@@ -1,0 +1,14 @@
+link creacion de paquetes 
+1 https://medium.com/@oscarricardosan/creaci%C3%B3n-de-paquete-para-laravel-paso-a-paso-2e02b0c1f7a2
+2 https://www.youtube.com/watch?v=vuBnGCi7zVY
+3 https://www.youtube.com/watch?v=U7nPxVLKCMs
+
+mejores paquetes para laravel
+https://medium.com/@lmichailian/los-mejores-7-paquetes-para-laravel-c46c595d2fb2
+
+
+            //"ChristianTigreC\\Ecuadlocations\\": "packages/ChristianTigreC/ecuadlocations/src"
+            https://www.youtube.com/watch?v=SLeY-2IPEXk
+
+
+php artisan vendor:publish --provider="Andres\Ecuadlocation\EcuadServiceProvider" --tag="migrations"

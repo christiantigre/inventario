@@ -1,3 +1,15 @@
+##App Inventario
+
+Aplicación web que permite llevar el inventario en locales comerciales.
+
+Controlar
+1 Configurar información de la empresa
+1 Ingreso por roles de usuarios.
+2 Controlar perfiles de usuarios
+3 Realizar respaldos de información
+4 Generar log por acciones que genere el usuarios
+
+
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 <p align="center">

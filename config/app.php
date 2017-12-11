@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         //adminlte
         JeroenNoten\LaravelAdminLte\ServiceProvider::class,
+        
 
     ],
 
