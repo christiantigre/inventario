@@ -4,9 +4,8 @@
 @include('errors.messages')
     <div class="container">
         <div class="row">
-            @include('admin.sidebar')
 
-            <div class="col-md-9">
+            <div class="col-md-11">
                 <div class="panel panel-default">
                     <div class="panel-heading">Create New Almacen</div>
                     <div class="panel-body">
