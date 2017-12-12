@@ -7,7 +7,7 @@
         <div class="row">
             {{-- @include('admin.sidebar') --}}
 
-            <div class="col-md-11">
+            <div class="col-md-11 col-lg-11 col-sm-12 col-xs-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">Almacen</div>
                     <div class="panel-body">
