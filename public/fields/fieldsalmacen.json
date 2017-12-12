@@ -1,0 +1,197 @@
+{
+    "fields": [
+        {
+            "name": "almacen",
+            "type": "string"
+        },
+        {
+            "name": "propietario",
+            "type": "string"
+        },
+        {
+            "name": "gerente",
+            "type": "string"
+        },
+        {
+            "name": "pag_web",
+            "type": "text"
+        },
+        {
+            "name": "razon_social",
+            "type": "string"
+        },
+        {
+            "name": "ruc",
+            "type": "string"
+        },
+        {
+            "name": "email",
+            "type": "email"
+        },
+        {
+            "name": "fecha_inicio",
+            "type": "date"
+        },
+        {
+            "name": "logo",
+            "type": "file"
+        },
+        {
+            "name": "name_logo",
+            "type": "string"
+        },
+        {
+            "name": "activo",
+            "type": "select",
+            "options": {
+                "1": "Activo",
+                "0": "Inactivo"
+            }
+        },
+        {
+            "name": "telefono",
+            "type": "string"
+        },
+        {
+            "name": "cel_movi",
+            "type": "string"
+        },
+        {
+            "name": "cel_claro",
+            "type": "string"
+        },
+        {
+            "name": "watsapp",
+            "type": "string"
+        },
+        {
+            "name": "fb",
+            "type": "text"
+        },
+        {
+            "name": "tw",
+            "type": "text"
+        },
+        {
+            "name": "ins",
+            "type": "text"
+        },
+        {
+            "name": "gg",
+            "type": "text"
+        },
+        {
+            "name": "funcion_empresa",
+            "type": "text"
+        },
+        {
+            "name": "dir",
+            "type": "text"
+        },
+        {
+            "name": "latitud",
+            "type": "string"
+        },
+        {
+            "name": "longitud",
+            "type": "string"
+        },
+        {
+            "name": "pais_id",
+            "type": "integer#unsigned"
+        },
+        {
+            "name": "provincia_id",
+            "type": "integer#unsigned"
+        }
+    ],
+    "foreign_keys": [
+        {
+            "column": "pais_id",
+            "references": "id",
+            "on": "paises",
+            "onDelete": "cascade"
+        },
+        {
+            "column": "provincia_id",
+            "references": "id",
+            "on": "provincias",
+            "onDelete": "cascade"
+        },
+        {
+            "column": "canton_id",
+            "references": "id",
+            "on": "cantons",
+            "onDelete": "cascade"
+        }
+    ],
+    "relationships": [
+        {
+            "name": "almacen",
+            "type": "belongsTo",
+            "class": "App\\Almacen"
+        }
+    ],
+    "validations": [
+        {
+            "field": "almacen",
+            "rules": "required|max:75"
+        },
+        {
+            "field": "propietario",
+            "rules": "max:75"
+        },
+        {
+            "field": "gerente",
+            "rules": "max:75"
+        },
+        {
+            "field": "pag_web",
+            "rules": "max:75"
+        },
+        {
+            "field": "razon_social",
+            "rules": "max:75"
+        },
+        {
+            "field": "ruc",
+            "rules": "max:999999999999999"
+        },
+        {
+            "field": "email",
+            "rules": "max:75|email"
+        },
+        {
+            "field": "fecha_inicio",
+            "rules": "max:15"
+        },
+        {
+            "field": "telefono",
+            "rules": "max:15"
+        },
+        {
+            "field": "cel_movi",
+            "rules": "max:15"
+        },
+        {
+            "field": "cel_claro",
+            "rules": "max:15"
+        },
+        {
+            "field": "watsapp",
+            "rules": "max:15"
+        },
+        {
+            "field": "dir",
+            "rules": "max:191"
+        },
+        {
+            "field": "latitud",
+            "rules": "max:50"
+        },
+        {
+            "field": "longitud",
+            "rules": "max:50"
+        }
+    ]
+}

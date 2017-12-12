@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Pais;
+use App\Parroquias;
 
 class HomeController extends Controller
 {
@@ -24,8 +24,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $pais = Pais::all();
-        dd($pais);
+        $Parroquias = Parroquias::all();
+        return ($Parroquias);
         return view('home');
     }
 }

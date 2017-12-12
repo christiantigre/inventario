@@ -12,3 +12,15 @@ https://medium.com/@lmichailian/los-mejores-7-paquetes-para-laravel-c46c595d2fb2
 
 
 php artisan vendor:publish --provider="Andres\Ecuadlocation\EcuadServiceProvider" --tag="migrations"
+
+
+PAQUETES INSTALADOS
+GENERADOR DE CRUD
+https://github.com/appzcoder/crud-generator
+
+
+probando crud generador
+
+php artisan crud:generate Almacen --fields='nom_almacen#string; propietario#string; gerente#string; pag_web#string; Razon_social#string; ruc#string; email#email; fecha_inicio#date; logo#file; name_logo#string; activo#boolean; telefono#string; cel_movi#string; cel_claro#string; watsapp#string; fb#string; tw#string; in#string; gg#string; funcion_empresa#text; dir#string; latitud#string; longitud#string; , "tips": "Tips", "health": "Health"}' --view-path=admin --controller-namespace=Admin --route-group=admin --form-helper=html
+
+php artisan crud:generate Almacen --fields_from_file="C:/Users/Andres/Dropbox/Dropbox/inventario/public/fields/fieldsalmacen.json" --view-path=admin --controller-namespace=Admin --route-group=admin
