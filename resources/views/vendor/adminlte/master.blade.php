@@ -37,6 +37,19 @@
 
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+    <!-- Jquery -->
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <!-- Datepicker Files -->
+    <link rel="stylesheet" href="{{asset('plugins/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker3.min.css')}}">
+    <link rel="stylesheet" href="{{asset('plugins/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker.standalone.min.css')}}">
+    <script src="{{asset('plugins/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.min.js')}}"></script>
+    <!-- Languaje -->
+    <script src="{{asset('plugins/bootstrap-datepicker-1.6.4/locales/bootstrap-datepicker.es.min.js')}}"></script>
+
+ 
+
+
 </head>
 <body class="hold-transition @yield('body_class')">
 
@@ -46,7 +59,11 @@
 <script src="{{ asset('vendor/adminlte/vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 <script>
 $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
+
+
+
 </script>
+
 @if(config('adminlte.plugins.select2'))
     <!-- Select2 -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>

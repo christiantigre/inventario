@@ -146,7 +146,7 @@ return [
                     'submenu' => [
                         [
                             'text' => 'Almacen',
-                            'url'  => '#',
+                            'url'  => 'admin/almacen',
                         ],
                         [
                             'text'    => 'Level Two',

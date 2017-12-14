@@ -20,4 +20,9 @@ class Provincias extends Model
     	return $this->hasMany(Canton::class);
     }
 
+    public function almacen()
+    {
+        return $this->hasMany('App\Almacen', 'id');
+    }
+
 }

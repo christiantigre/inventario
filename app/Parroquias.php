@@ -19,4 +19,9 @@ class Parroquias extends Model
     public function canton(){
     	return $this->belongsTo(Canton::class);
     }
+    public function almacen()
+    {
+        return $this->hasMany('App\Almacen', 'id');
+    }
+    
 }

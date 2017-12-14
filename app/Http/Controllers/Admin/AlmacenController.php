@@ -6,6 +6,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Almacen;
+use App\Pais;
+use App\Provincias;
+use App\Canton;
 use Illuminate\Http\Request;
 
 class AlmacenController extends Controller
@@ -15,6 +18,12 @@ class AlmacenController extends Controller
      *
      * @return \Illuminate\View\View
      */
+
+    public function __construct()
+    {
+        $this->middleware('admin', ['except' => 'logout']);
+    }
+
     public function index(Request $request)
     {
         $keyword = $request->get('search');
@@ -61,7 +70,10 @@ class AlmacenController extends Controller
      */
     public function create()
     {
-        return view('admin.almacen.create');
+        $paises = Pais::orderBy('id', 'DESC')->where('status', 1)->pluck('pais', 'id');
+        $provincias = Provincias::orderBy('id', 'ASC')->pluck('provincia', 'id');
+        $cantones = Canton::orderBy('id', 'ASC')->pluck('canton', 'id');
+        return view('admin.almacen.create',compact('paises','provincias','cantones'));
     }
 
     /**
@@ -134,8 +146,10 @@ class AlmacenController extends Controller
     public function edit($id)
     {
         $almacen = Almacen::findOrFail($id);
-
-        return view('admin.almacen.edit', compact('almacen'));
+        $paises = Pais::orderBy('id', 'DESC')->where('status', 1)->pluck('pais', 'id');
+        $provincias = Provincias::orderBy('id', 'ASC')->pluck('provincia', 'id');
+        $cantones = Canton::orderBy('id', 'ASC')->pluck('canton', 'id');
+        return view('admin.almacen.edit',compact('almacen','paises','provincias','cantones'));
     }
 
     /**
@@ -198,5 +212,15 @@ class AlmacenController extends Controller
         Almacen::destroy($id);
 
         return redirect('admin/almacen')->with('flash_message', 'Almacen deleted!');
+    }
+
+    /**
+     * Get the guard to be used during authentication.
+     *
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     */
+    protected function guard()
+    {
+        return Auth::guard('admin');
     }
 }

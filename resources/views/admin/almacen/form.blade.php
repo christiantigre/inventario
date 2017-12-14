@@ -19,7 +19,7 @@
 </div><div class="form-group {{ $errors->has('pag_web') ? 'has-error' : ''}}">
     <label for="pag_web" class="col-md-4 control-label">{{ 'Pag Web' }}</label>
     <div class="col-md-6">
-        <textarea class="form-control" rows="5" name="pag_web" type="textarea" id="pag_web" >{{ $almacen->pag_web or ''}}</textarea>
+        <input class="form-control" name="pag_web" type="text" id="pag_web" value="{{ $almacen->pag_web or ''}}" >
         {!! $errors->first('pag_web', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('razon_social') ? 'has-error' : ''}}">
@@ -43,7 +43,7 @@
 </div><div class="form-group {{ $errors->has('fecha_inicio') ? 'has-error' : ''}}">
     <label for="fecha_inicio" class="col-md-4 control-label">{{ 'Fecha Inicio' }}</label>
     <div class="col-md-6">
-        <input class="form-control" name="fecha_inicio" type="date" id="fecha_inicio" value="{{ $almacen->fecha_inicio or ''}}" >
+        <input class="form-control datepicker" name="fecha_inicio" type="text" id="fecha_inicio" value="{{ $almacen->fecha_inicio or ''}}" >
         {!! $errors->first('fecha_inicio', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('logo') ? 'has-error' : ''}}">
@@ -57,16 +57,6 @@
     <div class="col-md-6">
         <input class="form-control" name="name_logo" type="text" id="name_logo" value="{{ $almacen->name_logo or ''}}" >
         {!! $errors->first('name_logo', '<p class="help-block">:message</p>') !!}
-    </div>
-</div><div class="form-group {{ $errors->has('activo') ? 'has-error' : ''}}">
-    <label for="activo" class="col-md-4 control-label">{{ 'Activo' }}</label>
-    <div class="col-md-6">
-        <select name="activo" class="form-control" id="activo" >
-    @foreach (json_decode('{"1":"Activo","0":"Inactivo"}', true) as $optionKey => $optionValue)
-        <option value="{{ $optionKey }}" {{ (isset($almacen->activo) && $almacen->activo == $optionKey) ? 'selected' : ''}}>{{ $optionValue }}</option>
-    @endforeach
-</select>
-        {!! $errors->first('activo', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('telefono') ? 'has-error' : ''}}">
     <label for="telefono" class="col-md-4 control-label">{{ 'Telefono' }}</label>
@@ -125,7 +115,7 @@
 </div><div class="form-group {{ $errors->has('dir') ? 'has-error' : ''}}">
     <label for="dir" class="col-md-4 control-label">{{ 'Dir' }}</label>
     <div class="col-md-6">
-        <textarea class="form-control" rows="5" name="dir" type="textarea" id="dir" >{{ $almacen->dir or ''}}</textarea>
+        <input class="form-control" name="dir" type="text" id="dir" value="{{ $almacen->dir or ''}}" >
         {!! $errors->first('dir', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('latitud') ? 'has-error' : ''}}">
@@ -141,16 +131,35 @@
         {!! $errors->first('longitud', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('pais_id') ? 'has-error' : ''}}">
-    <label for="pais_id" class="col-md-4 control-label">{{ 'Pais Id' }}</label>
+    <label for="pais_id" class="col-md-4 control-label">{{ 'Pais' }}</label>
     <div class="col-md-6">
-        <input class="form-control" name="pais_id" type="number" id="pais_id" value="{{ $almacen->pais_id or ''}}" >
+        {!! Form::select('pais_id', $paises, null, ['class' => 'form-control']) !!}
         {!! $errors->first('pais_id', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('provincia_id') ? 'has-error' : ''}}">
-    <label for="provincia_id" class="col-md-4 control-label">{{ 'Provincia Id' }}</label>
+</div>
+<div class="form-group {{ $errors->has('provincia_id') ? 'has-error' : ''}}">
+    <label for="provincia_id" class="col-md-4 control-label">{{ 'Provincia' }}</label>
     <div class="col-md-6">
-        <input class="form-control" name="provincia_id" type="number" id="provincia_id" value="{{ $almacen->provincia_id or ''}}" >
+        {!! Form::select('provincia_id', $provincias, null, ['class' => 'form-control']) !!}
         {!! $errors->first('provincia_id', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+<div class="form-group {{ $errors->has('canton_id') ? 'has-error' : ''}}">
+    <label for="canton_id" class="col-md-4 control-label">{{ 'Canton' }}</label>
+    <div class="col-md-6">
+        {!! Form::select('canton_id', $cantones, null, ['class' => 'form-control']) !!}
+        {!! $errors->first('canton_id', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+<div class="form-group {{ $errors->has('activo') ? 'has-error' : ''}}">
+    <label for="activo" class="col-md-4 control-label">{{ 'Activo' }}</label>
+    <div class="col-md-6">
+        <select name="activo" class="form-control" id="activo" >
+    @foreach (json_decode('{"1":"Activo","0":"Inactivo"}', true) as $optionKey => $optionValue)
+        <option value="{{ $optionKey }}" {{ (isset($almacen->activo) && $almacen->activo == $optionKey) ? 'selected' : ''}}>{{ $optionValue }}</option>
+    @endforeach
+</select>
+        {!! $errors->first('activo', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
 
@@ -159,3 +168,10 @@
         <input class="btn btn-primary" type="submit" value="{{ $submitButtonText or 'Create' }}">
     </div>
 </div>
+<script type="text/javascript">
+    $('.datepicker').datepicker({
+    format: "yyyy/mm/dd",
+    language: "es",
+    autoclose: true
+});
+</script>

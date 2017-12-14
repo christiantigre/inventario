@@ -21,7 +21,16 @@
                             </ul>
                         @endif
 
-                        <form method="POST" action="{{ url('/admin/almacen/' . $almacen->id) }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+
+                            {!! Form::model($almacen, [
+                            'method' => 'PATCH',
+                            'url' => ['/admin/almacen', $almacen->id],
+                            'class' => 'form-horizontal', 
+                            'enctype'=>'multipart/form-data',
+                            'files' => true,
+                            'accept-charset'=>'UTF-8'
+                        ]) !!}
+
                             {{ method_field('PATCH') }}
                             {{ csrf_field() }}
 

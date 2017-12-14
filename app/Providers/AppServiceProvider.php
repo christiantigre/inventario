@@ -25,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
     {
         if ($this->app->environment() == 'local') {
         $this->app->register('Appzcoder\CrudGenerator\CrudGeneratorServiceProvider');
+        $this->app->register('Hesto\MultiAuth\MultiAuthServiceProvider');
     }
     }
 }

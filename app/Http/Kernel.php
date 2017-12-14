@@ -14,11 +14,19 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
+        \RenatoMarinho\LaravelPageSpeed\Middleware\CollapseWhitespace::class,
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
+        \RenatoMarinho\LaravelPageSpeed\Middleware\InlineCss::class,
+    \RenatoMarinho\LaravelPageSpeed\Middleware\ElideAttributes::class,
+    \RenatoMarinho\LaravelPageSpeed\Middleware\InsertDNSPrefetch::class,
+    \RenatoMarinho\LaravelPageSpeed\Middleware\RemoveComments::class,
+    \RenatoMarinho\LaravelPageSpeed\Middleware\TrimUrls::class,
+    \RenatoMarinho\LaravelPageSpeed\Middleware\RemoveQuotes::class,
+    \RenatoMarinho\LaravelPageSpeed\Middleware\CollapseWhitespace::class,
     ];
 
     /**
@@ -51,6 +59,12 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
+        'person' => \App\Http\Middleware\RedirectIfNotPerson::class,
+        'person.guest' => \App\Http\Middleware\RedirectIfPerson::class,
+        'use' => \App\Http\Middleware\RedirectIfNotUse::class,
+        'use.guest' => \App\Http\Middleware\RedirectIfUse::class,
+        'admin' => \App\Http\Middleware\RedirectIfNotAdmin::class,
+        'admin.guest' => \App\Http\Middleware\RedirectIfAdmin::class,
         'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
