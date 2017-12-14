@@ -32,7 +32,10 @@
                                     <tr><th> Pagina web </th><td> {{ $almacen->pag_web }} </td></tr>
                                     <tr><th> Razon social </th><td> {{ $almacen->razon_social }} </td></tr>
                                     <tr><th> Ruc </th><td> {{ $almacen->ruc }} </td></tr>
-                                    <tr><th> Fecha inicio </th><td> {{ $almacen->fecha_inicio }} ({{ $almacen->created_at->diffForHumans() }}) </td></tr>
+                                    <tr><th> Fecha inicio </th><td> 
+                                        {{ $almacen->fecha_inicio }} 
+                                        ({{ $almacen->created_at->diffForHumans() }})
+                                    </td></tr>
                                     <tr><th> Logo </th><td> 
                                          @if(empty($almacen->logo))
                                             <center>-</center>
