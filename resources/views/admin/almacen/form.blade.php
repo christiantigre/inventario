@@ -52,12 +52,6 @@
         <input class="form-control" name="logo" type="file" id="logo" value="{{ $almacen->logo or ''}}" >
         {!! $errors->first('logo', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('name_logo') ? 'has-error' : ''}}">
-    <label for="name_logo" class="col-md-4 control-label">{{ 'Name Logo' }}</label>
-    <div class="col-md-6">
-        <input class="form-control" name="name_logo" type="text" id="name_logo" value="{{ $almacen->name_logo or ''}}" >
-        {!! $errors->first('name_logo', '<p class="help-block">:message</p>') !!}
-    </div>
 </div><div class="form-group {{ $errors->has('telefono') ? 'has-error' : ''}}">
     <label for="telefono" class="col-md-4 control-label">{{ 'Telefono' }}</label>
     <div class="col-md-6">

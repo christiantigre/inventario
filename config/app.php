@@ -180,6 +180,8 @@ return [
         JeroenNoten\LaravelAdminLte\ServiceProvider::class,    
         //Crud appzcoder
         Collective\Html\HtmlServiceProvider::class,
+        //Intervention image
+        Intervention\Image\ImageServiceProvider::class,
         
 
     ],
@@ -233,6 +235,7 @@ return [
 
         'Form' => Collective\Html\FormFacade::class,
         'HTML' => Collective\Html\HtmlFacade::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

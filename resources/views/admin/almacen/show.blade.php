@@ -24,10 +24,46 @@
                         <div class="table-responsive">
                             <table class="table table-borderless">
                                 <tbody>
-                                    <tr>
-                                        <th>ID</th><td>{{ $almacen->id }}</td>
-                                    </tr>
-                                    <tr><th> Almacen </th><td> {{ $almacen->almacen }} </td></tr><tr><th> Propietario </th><td> {{ $almacen->propietario }} </td></tr><tr><th> Gerente </th><td> {{ $almacen->gerente }} </td></tr>
+                                    <tr><th>ID</th><td>{{ $almacen->id }}</td></tr>
+                                    <tr><th> Almacen </th><td> {{ $almacen->almacen }} </td></tr>
+                                    <tr><th> Email </th><td> {{ $almacen->email }} </td></tr>
+                                    <tr><th> Propietario </th><td> {{ $almacen->propietario }} </td></tr>
+                                    <tr><th> Gerente </th><td> {{ $almacen->gerente }} </td></tr>
+                                    <tr><th> Pagina web </th><td> {{ $almacen->pag_web }} </td></tr>
+                                    <tr><th> Razon social </th><td> {{ $almacen->razon_social }} </td></tr>
+                                    <tr><th> Ruc </th><td> {{ $almacen->ruc }} </td></tr>
+                                    <tr><th> Fecha inicio </th><td> {{ $almacen->fecha_inicio }} ({{ $almacen->created_at->diffForHumans() }}) </td></tr>
+                                    <tr><th> Logo </th><td> 
+                                         @if(empty($almacen->logo))
+                                            <center>-</center>
+                                            @else
+                                            <a href="{{ asset($almacen->logo) }}">
+                                            <img src="{{ asset($almacen->logo) }}" class="img img-responsive">
+                                            </a>
+                                            @endif
+                                    </td></tr>
+                                    <tr><th> Telefono </th><td> {{ $almacen->telefono }} </td></tr>
+                                    <tr><th> Celular movistar </th><td> {{ $almacen->cel_movi }} </td></tr>
+                                    <tr><th> Celular claro </th><td> {{ $almacen->cel_claro }} </td></tr>
+                                    <tr><th> Watsapp </th><td> {{ $almacen->watsapp }} </td></tr>
+                                    <tr><th> Facebook </th><td> {{ $almacen->fb }} </td></tr>
+                                    <tr><th> Twitter </th><td> {{ $almacen->tw }} </td></tr>
+                                    <tr><th> Instagram </th><td> {{ $almacen->ins }} </td></tr>
+                                    <tr><th> Google + </th><td> {{ $almacen->gg }} </td></tr>
+                                    <tr><th> Detalle almacen </th><td> {{ $almacen->funcion_empresa }} </td></tr>
+                                    <tr><th> Dirección </th><td> {{ $almacen->dir }} </td></tr>
+                                    <tr><th> Latitud </th><td> {{ $almacen->latitud }} </td></tr>
+                                    <tr><th> Longitud </th><td> {{ $almacen->longitud }} </td></tr>
+                                    <tr><th> Pais </th><td> {{ $almacen->pais->pais }} </td></tr>
+                                    <tr><th> Provincia </th><td> {{ $almacen->provincia->provincia }} </td></tr>
+                                    <tr><th> Canton </th><td> {{ $almacen->canton->canton }} </td></tr>
+                                    <tr><th> Activo </th><td> 
+                                        @if(($almacen->activo)=='1')
+                                            <small class="label pull-left bg-green">Activado</small>
+                                        @else
+                                            <small class="label pull-left bg-red">Desactivado</small>
+                                        @endif
+                                    </td></tr>
                                 </tbody>
                             </table>
                         </div>
