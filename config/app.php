@@ -182,7 +182,10 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         //Intervention image
         Intervention\Image\ImageServiceProvider::class,
-        
+        //Zizaco
+        Zizaco\Entrust\EntrustServiceProvider::class,  
+        //Entrust gui
+        Acoustep\EntrustGui\EntrustGuiServiceProvider::class,      
 
     ],
 
@@ -198,7 +201,6 @@ return [
     */
 
     'aliases' => [
-
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
@@ -232,10 +234,10 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
         'Form' => Collective\Html\FormFacade::class,
         'HTML' => Collective\Html\HtmlFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
     ],
 
 ];

@@ -2,7 +2,6 @@
 
 @section('content')
 @include('errors.messages')
-    <div class="container">
         <div class="row">
 
             <div class="col-md-11">
@@ -32,5 +31,4 @@
                 </div>
             </div>
         </div>
-    </div>
 @endsection

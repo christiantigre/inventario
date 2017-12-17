@@ -3,11 +3,10 @@
 @section('content')
 @include('errors.messages')
 
-    <div class="container">
         <div class="row">
             {{-- @include('admin.sidebar') --}}
 
-            <div class="col-md-11 col-lg-11 col-sm-12 col-xs-12">
+            <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">Almacen</div>
                     <div class="panel-body">
@@ -61,5 +60,4 @@
                 </div>
             </div>
         </div>
-    </div>
 @endsection

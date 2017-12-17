@@ -127,21 +127,21 @@
 </div><div class="form-group {{ $errors->has('pais_id') ? 'has-error' : ''}}">
     <label for="pais_id" class="col-md-4 control-label">{{ 'Pais' }}</label>
     <div class="col-md-6">
-        {!! Form::select('pais_id', $paises, null, ['class' => 'form-control']) !!}
+        {!! Form::select('pais_id', $paises, null, ['class' => 'form-control','id'=>'pais_id']) !!}
         {!! $errors->first('pais_id', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
 <div class="form-group {{ $errors->has('provincia_id') ? 'has-error' : ''}}">
     <label for="provincia_id" class="col-md-4 control-label">{{ 'Provincia' }}</label>
     <div class="col-md-6">
-        {!! Form::select('provincia_id', $provincias, null, ['class' => 'form-control']) !!}
+        {!! Form::select('provincia_id', $provincias, null, ['class' => 'form-control','id'=>'provincia_id']) !!}
         {!! $errors->first('provincia_id', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
 <div class="form-group {{ $errors->has('canton_id') ? 'has-error' : ''}}">
     <label for="canton_id" class="col-md-4 control-label">{{ 'Canton' }}</label>
     <div class="col-md-6">
-        {!! Form::select('canton_id', $cantones, null, ['class' => 'form-control']) !!}
+        {!! Form::select('canton_id', $cantones, null, ['class' => 'form-control','id'=>'canton_id']) !!}
         {!! $errors->first('canton_id', '<p class="help-block">:message</p>') !!}
     </div>
 </div>

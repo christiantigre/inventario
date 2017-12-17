@@ -5,6 +5,8 @@ link creacion de paquetes
 
 mejores paquetes para laravel
 https://medium.com/@lmichailian/los-mejores-7-paquetes-para-laravel-c46c595d2fb2
+https://code.tutsplus.com/es/articles/20-useful-laravel-packages-available-on-codecanyon--cms-25334
+http://programacion.net/articulo/10_paquetes_imprescindibles_para_laravel_que_no_debes_dejar_pasar_1914
 
 
             //"ChristianTigreC\\Ecuadlocations\\": "packages/ChristianTigreC/ecuadlocations/src"
@@ -18,9 +20,44 @@ PAQUETES INSTALADOS
 GENERADOR DE CRUD
 https://github.com/appzcoder/crud-generator
 
+LARAVEL ENTRUST Y ZIZACO
+https://www.youtube.com/watch?v=akjpS_1wz30&t=8s
+
 
 probando crud generador
 
 php artisan crud:generate Almacen --fields='nom_almacen#string; propietario#string; gerente#string; pag_web#string; Razon_social#string; ruc#string; email#email; fecha_inicio#date; logo#file; name_logo#string; activo#boolean; telefono#string; cel_movi#string; cel_claro#string; watsapp#string; fb#string; tw#string; in#string; gg#string; funcion_empresa#text; dir#string; latitud#string; longitud#string; , "tips": "Tips", "health": "Health"}' --view-path=admin --controller-namespace=Admin --route-group=admin --form-helper=html
 
+php artisan crud:generate Category --fields='category#string; detall#string; gerente#string; activo#boolean' --view-path=admin --controller-namespace=Admin --route-group=admin --form-helper=html
+
+php artisan crud:generate Marca --fields='marca#string; detall#string; img#file; name_img#string; activo#boolean' --view-path=admin --controller-namespace=Admin --route-group=admin --form-helper=html
+
 php artisan crud:generate Almacen --fields_from_file="C:/Users/Andres/Dropbox/Dropbox/inventario/public/fields/fieldsalmacen.json" --view-path=admin --controller-namespace=Admin --route-group=admin
+
+php artisan crud:generate Subcategory --fields_from_file="/home/pcsolution/Dropbox/inventario/public/fields/fieldssubcategories.json" --view-path=admin --controller-namespace=Admin --route-group=admin
+
+php artisan crud:generate Product --fields_from_file="/home/pcsolution/Dropbox/webpageveterinaria/public/fields/fieldsproducts.json" --view-path=admin --controller-namespace=Admin --route-group=admin
+
+php artisan crud:generate Proveedor --fields_from_file="/home/pcsolution/Dropbox/inventario/public/fields/fieldsproveedor.json" --view-path=admin --controller-namespace=Admin --route-group=admin
+
+php artisan crud:view Pais --fields="pais#string; cod_postal#string; latitud#string; longitud#string; status#boolean" --view-path=admin --route-group=admin --form-helper=html
+
+php artisan crud:controller Admin/PaisController --crud-name=Pais --model-name=Pais --view-path=admin --route-group=admin
+
+php artisan crud:view Provincia --fields="provincia#string; cod_postal#string; latitud#string; longitud#string; pais_id#string" --view-path=admin --route-group=admin --form-helper=html
+
+php artisan crud:controller Admin/ProvinciaController --crud-name=Provincia --model-name=Provincia --view-path=admin --route-group=admin
+
+php artisan crud:view Canton --fields="canton#string; cod_postal#string; latitud#string; longitud#string; provincia_id#string" --view-path=admin --route-group=admin --form-helper=html
+
+php artisan crud:controller Admin/CantonController --crud-name=Canton --model-name=Canton --view-path=admin --route-group=admin
+
+php artisan crud:view Parroquia --fields="parrroquia#string; cod_postal#string; latitud#string; longitud#string; parroquia_id#string" --view-path=admin --route-group=admin --form-helper=html
+
+php artisan crud:controller Admin/ParroquiaController --crud-name=Parroquia --model-name=Parroquia --view-path=admin --route-group=admin
+
+
+base de datos
+- Categorias
+- Subcategory
+- Marcas

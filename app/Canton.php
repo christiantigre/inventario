@@ -9,7 +9,7 @@ class Canton extends Model
 	protected $table = 'cantons';
 	
     protected $fillable = [
-        'canton', 'cod_postal', 'latitud','longitud'
+        'canton', 'cod_postal', 'latitud','longitud','provincia_id'
     ];
 
     public function parroquias(){
@@ -18,6 +18,11 @@ class Canton extends Model
 
     public function provincia(){
     	return $this->belongsTo(Provincias::class);
+    }
+
+    public static function canton($id){
+        return Canton::where('provincia_id','=',$id)
+        ->get();
     }
 
 }

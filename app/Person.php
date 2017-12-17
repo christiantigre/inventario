@@ -5,10 +5,11 @@ namespace App;
 use App\Notifications\PersonResetPassword;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class Person extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, EntrustUserTrait; // add this trait to your user model
 
     /**
      * The attributes that are mass assignable.

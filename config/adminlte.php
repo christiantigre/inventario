@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'title' => 'Inventario App',
+    'title' => 'AdminLTE 2',
 
     'title_prefix' => '',
 
@@ -30,9 +30,9 @@ return [
     |
     */
 
-    'logo' => '<b>Inventario</b>App',
+    'logo' => '<b>Admin</b>LTE',
 
-    'logo_mini' => '<b>I</b>App',
+    'logo_mini' => '<b>A</b>LT',
 
     /*
     |--------------------------------------------------------------------------
@@ -133,15 +133,15 @@ return [
             'icon' => 'lock',
         ],
         [
-            'text'    => 'Configuración',
-            'icon'    => 'gear',
+            'text'    => 'Multilevel',
+            'icon'    => 'share',
             'submenu' => [
                 [
                     'text' => 'Level One',
                     'url'  => '#',
                 ],
                 [
-                    'text'    => 'General',
+                    'text'    => 'Configuración',
                     'url'     => '#',
                     'submenu' => [
                         [
@@ -149,39 +149,58 @@ return [
                             'url'  => 'admin/almacen',
                         ],
                         [
-                            'text'    => 'Level Two',
+                            'text'    => 'Localidades',
                             'url'     => '#',
                             'submenu' => [
                                 [
-                                    'text' => 'Level Three',
-                                    'url'  => '#',
+                                    'text' => 'Pais',
+                                    'url'  => 'admin/pais',
                                 ],
                                 [
-                                    'text' => 'Level Three',
-                                    'url'  => '#',
+                                    'text' => 'Provincia',
+                                    'url'  => 'admin/provincia',
+                                ],
+                                [
+                                    'text' => 'Canton',
+                                    'url'  => 'admin/canton',
+                                ],
+                                [
+                                    'text' => 'Parroquia',
+                                    'url'  => 'admin/parroquia',
+                                ],
+                            ],
+                        ],
+                        [
+                            'text'    => 'Categoría',
+                            'url'     => '#',
+                            'submenu' => [
+                                [
+                                    'text' => 'Categoría',
+                                    'url'  => 'admin/category',
+                                ],
+                                [
+                                    'text' => 'Subcategoría',
+                                    'url'  => 'admin/subcategory',
+                                ],
+                            ],
+                        ],
+                        [
+                            'text'    => 'Extras',
+                            'url'     => '#',
+                            'submenu' => [
+                                [
+                                    'text' => 'Marca',
+                                    'url'  => 'admin/marca',
                                 ],
                             ],
                         ],
                     ],
                 ],
                 [
-                    'text' => 'Level One',
-                    'url'  => '#',
+                    'text' => 'Proveedor',
+                    'url'  => 'admin/proveedor',
                 ],
             ],
-        ],
-        'LABELS',
-        [
-            'text'       => 'Important',
-            'icon_color' => 'red',
-        ],
-        [
-            'text'       => 'Warning',
-            'icon_color' => 'yellow',
-        ],
-        [
-            'text'       => 'Information',
-            'icon_color' => 'aqua',
         ],
     ],
 

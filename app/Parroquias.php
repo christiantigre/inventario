@@ -9,7 +9,7 @@ class Parroquias extends Model
 	protected $table = 'parroquias';
 
     protected $fillable = [
-        'parroquia', 'cod_postal', 'latitud','longitud'
+        'parroquia', 'cod_postal', 'latitud','longitud','canton_id'
     ];
 
     public function pais(){

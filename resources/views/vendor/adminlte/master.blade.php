@@ -74,6 +74,8 @@ $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
     <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 @endif
 
+    {!! Html::script('js/dropdown.js') !!}
+
 @yield('adminlte_js')
 
 </body>

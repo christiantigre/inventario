@@ -12,6 +12,11 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('admin', ['except' => 'logout']);
+    }
+
     public function index()
     {
         return view('adminlte::page')->with('flash_message', 'Administrador bienvenido...');
@@ -81,5 +86,10 @@ class AdminController extends Controller
     public function destroy($id)
     {
         //
+    }
+    
+    protected function guard()
+    {
+        return Auth::guard('admin');
     }
 }

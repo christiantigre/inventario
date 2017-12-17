@@ -9,7 +9,7 @@ class Provincias extends Model
 	protected $table = 'provincias';
 
     protected $fillable = [
-        'provincia', 'cod_postal', 'latitud','longitud'
+        'provincia', 'cod_postal', 'latitud','longitud','pais_id'
     ];
 
     public function pais(){
