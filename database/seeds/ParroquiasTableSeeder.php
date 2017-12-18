@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Parroquias as Paise;
+use App\Parroquias as Parroquia;
 
 class ParroquiasTableSeeder extends Seeder
 {
@@ -1842,11 +1842,7 @@ class ParroquiasTableSeeder extends Seeder
     		'parroquia'=>' CRISTÓBAL COLÓN ',
     		'cod_parr'=>'40551',
     		'cod_postal'=>'40551',
-    		'latitud'=>NULL,
-    		'longitud'=>NULL,
-    		'canton_id'=>34,
-    		'created_at'=>NULL,
-    		'updated_at'=>NULL
+    		'canton_id'=>34
     	] );
 
 
@@ -1856,11 +1852,7 @@ class ParroquiasTableSeeder extends Seeder
     		'parroquia'=>' CHITÁN DE NAVARRETE ',
     		'cod_parr'=>'40552',
     		'cod_postal'=>'40552',
-    		'latitud'=>NULL,
-    		'longitud'=>NULL,
-    		'canton_id'=>34,
-    		'created_at'=>NULL,
-    		'updated_at'=>NULL
+    		'canton_id'=>34
     	] );
 
 
@@ -1870,11 +1862,7 @@ class ParroquiasTableSeeder extends Seeder
     		'parroquia'=>' FERNÁNDEZ SALVADOR  ',
     		'cod_parr'=>'40553',
     		'cod_postal'=>'40553',
-    		'latitud'=>NULL,
-    		'longitud'=>NULL,
-    		'canton_id'=>34,
-    		'created_at'=>NULL,
-    		'updated_at'=>NULL
+    		'canton_id'=>34
     	] );
 
 
@@ -1884,11 +1872,7 @@ class ParroquiasTableSeeder extends Seeder
     		'parroquia'=>' LA PAZ  ',
     		'cod_parr'=>'40554',
     		'cod_postal'=>'40554',
-    		'latitud'=>NULL,
-    		'longitud'=>NULL,
-    		'canton_id'=>34,
-    		'created_at'=>NULL,
-    		'updated_at'=>NULL
+    		'canton_id'=>34
     	] );
 
 
@@ -1898,11 +1882,7 @@ class ParroquiasTableSeeder extends Seeder
     		'parroquia'=>' PIARTAL ',
     		'cod_parr'=>'40555',
     		'cod_postal'=>'40555',
-    		'latitud'=>NULL,
-    		'longitud'=>NULL,
-    		'canton_id'=>34,
-    		'created_at'=>NULL,
-    		'updated_at'=>NULL
+    		'canton_id'=>34
     	] );
 
 
@@ -1912,11 +1892,7 @@ class ParroquiasTableSeeder extends Seeder
     		'parroquia'=>' HUACA   ',
     		'cod_parr'=>'40650',
     		'cod_postal'=>'40650',
-    		'latitud'=>NULL,
-    		'longitud'=>NULL,
-    		'canton_id'=>35,
-    		'created_at'=>NULL,
-    		'updated_at'=>NULL
+    		'canton_id'=>35
     	] );
 
 
@@ -1926,11 +1902,7 @@ class ParroquiasTableSeeder extends Seeder
     		'parroquia'=>' MARISCAL SUCRE  ',
     		'cod_parr'=>'40651',
     		'cod_postal'=>'40651',
-    		'latitud'=>NULL,
-    		'longitud'=>NULL,
-    		'canton_id'=>35,
-    		'created_at'=>NULL,
-    		'updated_at'=>NULL
+    		'canton_id'=>35
     	] );
 
 
@@ -1940,11 +1912,7 @@ class ParroquiasTableSeeder extends Seeder
     		'parroquia'=>' ELOY ALFARO (SAN FELIPE)    ',
     		'cod_parr'=>'50101',
     		'cod_postal'=>'50101',
-    		'latitud'=>NULL,
-    		'longitud'=>NULL,
-    		'canton_id'=>36,
-    		'created_at'=>NULL,
-    		'updated_at'=>NULL
+    		'canton_id'=>36
     	] );
 
 
@@ -1954,11 +1922,7 @@ class ParroquiasTableSeeder extends Seeder
     		'parroquia'=>' IGNACIO FLORES (PARQUE FLORES)  ',
     		'cod_parr'=>'50102',
     		'cod_postal'=>'50102',
-    		'latitud'=>NULL,
-    		'longitud'=>NULL,
-    		'canton_id'=>36,
-    		'created_at'=>NULL,
-    		'updated_at'=>NULL
+    		'canton_id'=>36
     	] );
 
 
@@ -1968,16 +1932,12 @@ class ParroquiasTableSeeder extends Seeder
     		'parroquia'=>' JUAN MONTALVO (SAN SEBASTIÁN)   ',
     		'cod_parr'=>'50103',
     		'cod_postal'=>'50103',
-    		'latitud'=>NULL,
-    		'longitud'=>NULL,
-    		'canton_id'=>36,
-    		'created_at'=>NULL,
-    		'updated_at'=>NULL
+    		'canton_id'=>36
     	] );
 
 
 
-    	Parroquia::create( [
+/*    	Parroquia::create( [
     		'id'=>222,
     		'parroquia'=>' LA MATRIZ   ',
     		'cod_parr'=>'50104',
@@ -18475,7 +18435,7 @@ class ParroquiasTableSeeder extends Seeder
     		'canton_id'=>223,
     		'created_at'=>NULL,
     		'updated_at'=>NULL
-    	] );
+    	] );*/
 
 
     }

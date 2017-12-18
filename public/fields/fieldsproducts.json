@@ -1,0 +1,99 @@
+{
+    "fields": [
+        {
+            "name": "producto",
+            "type": "string"
+        },
+        {
+            "name": "cod_barra",
+            "type": "string"
+        },
+        {
+            "name": "pre_compra",
+            "type": "double"
+        },
+        {
+            "name": "pre_venta",
+            "type": "double"
+        },
+        {
+            "name": "cantidad",
+            "type": "integer"
+        },
+        {
+            "name": "imagen",
+            "type": "file"
+        },
+        {
+            "name": "name_img",
+            "type": "string"
+        },
+        {
+            "name": "nuevo",
+            "type": "boolean"
+        },
+        {
+            "name": "promo",
+            "type": "boolean"
+        },
+        {
+            "name": "catalogo",
+            "type": "boolean"
+        },
+        {
+            "name": "activo",
+            "type": "boolean"
+        },
+        {
+            "name": "propaganda",
+            "type": "text"
+        },
+        {
+            "name": "id_category",
+            "type": "integer#unsigned"
+        },
+        {
+            "name": "id_subcategory",
+            "type": "integer#unsigned"
+        },
+        {
+            "name": "id_proveedor",
+            "type": "integer#unsigned"
+        }
+    ],
+    "foreign_keys": [
+        {
+            "column": "id_category",
+            "references": "id",
+            "on": "Category"
+        },
+        {
+            "column": "id_subcategory",
+            "references": "id",
+            "on": "Subcategory"
+        },
+        {
+            "column": "id_proveedor",
+            "references": "id",
+            "on": "Proveedor"
+        }
+    ],
+    "relationships": [
+        {
+            "name": "Category",
+            "type": "belongsTo",
+            "class": "App\\Category"
+        },
+        {
+            "name": "Subcategory",
+            "type": "belongsTo",
+            "class": "App\\Subcategory"
+        }
+        ,
+        {
+            "name": "Proveedor",
+            "type": "belongsTo",
+            "class": "App\\Proveedor"
+        }
+    ]
+}

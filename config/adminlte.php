@@ -131,6 +131,11 @@ return [
             'text' => 'Change Password',
             'url'  => 'admin/settings',
             'icon' => 'lock',
+        ],        
+        [
+            'text' => 'Productos',
+            'url'  => 'admin/product',
+            'icon' => 'cloud-upload',
         ],
         [
             'text'    => 'Multilevel',

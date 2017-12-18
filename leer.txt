@@ -34,9 +34,13 @@ php artisan crud:generate Marca --fields='marca#string; detall#string; img#file;
 
 php artisan crud:generate Almacen --fields_from_file="C:/Users/Andres/Dropbox/Dropbox/inventario/public/fields/fieldsalmacen.json" --view-path=admin --controller-namespace=Admin --route-group=admin
 
+
+
 php artisan crud:generate Subcategory --fields_from_file="/home/pcsolution/Dropbox/inventario/public/fields/fieldssubcategories.json" --view-path=admin --controller-namespace=Admin --route-group=admin
 
 php artisan crud:generate Product --fields_from_file="/home/pcsolution/Dropbox/webpageveterinaria/public/fields/fieldsproducts.json" --view-path=admin --controller-namespace=Admin --route-group=admin
+
+php artisan crud:generate Product --fields_from_file="C:/Users/Andres/Dropbox/Dropbox/inventario/public/fields/fieldsproducts.json" --view-path=admin --controller-namespace=Admin --route-group=admin
 
 php artisan crud:generate Proveedor --fields_from_file="/home/pcsolution/Dropbox/inventario/public/fields/fieldsproveedor.json" --view-path=admin --controller-namespace=Admin --route-group=admin
 

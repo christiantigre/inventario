@@ -54,6 +54,7 @@ Route::get('proveedor/{var}/getcanton/{id}', 'ComponentController@getCanton');
   Route::resource('/canton', 'Admin\\CantonController');
   Route::resource('/parroquia', 'Admin\\ParroquiaController');
   Route::resource('/proveedor', 'Admin\\ProveedorController');
+  Route::resource('/product', 'Admin\\ProductController');
 });
 
 
@@ -72,3 +73,5 @@ Route::group(['prefix' => 'person'], function () {
   Route::get('/password/reset/{token}', 'PersonAuth\ResetPasswordController@showResetForm');
 });
 
+
+Route::resource('admin/product', 'Admin\\ProductController');

@@ -90,5 +90,12 @@ class CategoryTableSeeder extends Seeder
             'detall'=>'Infantil',
             'activo'=>1
         ] );
+
+        Category::create( [
+            'id'=>10,
+            'category'=>'Tecnología',
+            'detall'=>'Tecnología',
+            'activo'=>1
+        ] );
     }
 }
