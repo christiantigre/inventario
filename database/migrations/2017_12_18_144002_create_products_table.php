@@ -15,7 +15,7 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
             $table->string('producto')->nullable();
-            $table->string('cod_barra')->nullable();
+            $table->string('cod_barra')->nullable()->unique();
             $table->double('pre_compra')->nullable();
             $table->double('pre_venta')->nullable();
             $table->integer('cantidad')->nullable();
@@ -29,9 +29,11 @@ class CreateProductsTable extends Migration
             $table->integer('id_category')->unsigned()->nullable();
             $table->integer('id_subcategory')->unsigned()->nullable();
             $table->integer('id_proveedor')->unsigned()->nullable();
+            $table->integer('id_marca')->unsigned()->nullable();
             $table->foreign('id_category')->references('id')->on('categories');
             $table->foreign('id_subcategory')->references('id')->on('subcategories');
             $table->foreign('id_proveedor')->references('id')->on('proveedors');
+            $table->foreign('id_marca')->references('id')->on('marcas');
             $table->timestamps();
         });
     }

@@ -9,10 +9,13 @@ use App\Product;
 use App\Category;
 use App\Subcategory;
 use App\Proveedor;
+use App\Marca;
 use Illuminate\Http\Request;
 use Image;
 use Illuminate\Support\Facades\Input;
 use Session;
+use DB;
+use Excel;
 
 class ProductController extends Controller
 {
@@ -63,7 +66,8 @@ class ProductController extends Controller
     {
         $category = Category::orderBy('id', 'ASC')->where('activo', 1)->pluck('category', 'id');
         $subcategory = Subcategory::orderBy('id', 'ASC')->where('active', 1)->pluck('subcategory', 'id');
-        return view('admin.product.create',compact('category','subcategory'));
+        $marca = Marca::orderBy('id', 'ASC')->where('activo', 1)->pluck('marca', 'id');
+        return view('admin.product.create',compact('category','subcategory','marca'));
     }
 
     /**
@@ -75,53 +79,53 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-         $rules = [
-            'producto' => 'required|max:75',
-            'cod_barra'=>'unique:products|max:99999999999999999999',
-            'pre_compra'=>'numeric',
-            'pre_venta'=>'numeric',
-            'cantidad'=>'numeric',
-            'imagen' => 'mimes:jpg,jpeg,gif,png',
-        ];
+     $rules = [
+        'producto' => 'required|max:75',
+        'cod_barra'=>'unique:products|max:99999999999999999999',
+        'pre_compra'=>'numeric',
+        'pre_venta'=>'numeric',
+        'cantidad'=>'numeric',
+        'imagen' => 'mimes:jpg,jpeg,gif,png',
+    ];
 
-        $messages = [
-            'pre_compra.numeric'=>'Caractér invalido',
-            'pre_venta.numeric'=>'Caractér invalido',
-            'cod_barra.unique'=>'Este codigo de barra ya esta en uso.',
-            'cantidad.numeric'=>'Cantidad incorrecta',
-            'cantidad.max'=>'Cantidad fuera de rango permitido'
-        ];
+    $messages = [
+        'pre_compra.numeric'=>'Caractér invalido',
+        'pre_venta.numeric'=>'Caractér invalido',
+        'cod_barra.unique'=>'Este codigo de barra ya esta en uso.',
+        'cantidad.numeric'=>'Cantidad incorrecta',
+        'cantidad.max'=>'Cantidad fuera de rango permitido'
+    ];
 
-         $this->validate($request, $rules, $messages);
+    $this->validate($request, $rules, $messages);
 
-        try {
+    try {
 
 
 
-            $requestData = $request->all();
+        $requestData = $request->all();
 
-            if ($request->hasFile('imagen')) {
-                $file = Input::file('imagen');
-                $uploadPath = public_path('uploads/product/');
-                $extension = $file->getClientOriginalName();
-                $image  = Image::make($file->getRealPath());
-                $image->resize(300, 300);
-                $extension = rand(11111, 99999) . '.' . $extension;
-                $image->save($uploadPath.$extension);
-                $requestData['imagen'] = 'uploads/product/'.$extension;
-                $requestData['name_img'] = $extension;
-            }
-
-            Product::create($requestData);
-            Session::flash('flash_message', 'Guardado correctamente');            
-
-        } catch (\Exception $e) {
-            Session::flash('warning', 'Error al registrar producto!!!');            
-            
+        if ($request->hasFile('imagen')) {
+            $file = Input::file('imagen');
+            $uploadPath = public_path('uploads/product/');
+            $extension = $file->getClientOriginalName();
+            $image  = Image::make($file->getRealPath());
+            $image->resize(300, 300);
+            $extension = rand(11111, 99999) . '.' . $extension;
+            $image->save($uploadPath.$extension);
+            $requestData['imagen'] = 'uploads/product/'.$extension;
+            $requestData['name_img'] = $extension;
         }
 
-        return redirect('admin/product');
+        Product::create($requestData);
+        Session::flash('flash_message', 'Guardado correctamente');            
+
+    } catch (\Exception $e) {
+        Session::flash('warning', 'Error al registrar producto!!!');            
+
     }
+
+    return redirect('admin/product');
+}
 
     /**
      * Display the specified resource.
@@ -150,7 +154,94 @@ class ProductController extends Controller
 
         $category = Category::orderBy('id', 'ASC')->where('activo', 1)->pluck('category', 'id');
         $subcategory = Subcategory::orderBy('id', 'ASC')->where('active', 1)->pluck('subcategory', 'id');
-        return view('admin.product.edit', compact('product','category','subcategory'));
+        $marca = Marca::orderBy('id', 'ASC')->where('activo', 1)->pluck('marca', 'id');
+        return view('admin.product.edit', compact('product','category','subcategory','marca'));
+    }
+
+    public function downloadExcel($type){
+        $data = Product::get()->toArray();
+        return Excel::create('exportardatos', function($excel) use ($data) {
+            $excel->sheet('mySheet', function($sheet) use ($data)
+            {
+                $sheet->fromArray($data);
+            });
+        })->download($type);
+    }
+
+    public function importExcelProducts(Request $request){
+        try {
+            if(Input::hasFile('file')){
+                $path = Input::file('file')->getRealPath();
+                $data = Excel::load($path, function($reader) {
+                })->get();
+                if(!empty($data) && $data->count()){
+                    foreach ($data as $key => $value) {
+                        $insert[] = [
+                            "producto" => $value->producto, 
+                            'cod_barra' => $value->cod_barra,
+                            'pre_compra' => $value->pre_compra,
+                            'pre_venta' => $value->pre_venta,
+                            'cantidad' => $value->cantidad,
+                            "imagen" => $value->imagen,
+                            "name_img" => $value->name_img,
+                            'nuevo' => $value->nuevo,
+                            'promo' => $value->promo,
+                            'catalogo' => $value->catalogo,
+                            'activo' => $value->activo,
+                            "propaganda" => $value->propaganda,
+                            'id_category' => $value->id_category,
+                            'id_subcategory' => $value->id_subcategory,
+                            'id_proveedor' => $value->id_proveedor,
+                            'id_marca' => $value->id_marca
+                        ];
+                    }
+                    if(!empty($insert)){
+                        //DB::table('products')->delete();
+                        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+                        DB::table('products')->truncate();
+                        DB::table('products')->insert($insert);
+                    }
+                }
+            }
+            Session::flash('flash_message', 'Importación correctamente');            
+        } catch (\Exception $e) {
+            Session::flash('warning', 'Error al procesar archivo!!!');                 
+        }
+        return redirect('admin/product');
+    }
+
+    public function importProducts(Request $request)
+    {
+        try {
+            \Excel::load($request->excel, function($reader) {
+                $excel = $reader->get();
+        // iteracción
+                $reader->each(function($row) { 
+                    $Product = new Product;
+                    $Product->producto = $row->producto;
+                    $Product->cod_barra = $row->cod_barra;
+                    $Product->pre_compra = $row->pre_compra;
+                    $Product->pre_venta = $row->pre_venta;
+                    $Product->cantidad = $row->cantidad;
+                    $Product->imagen = $row->imagen;
+                    $Product->name_imagen = $row->name_imagen;
+                    $Product->nuevo = $row->nuevo;
+                    $Product->promo = $row->promo;
+                    $Product->catalogo = $row->catalogo;
+                    $Product->activo = $row->activo;
+                    $Product->propaganda = $row->propaganda;
+                    $Product->id_category = $row->id_category;
+                    $Product->id_subcategory = $row->id_subcategory;
+                    $Product->id_proveedor = $row->id_proveedor;
+                    $Product->id_marca = $row->id_marca;
+                    $Product->save();
+                });
+            });    
+            Session::flash('flash_message', 'Importación correctamente');            
+        } catch (\Exception $e) {
+            Session::flash('warning', 'Error al procesar archivo!!!');         
+        }
+        return redirect('admin/product');
     }
 
     /**
@@ -179,7 +270,7 @@ class ProductController extends Controller
             'cantidad.max'=>'Cantidad fuera de rango permitido'
         ];
 
-         $this->validate($request, $rules, $messages);
+        $this->validate($request, $rules, $messages);
 
         try {
 

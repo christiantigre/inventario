@@ -24,5 +24,9 @@ class Provincias extends Model
     {
         return $this->hasMany('App\Almacen', 'id');
     }
+    
+    public function proveedor(){
+        return $this->hasMany(Proveedor::class);
+    } 
 
 }

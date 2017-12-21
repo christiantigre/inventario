@@ -4,8 +4,7 @@
 @include('errors.messages')
 
 <div class="row">
-
-    <section class="content-header">
+<section class="content-header">
       <h1>
         Registro de productos
         <small>Ingreso</small>

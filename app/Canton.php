@@ -25,4 +25,8 @@ class Canton extends Model
         ->get();
     }
 
+    public function proveedor(){
+        return $this->hasMany(Proveedor::class);
+    } 
+
 }

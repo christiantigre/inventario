@@ -185,7 +185,8 @@ return [
         //Zizaco
         Zizaco\Entrust\EntrustServiceProvider::class,  
         //Entrust gui
-        Acoustep\EntrustGui\EntrustGuiServiceProvider::class,      
+        Acoustep\EntrustGui\EntrustGuiServiceProvider::class,  
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
 
@@ -238,6 +239,7 @@ return [
         'HTML' => Collective\Html\HtmlFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

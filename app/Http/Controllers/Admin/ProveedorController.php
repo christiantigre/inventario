@@ -10,6 +10,11 @@ use App\Pais;
 use App\Provincias;
 use App\Canton;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+use DB;
+use Excel;
+use Session;
+use Illuminate\Support\Facades\Validator;
 
 class ProveedorController extends Controller
 {
@@ -30,27 +35,27 @@ class ProveedorController extends Controller
 
         if (!empty($keyword)) {
             $proveedor = Proveedor::where('proveedor', 'LIKE', "%$keyword%")
-                ->orWhere('dir', 'LIKE', "%$keyword%")
-                ->orWhere('tlfn', 'LIKE', "%$keyword%")
-                ->orWhere('cel_movi', 'LIKE', "%$keyword%")
-                ->orWhere('cel_claro', 'LIKE', "%$keyword%")
-                ->orWhere('watsapp', 'LIKE', "%$keyword%")
-                ->orWhere('fax', 'LIKE', "%$keyword%")
-                ->orWhere('mail', 'LIKE', "%$keyword%")
-                ->orWhere('web', 'LIKE', "%$keyword%")
-                ->orWhere('ruc', 'LIKE', "%$keyword%")
-                ->orWhere('representante', 'LIKE', "%$keyword%")
-                ->orWhere('actividad', 'LIKE', "%$keyword%")
-                ->orWhere('logo', 'LIKE', "%$keyword%")
-                ->orWhere('id_pais', 'LIKE', "%$keyword%")
-                ->orWhere('id_provincia', 'LIKE', "%$keyword%")
-                ->orWhere('id_canton', 'LIKE', "%$keyword%")
-                ->orWhere('status', 'LIKE', "%$keyword%")
-                ->orWhere('empresa', 'LIKE', "%$keyword%")
-                ->orWhere('ubicacion', 'LIKE', "%$keyword%")
-                ->orWhere('latitud', 'LIKE', "%$keyword%")
-                ->orWhere('longitud', 'LIKE', "%$keyword%")
-                ->paginate($perPage);
+            ->orWhere('dir', 'LIKE', "%$keyword%")
+            ->orWhere('tlfn', 'LIKE', "%$keyword%")
+            ->orWhere('cel_movi', 'LIKE', "%$keyword%")
+            ->orWhere('cel_claro', 'LIKE', "%$keyword%")
+            ->orWhere('watsapp', 'LIKE', "%$keyword%")
+            ->orWhere('fax', 'LIKE', "%$keyword%")
+            ->orWhere('mail', 'LIKE', "%$keyword%")
+            ->orWhere('web', 'LIKE', "%$keyword%")
+            ->orWhere('ruc', 'LIKE', "%$keyword%")
+            ->orWhere('representante', 'LIKE', "%$keyword%")
+            ->orWhere('actividad', 'LIKE', "%$keyword%")
+            ->orWhere('logo', 'LIKE', "%$keyword%")
+            ->orWhere('id_pais', 'LIKE', "%$keyword%")
+            ->orWhere('id_provincia', 'LIKE', "%$keyword%")
+            ->orWhere('id_canton', 'LIKE', "%$keyword%")
+            ->orWhere('status', 'LIKE', "%$keyword%")
+            ->orWhere('empresa', 'LIKE', "%$keyword%")
+            ->orWhere('ubicacion', 'LIKE', "%$keyword%")
+            ->orWhere('latitud', 'LIKE', "%$keyword%")
+            ->orWhere('longitud', 'LIKE', "%$keyword%")
+            ->paginate($perPage);
         } else {
             $proveedor = Proveedor::paginate($perPage);
         }
@@ -81,24 +86,88 @@ class ProveedorController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-			'proveedor' => 'max:35',
-			'dir' => 'max:150',
-			'tlfn' => 'max:15',
-			'cel_movi' => 'max:15',
-			'cel_claro' => 'max:15',
-			'watsapp' => 'max:15',
-			'fax' => 'max:150',
-			'mail' => 'max:75',
-			'web' => 'max:150',
-			'ruc' => 'max:15',
-			'representante' => 'max:150',
-			'watsapp' => 'max:15'
-		]);
+         'proveedor' => 'max:35',
+         'dir' => 'max:150',
+         'tlfn' => 'max:15',
+         'cel_movi' => 'max:15|regex:/(01)[0-9]{9}/',
+         'cel_claro' => 'max:15|regex:/(01)[0-9]{9}/',
+         'watsapp' => 'max:15|regex:/(01)[0-9]{9}/',
+         'fax' => 'max:150',
+         'mail' => 'max:75',
+         'web' => 'max:150',
+         'ruc' => 'max:15',
+         'representante' => 'max:150',
+         'watsapp' => 'max:15'
+     ]);
         $requestData = $request->all();
         
         Proveedor::create($requestData);
 
         return redirect('admin/proveedor')->with('flash_message', 'Proveedor added!');
+    }
+
+    public function downloadExcel($type){
+        $data = Proveedor::get()->toArray();
+        return Excel::create('Proveedores', function($excel) use ($data) {
+            $excel->sheet('mySheet', function($sheet) use ($data)
+            {
+                $sheet->fromArray($data);
+            });
+        })->download($type);
+    }
+
+    public function importExcelProveedor(Request $request){
+        $excel_file = $request->file('file');
+
+        $validator = Validator::make($request->all(), [
+         'file' => 'required'
+     ]);
+        try {
+            if(Input::hasFile('file')){
+                $path = Input::file('file')->getRealPath();
+                $data = Excel::load($path, function($reader) {
+                })->get();
+                if(!empty($data) && $data->count()){
+                    foreach ($data as $key => $value) {
+                        if($value == '')
+                        {
+                            $value = "n/n";
+                        }
+                        $insert[] = [
+                            "proveedor" => $value->proveedor, 
+                            'dir' => $value->dir,
+                            'tlfn' => $value->tlfn,
+                            'cel_movi' => $value->cel_movi,
+                            'cel_claro' => $value->cel_claro,
+                            "watsapp" => $value->watsapp,
+                            "fax" => $value->fax,
+                            'mail' => $value->mail, 
+                            'web' => $value->web,
+                            'ruc' => $value->ruc,
+                            'representante' => $value->representante,
+                            "actividad" => $value->actividad,
+                            'status' => $value->status,
+                            'empresa' => $value->empresa,
+                            'ubicacion' => $value->ubicacion,
+                            'latitud' => $value->latitud,
+                            'longitud' => $value->longitud,
+                            'logo' => $value->logo,
+                            'id_pais' => $value->id_pais,
+                            'id_provincia' => $value->id_provincia,
+                            'id_canton' => $value->id_canton
+                        ];
+                    }
+                    if(!empty($insert)){
+
+                        DB::table('proveedors')->insert($insert);
+                    }
+                }
+            }
+            Session::flash('flash_message', 'Importación correctamente');            
+        } catch (\Exception $e) {
+            Session::flash('warning', 'Error al procesar archivo, reviselo y intentelo nuevamente !!!');                 
+        }
+        return redirect('admin/proveedor');
     }
 
     /**
@@ -113,6 +182,28 @@ class ProveedorController extends Controller
         $proveedor = Proveedor::findOrFail($id);
 
         return view('admin.proveedor.show', compact('proveedor'));
+    }
+
+
+    public function buscarrucproveedor(Request $request){
+        if ($request->ajax()) {
+            $proveedor = Proveedor::orderBy('id','DESC')->where('ruc',$request->id)->first();
+            return response()->json($proveedor);
+        }
+    }
+
+    public function buscarempresaproveedor(Request $request){
+        if ($request->ajax()) {
+            $proveedor = Proveedor::orderBy('id','DESC')->where('proveedor',$request->id)->first();
+            return response()->json($proveedor);
+        }
+    }
+
+    public function buscarmailproveedor(Request $request){
+        if ($request->ajax()) {
+            $proveedor = Proveedor::orderBy('id','DESC')->where('mail',$request->id)->first();
+            return response()->json($proveedor);
+        }
     }
 
     /**
@@ -142,19 +233,19 @@ class ProveedorController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-			'proveedor' => 'max:35',
-			'dir' => 'max:150',
-			'tlfn' => 'max:15',
-			'cel_movi' => 'max:15',
-			'cel_claro' => 'max:15',
-			'watsapp' => 'max:15',
-			'fax' => 'max:150',
-			'mail' => 'max:75',
-			'web' => 'max:150',
-			'ruc' => 'max:15',
-			'representante' => 'max:150',
-			'watsapp' => 'max:15'
-		]);
+         'proveedor' => 'max:35',
+         'dir' => 'max:150',
+         'tlfn' => 'max:15',
+         'cel_movi' => 'max:15',
+         'cel_claro' => 'max:15',
+         'watsapp' => 'max:15',
+         'fax' => 'max:150',
+         'mail' => 'max:75',
+         'web' => 'max:150',
+         'ruc' => 'max:15',
+         'representante' => 'max:150',
+         'watsapp' => 'max:15'
+     ]);
         $requestData = $request->all();
         
         $proveedor = Proveedor::findOrFail($id);

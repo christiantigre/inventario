@@ -16,12 +16,6 @@
         <input class="form-control" name="img" type="file" id="img" value="{{ $marca->img or ''}}" >
         {!! $errors->first('img', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('name_img') ? 'has-error' : ''}}">
-    <label for="name_img" class="col-md-4 control-label">{{ 'Name Img' }}</label>
-    <div class="col-md-6">
-        <input class="form-control" name="name_img" type="text" id="name_img" value="{{ $marca->name_img or ''}}" >
-        {!! $errors->first('name_img', '<p class="help-block">:message</p>') !!}
-    </div>
 </div><div class="form-group {{ $errors->has('activo') ? 'has-error' : ''}}">
     <label for="activo" class="col-md-4 control-label">{{ 'Estado' }}</label>
     <div class="col-md-6">
@@ -36,6 +30,6 @@
 
 <div class="form-group">
     <div class="col-md-offset-4 col-md-4">
-        <input class="btn btn-primary" type="submit" value="{{ $submitButtonText or 'Create' }}">
+        <input class="btn btn-primary" type="submit" value="{{ $submitButtonText or 'Crear' }}">
     </div>
 </div>

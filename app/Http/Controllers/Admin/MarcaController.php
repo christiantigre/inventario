@@ -7,6 +7,9 @@ use App\Http\Controllers\Controller;
 
 use App\Marca;
 use Illuminate\Http\Request;
+use Image;
+use Illuminate\Support\Facades\Input;
+use Session;
 
 class MarcaController extends Controller
 {
@@ -27,11 +30,11 @@ class MarcaController extends Controller
 
         if (!empty($keyword)) {
             $marca = Marca::where('marca', 'LIKE', "%$keyword%")
-                ->orWhere('detall', 'LIKE', "%$keyword%")
-                ->orWhere('img', 'LIKE', "%$keyword%")
-                ->orWhere('name_img', 'LIKE', "%$keyword%")
-                ->orWhere('activo', 'LIKE', "%$keyword%")
-                ->paginate($perPage);
+            ->orWhere('detall', 'LIKE', "%$keyword%")
+            ->orWhere('img', 'LIKE', "%$keyword%")
+            ->orWhere('name_img', 'LIKE', "%$keyword%")
+            ->orWhere('activo', 'LIKE', "%$keyword%")
+            ->paginate($perPage);
         } else {
             $marca = Marca::paginate($perPage);
         }
@@ -58,20 +61,20 @@ class MarcaController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $requestData = $request->all();
         
 
         if ($request->hasFile('img')) {
-            foreach($request['img'] as $file){
-                $uploadPath = public_path('/uploads/img');
-
-                $extension = $file->getClientOriginalExtension();
-                $fileName = rand(11111, 99999) . '.' . $extension;
-
-                $file->move($uploadPath, $fileName);
-                $requestData['img'] = $fileName;
-            }
+            $file = Input::file('img');
+            $uploadPath = public_path('uploads/marca/');
+            $extension = $file->getClientOriginalName();
+            $image  = Image::make($file->getRealPath());
+            $image->resize(300, 300);
+            $extension = rand(11111, 99999) . '.' . $extension;
+            $image->save($uploadPath.$extension);
+            $requestData['img'] = 'uploads/marca/'.$extension;
+            $requestData['name_img'] = $extension;
         }
 
         Marca::create($requestData);
@@ -117,19 +120,29 @@ class MarcaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $requestData = $request->all();
         
 
         if ($request->hasFile('img')) {
-            foreach($request['img'] as $file){
-                $uploadPath = public_path('/uploads/img');
+            $file = Input::file('img');
+            $uploadPath = public_path('uploads/marca/');
+            $extension = $file->getClientOriginalName();
+            $image  = Image::make($file->getRealPath());
+            $image->resize(300, 300);
+            $extension = rand(11111, 99999) . '.' . $extension;
+            $image->save($uploadPath.$extension);
+            $requestData['img'] = 'uploads/marca/'.$extension;
+            $requestData['name_img'] = $extension;
 
-                $extension = $file->getClientOriginalExtension();
-                $fileName = rand(11111, 99999) . '.' . $extension;
-
-                $file->move($uploadPath, $fileName);
-                $requestData['img'] = $fileName;
+            $item_delete = Marca::findOrFail($id);   
+            $move = $item_delete['name_img'];
+            $old = public_path('uploads/marca/').$move;
+                       //verificamos si la imagen exist
+            if(!empty($move)){
+                if(\File::exists($old)){
+                    unlink($old);
+                }
             }
         }
 
@@ -148,8 +161,21 @@ class MarcaController extends Controller
      */
     public function destroy($id)
     {
-        Marca::destroy($id);
+        try {           
+            $item_delete = Marca::findOrFail($id);   
+            $move = $item_delete['name_img'];
+            $old = public_path('uploads/marca/').$move;
+                       //verificamos si la imagen exist
+            if(!empty($move)){
+                if(\File::exists($old)){
+                    unlink($old);
+                }
+            }
+            Marca::destroy($id);
 
+        } catch (Exception $e) {
+
+        }
         return redirect('admin/marca')->with('flash_message', 'Marca deleted!');
     }
 

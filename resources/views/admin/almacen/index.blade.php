@@ -1,5 +1,4 @@
 @extends('adminlte::page')
-
 @section('content')
 @include('errors.messages')
 

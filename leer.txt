@@ -60,6 +60,7 @@ php artisan crud:view Parroquia --fields="parrroquia#string; cod_postal#string; 
 
 php artisan crud:controller Admin/ParroquiaController --crud-name=Parroquia --model-name=Parroquia --view-path=admin --route-group=admin
 
+php artisan crud:generate Cliente --fields_from_file="/home/pcsolution/Dropbox/inventario/public/fields/fieldClient.json" --view-path=admin --controller-namespace=Admin --route-group=admin
 
 base de datos
 - Categorias

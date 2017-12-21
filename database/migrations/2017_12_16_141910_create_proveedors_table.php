@@ -21,9 +21,9 @@ class CreateProveedorsTable extends Migration
             $table->string('cel_claro')->nullable();
             $table->string('watsapp')->nullable();
             $table->string('fax')->nullable();
-            $table->string('mail')->nullable();
+            $table->string('mail')->nullable()->unique();
             $table->string('web')->nullable();
-            $table->string('ruc')->nullable();
+            $table->string('ruc')->nullable()->unique();
             $table->string('representante')->nullable();
             $table->text('actividad')->nullable();
             $table->boolean('status')->default(1);

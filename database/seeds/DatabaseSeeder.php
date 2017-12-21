@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ParroquiasTableSeeder::class);
         $this->call(CategoryTableSeeder::class);
         $this->call(SucategoryTableSeeder::class);
+        $this->call(MarcaTableSeeder::class);
     }
 }

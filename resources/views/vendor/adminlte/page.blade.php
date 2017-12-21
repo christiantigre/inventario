@@ -123,6 +123,9 @@
             </div>
             <!-- /.container -->
             @endif
+
+            @include('layouts.modal.proveedor')
+
         </div>
         <!-- /.content-wrapper -->
 

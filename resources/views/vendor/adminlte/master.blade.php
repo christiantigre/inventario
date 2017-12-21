@@ -75,6 +75,7 @@ $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
 @endif
 
     {!! Html::script('js/dropdown.js') !!}
+    {!! Html::script('js/scriptmodalsearchs.js') !!}
 
 @yield('adminlte_js')
 

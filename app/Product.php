@@ -27,5 +27,19 @@ class Product extends Model
      */
     protected $fillable = ['producto', 'cod_barra', 'pre_compra', 'pre_venta', 'cantidad', 'imagen', 'name_img', 'nuevo', 'promo', 'catalogo', 'activo', 'propaganda', 'id_category', 'id_subcategory', 'id_proveedor'];
 
-    
+    public function Category()
+    {
+        return $this->belongsTo('App\Category','id_category');
+    }
+
+    public function Subcategory()
+    {
+        return $this->belongsTo('App\Subcategory','id_subcategory');
+    }
+
+    public function Proveedor()
+    {
+        return $this->belongsTo('App\Proveedor','id_proveedor');
+    }
+
 }

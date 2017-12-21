@@ -45,6 +45,12 @@
             </select>
             {!! $errors->first('nuevo', '<p class="help-block">:message</p>') !!}
         </div>
+    </div><div class="form-group {{ $errors->has('id_marca') ? 'has-error' : ''}}">
+        <label for="id_marca" class="col-md-4 col-lg-2 control-label">{{ 'Marca' }}</label>
+        <div class="col-md-6 col-lg-8">
+            {!! Form::select('id_marca', $marca, null, ['class' => 'form-control','id'=>'id_category']) !!}
+            {!! $errors->first('id_marca', '<p class="help-block">:message</p>') !!}
+        </div>
     </div>
 </div>
 <div class="col-md-6">
@@ -100,7 +106,24 @@
     </div><div class="form-group {{ $errors->has('id_proveedor') ? 'has-error' : ''}}">
         <label for="id_proveedor" class="col-md-4 col-lg-2 control-label">{{ 'Proveedor' }}</label>
         <div class="col-md-6 col-lg-8">
-            <input class="form-control" name="id_proveedor" type="number" id="id_proveedor" value="{{ $product->id_proveedor or ''}}" >
+
+        <button class="btn btn-default" id="buscarcliente" type="button" data-toggle="modal" data-target="#modal-proveedor"><i class="fa fa-search" aria-hidden="true"></i> Buscar Proveedor</button>
+
+        <button class="btn btn-default" id="resetproveedor" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i> Reset Proveedor</button>
+        <br/>
+        <br/>
+        {!! $errors->first('marca_id', '<p class="help-block">:message</p>') !!}
+
+        {!! Form::hidden('id_proveedor', null, ['id'=>'id_proveedor','class' => 'form-control', 'required' => 'required','placeholder'=>'Proveedor Id']) !!}
+        {!! Form::text('nom_pro', null, ['id'=>'nom_pro','class' => 'form-control', 'required' => 'required','placeholder'=>'Nombre proveedor','readonly'=>'readonly']) !!}
+
+        {!! Form::text('mail', null, ['id'=>'mail','class' => 'form-control', 'required' => 'required','placeholder'=>'Proveedor Mail','readonly'=>'readonly']) !!}
+
+        {!! Form::text('empresa', null, ['id'=>'empresa','class' => 'form-control', 'required' => 'required','placeholder'=>'Empresa','readonly'=>'readonly']) !!}
+
+        {!! Form::text('contactos', null, ['id'=>'contactos','class' => 'form-control', 'required' => 'required','placeholder'=>'Cantactos movil','readonly'=>'readonly']) !!}
+
+            <!--<input class="form-control" name="id_proveedor" type="number" id="id_proveedor" value="{{ $product->id_proveedor or ''}}" >-->
             {!! $errors->first('id_proveedor', '<p class="help-block">:message</p>') !!}
         </div>
     </div>
@@ -111,3 +134,120 @@
         </div>
     </div>
 </div>
+
+
+<style>
+  .example-modal .modal {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    right: auto;
+    left: auto;
+    display: block;
+    z-index: 1;
+  }
+
+  .example-modal .modal {
+    background: transparent !important;
+  }
+</style>
+
+<div class="modal fade" id="modal-proveedor">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      {!! Form::open(['id'=>'myForm'])  !!}
+      {{ csrf_field() }}
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+          <?Php
+          if (empty($tittle_modal)) {
+            ?>
+            <h4 class="modal-title">Default Modal</h4>
+            <?php
+          }else{
+            ?>
+            <h4 class="modal-title"><?Php echo $tittle_modal ?></h4>
+            <?php
+          }
+          ?>
+
+        </div>
+        <div class="modal-body">
+          <div class="col-lg-12">
+            <div class="input-group">
+              <input type="text" class="form-control" id="rucprv" placeholder="Ingrese numero de ruc">
+              <span class="input-group-btn">
+                <button class="btn btn-default" id="proveedorrucchbuton" type="button">BUSCAR</button>
+              </span>
+            </div><!-- /input-group -->
+
+
+            <!--nom cliente-->    
+            <div class="input-group">
+              <input type="text" class="form-control" id="nompro" placeholder="Ingrese nombre empresa">
+              <span class="input-group-btn">
+                <button class="btn btn-default" id="proveedorempchbuton" type="button">BUSCAR</button>
+              </span>
+            </div><!-- /input-group -->
+
+            <!-- /.form-group -->
+            <!--Mail cliente-->     
+            <div class="input-group">
+              <input type="text" class="form-control" id="mailpro" placeholder="Ingrese correo proveedor">
+              <span class="input-group-btn">
+                <button class="btn btn-default" id="proveedormailchbuton" type="button">BUSCAR</button>
+              </span>
+            </div><!-- /input-group -->
+          </div><!-- /.col-lg-6 -->
+          <!-- /.form-group -->
+          <!-- /.row -->
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Datos Proveedor</h3>
+
+                  <div class="box-tools">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                      <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+
+                      <div class="input-group-btn">
+                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                  <table class="table table-hover" id="tabla_proveedor">
+                    <tr>
+                      <th>Proveedor</th>
+                      <th>Contactos</th>
+                      <th>Mail</th>
+                      <th>Empresa</th>
+                      <th></th>
+                    </tr>
+                    <tbody>
+                                            
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.box-body -->
+              </div>
+              <!-- /.box -->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+          <!--{!! Form::submit(isset($submitButtonText) ? $submitButtonText : 'Create', ['class' => 'btn btn-primary']) !!}-->
+        </div>
+        {!! Form::close() !!}
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+

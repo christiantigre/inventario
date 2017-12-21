@@ -201,11 +201,17 @@ return [
                         ],
                     ],
                 ],
-                [
-                    'text' => 'Proveedor',
-                    'url'  => 'admin/proveedor',
-                ],
             ],
+        ],
+        [
+            'text' => 'Proveedor',
+            'url'  => 'admin/proveedor',
+            'icon' => 'group',
+        ],
+        [
+            'text' => 'Cliente',
+            'url'  => 'admin/cliente',
+            'icon' => 'user',
         ],
     ],
 
