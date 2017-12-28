@@ -10,7 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function () {
   return view('welcome');
 });
@@ -22,14 +21,14 @@ Route::get('/test', 'HomeController@index')->name('test');
 
 
 Route::group(['prefix' => 'admin'], function () {
-Route::post('/product/importexcelProducts', 'Admin\\ProductController@importExcelProducts');
-Route::get('/product/downloadExcel/{type}', 'Admin\\ProductController@downloadExcel');
-Route::post('/proveedor/importexcelProveedor', 'Admin\\ProveedorController@importExcelProveedor');
-Route::get('/proveedor/downloadExcel/{type}', 'Admin\\ProveedorController@downloadExcel');
-Route::get('almacen/getcanton/{id}', 'ComponentController@getCanton');
-Route::get('almacen/{var}/getcanton/{id}', 'ComponentController@getCanton');
-Route::get('proveedor/getcanton/{id}', 'ComponentController@getCanton');
-Route::get('proveedor/{var}/getcanton/{id}', 'ComponentController@getCanton');
+  Route::post('/product/importexcelProducts', 'Admin\\ProductController@importExcelProducts');
+  Route::get('/product/downloadExcel/{type}', 'Admin\\ProductController@downloadExcel');
+  Route::post('/proveedor/importexcelProveedor', 'Admin\\ProveedorController@importExcelProveedor');
+  Route::get('/proveedor/downloadExcel/{type}', 'Admin\\ProveedorController@downloadExcel');
+  Route::get('almacen/getcanton/{id}', 'ComponentController@getCanton');
+  Route::get('almacen/{var}/getcanton/{id}', 'ComponentController@getCanton');
+  Route::get('proveedor/getcanton/{id}', 'ComponentController@getCanton');
+  Route::get('proveedor/{var}/getcanton/{id}', 'ComponentController@getCanton');
   Route::get('/administracion', 'Admin\AdminController@index')->name('home');
   Route::get('/login', 'AdminAuth\LoginController@showLoginForm')->name('login');
   Route::post('/login', 'AdminAuth\LoginController@login');
@@ -63,9 +62,11 @@ Route::get('proveedor/{var}/getcanton/{id}', 'ComponentController@getCanton');
   Route::get('products/buscaproveedorempresa','Admin\\ProveedorController@buscarempresaproveedor');
   Route::get('products/buscaproveedormail','Admin\\ProveedorController@buscarmailproveedor');
   Route::resource('/cliente', 'Admin\\ClienteController');
+  Route::resource('/iva', 'Admin\\IvaController');
+  Route::resource('/venta', 'Admin\\VentaController');
+  Route::get('/extraerdatoscli/','Admin\\VentaController@extraerdatoscliente');
+  Route::post('/getClienteId/', 'ComponentController@getcliente');
 });
-
-
 
 
 Route::group(['prefix' => 'person'], function () {
@@ -81,4 +82,3 @@ Route::group(['prefix' => 'person'], function () {
   Route::get('/password/reset', 'PersonAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
   Route::get('/password/reset/{token}', 'PersonAuth\ResetPasswordController@showResetForm');
 });
-

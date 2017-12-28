@@ -2,8 +2,8 @@
 
 @section('content')
 @include('errors.messages')
-        <div class="row">
-            <section class="content-header">
+<div class="row">
+    <section class="content-header">
       <h1>
         Registro de proveedores
         <small>Ingreso</small>
@@ -15,28 +15,28 @@
     </ol>
 </section>
 <section class="content">
-     <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
-        <!-- SELECT2 EXAMPLE -->
-        <div class="box box-default">
-            <div class="panel-heading">
-                <a href="{{ url('/admin/proveedor') }}" title="Atras"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Atras</button></a>
-                <br />
-                <br />
-                @if ($errors->any())
-                <ul class="alert alert-danger">
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                @endif
+   <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
+    <!-- SELECT2 EXAMPLE -->
+    <div class="box box-default">
+        <div class="panel-heading">
+            <a href="{{ url('/admin/proveedor') }}" title="Atras"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Atras</button></a>
+            <br />
+            <br />
+            @if ($errors->any())
+            <ul class="alert alert-danger">
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            @endif
 
-            </div>
-            <div class="box-header with-border">
-                <h3 class="box-title">Información del Producto</h3>
+        </div>
+        <div class="box-header with-border">
+            <h3 class="box-title">Información del Producto</h3>
 
 
 
-              <div class="box-tools pull-right">
+            <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                 <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
             </div>
@@ -57,6 +57,6 @@
   </div>
 </div>
 <!-- /.box -->
-        </section>
-        </div>
+</section>
+</div>
 @endsection

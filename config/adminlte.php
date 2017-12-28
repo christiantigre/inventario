@@ -128,9 +128,9 @@ return [
             'icon' => 'user',
         ],
         [
-            'text' => 'Change Password',
-            'url'  => 'admin/settings',
-            'icon' => 'lock',
+            'text' => 'Ventas',
+            'url'  => 'admin/venta',
+            'icon' => 'shopping-basket',
         ],        
         [
             'text' => 'Productos',
@@ -138,7 +138,17 @@ return [
             'icon' => 'cloud-upload',
         ],
         [
-            'text'    => 'Multilevel',
+            'text' => 'Proveedor',
+            'url'  => 'admin/proveedor',
+            'icon' => 'group',
+        ],
+        [
+            'text' => 'Cliente',
+            'url'  => 'admin/cliente',
+            'icon' => 'user',
+        ],
+        [
+            'text'    => 'Sistema',
             'icon'    => 'share',
             'submenu' => [
                 [
@@ -166,7 +176,7 @@ return [
                                     'url'  => 'admin/provincia',
                                 ],
                                 [
-                                    'text' => 'Canton',
+                                    'text' => 'Cantón',
                                     'url'  => 'admin/canton',
                                 ],
                                 [
@@ -197,21 +207,15 @@ return [
                                     'text' => 'Marca',
                                     'url'  => 'admin/marca',
                                 ],
+                                [
+                                    'text' => 'Iva',
+                                    'url'  => 'admin/iva',
+                                ],
                             ],
                         ],
                     ],
                 ],
             ],
-        ],
-        [
-            'text' => 'Proveedor',
-            'url'  => 'admin/proveedor',
-            'icon' => 'group',
-        ],
-        [
-            'text' => 'Cliente',
-            'url'  => 'admin/cliente',
-            'icon' => 'user',
         ],
     ],
 

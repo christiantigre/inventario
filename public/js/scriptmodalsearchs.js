@@ -169,3 +169,107 @@ $(document).ready(function(){
 		resetproveedor();
 	});
 });
+
+$('.select_cli').click(function(){
+			reset_input();
+	var dataId = this.id;
+	var token = $("input[name=_token]").val();
+	var route = '/admin/extraerdatoscli/';
+	var parametros = {
+		"id" :dataId
+	}
+	$.ajax({
+		url:route,
+		headers:{'X-CSRF-TOKEN':token},
+		type:'get',
+		dataType: 'json',
+		data:parametros,
+		success:function(data)
+		{
+			//data.cel_movi
+			console.log(data.id);
+			console.log("copy data selected");
+			document.getElementById("cliente").value = data.nom_cli+' '+data.app_cli;
+			document.getElementById("ruc_cli").value = data.ruc_cli;
+			document.getElementById("ced_cli").value = data.ced_cli;
+			document.getElementById("cel_cli").value = data.tlf_cli+' '+data.wts_cli;
+			document.getElementById("dir_cli").value = data.dir_cli;
+			document.getElementById("mail_cli").value = data.mail_cli;
+			document.getElementById("id_cliente").value = data.id;
+			console.log("copy data succefull");
+		},
+		error:function(data)
+		{
+			console.log('Error '+data);
+		}  
+	});
+});
+
+$('.reset_cli').click(function(){
+	
+	console.log('loading ... reset');
+	document.getElementById("cliente").value = "";
+	document.getElementById("ruc_cli").value = "";
+	document.getElementById("ced_cli").value = "";
+	document.getElementById("cel_cli").value = "";
+	document.getElementById("dir_cli").value = "";
+	document.getElementById("mail_cli").value = "";
+	document.getElementById("id_cliente").value = "";
+	console.log('reset finally');
+});
+
+/*$('.cliente-final').click(function(){
+			console.log('loading ... cliente final');
+			document.getElementById("cliente").value = "CONSUMIDOR FINAL";
+			document.getElementById("ruc_cli").value = "00000000000000";
+			document.getElementById("cc_cli").value = "00000000000";
+			document.getElementById("cel_cli").value = "";
+			document.getElementById("dir_cli").value = "";
+			document.getElementById("mail_cli").value = "";
+			document.getElementById("id_cliente").value = "1";
+			console.log('cliente final finally');
+		});*/
+
+		function reset_input(){
+			console.log('reseting');
+			document.getElementById("cliente").value = "";
+			document.getElementById("ruc_cli").value = "";
+			document.getElementById("ced_cli").value = "";
+			document.getElementById("cel_cli").value = "";
+			document.getElementById("dir_cli").value = "";
+			document.getElementById("mail_cli").value = "";
+			document.getElementById("id_cliente").value = "";
+		}
+
+		$(".cliente-final").click(function(event){
+			event.preventDefault();
+			reset_input();
+			var dataId= "1";
+			var token = $("input[name=_token]").val();
+			var route = '/admin/getClienteId/';
+			var parametros = {
+				"id" :dataId
+			}
+			$.ajax({
+				url:route,
+				headers:{'X-CSRF-TOKEN':token},
+				type:'post',
+				dataType: 'json',
+				data:parametros,
+				success:function(data)
+				{
+					console.log('loading ... cliente final');
+					document.getElementById("cliente").value = data.nom_cli;
+					document.getElementById("ruc_cli").value = data.ruc_cli;
+					document.getElementById("ced_cli").value = data.ced_cli;
+					document.getElementById("cel_cli").value = data.tlf_cli;
+					document.getElementById("dir_cli").value = data.dir_cli;
+					document.getElementById("mail_cli").value = data.mail_cli;
+					document.getElementById("id_cliente").value = data.id;
+				},
+				error:function(data)
+				{
+					console.log('Error '+data);
+				}  
+			});
+		});

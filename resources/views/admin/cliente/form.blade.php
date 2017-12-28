@@ -1,3 +1,4 @@
+<div class="col-md-6">
 <div class="form-group {{ $errors->has('nom_cli') ? 'has-error' : ''}}">
     <label for="nom_cli" class="col-md-4 control-label">{{ 'Nombre' }}</label>
     <div class="col-md-6">
@@ -40,7 +41,10 @@
         <input class="form-control" name="tlf_cli" type="text" id="tlf_cli" value="{{ $cliente->tlf_cli or ''}}" >
         {!! $errors->first('tlf_cli', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('wts_cli') ? 'has-error' : ''}}">
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-group {{ $errors->has('wts_cli') ? 'has-error' : ''}}">
     <label for="wts_cli" class="col-md-4 control-label">{{ 'Watsapp' }}</label>
     <div class="col-md-6">
         <input class="form-control" name="wts_cli" type="text" id="wts_cli" value="{{ $cliente->wts_cli or ''}}" >
@@ -86,6 +90,7 @@
         <input class="form-control" name="id_canton" type="number" id="id_canton" value="{{ $cliente->id_canton or ''}}" >
         {!! $errors->first('id_canton', '<p class="help-block">:message</p>') !!}
     </div>
+</div>
 </div>
 
 <div class="form-group">
