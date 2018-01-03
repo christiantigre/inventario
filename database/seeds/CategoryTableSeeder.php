@@ -14,7 +14,7 @@ class CategoryTableSeeder extends Seeder
     {
         Category::create( [
             'id'=>1,
-            'category'=>'Electrónica',
+            'category'=>'n/n',
             'detall'=>'Electrónica',
             'activo'=>1
         ] );

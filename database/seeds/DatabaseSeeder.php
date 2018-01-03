@@ -22,5 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SucategoryTableSeeder::class);
         $this->call(MarcaTableSeeder::class);
         $this->call(ClientTableSeeder::class);
+        $this->call(ProductTableSeeder::class);
+        $this->call(IvaTableSeeder::class);
     }
 }

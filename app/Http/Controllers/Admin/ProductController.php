@@ -197,8 +197,8 @@ class ProductController extends Controller
                     }
                     if(!empty($insert)){
                         //DB::table('products')->delete();
-                        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-                        DB::table('products')->truncate();
+                        /*DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+                        DB::table('products')->truncate();*/
                         DB::table('products')->insert($insert);
                     }
                 }

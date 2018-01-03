@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Cliente;
+use App\Product;
 use App\Ventum;
+use App\ItemVenta;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -58,14 +60,16 @@ class VentaController extends Controller
      */
     public function create()
     {
+        ItemVenta::truncate();
         $cant_ventas = Ventum::count();
         $clientes = Cliente::all();
+        $products = Product::all();
         $cant_incr = $cant_ventas+1;
         $numbers     = $this->generate_numbers($cant_incr, 1, 8);
         $numero_venta = implode("", $numbers);
         $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
         $fecha_venta = $carbon->now()->format('Y-m-d H:i:s');
-        return view('admin.venta.create',compact('numero_venta','fecha_venta','clientes'));
+        return view('admin.venta.create',compact('numero_venta','fecha_venta','clientes','products','cant_incr'));
     }
 
     public function extraerdatoscliente(Request $request){

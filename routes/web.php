@@ -66,6 +66,11 @@ Route::group(['prefix' => 'admin'], function () {
   Route::resource('/venta', 'Admin\\VentaController');
   Route::get('/extraerdatoscli/','Admin\\VentaController@extraerdatoscliente');
   Route::post('/getClienteId/', 'ComponentController@getcliente');
+  Route::post('/savecli/', 'ComponentController@savecliente');
+  Route::post('/saveprod/', 'ComponentController@saveproducto');
+  Route::get('/listcartitems/', 'ComponentController@listallitems');
+  Route::post('/trashItem/','ComponentController@trashItem');
+  Route::post('/deleteItem/','ComponentController@deleteItem');
 });
 
 
@@ -81,4 +86,5 @@ Route::group(['prefix' => 'person'], function () {
   Route::post('/password/reset', 'PersonAuth\ResetPasswordController@reset')->name('password.email');
   Route::get('/password/reset', 'PersonAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
   Route::get('/password/reset/{token}', 'PersonAuth\ResetPasswordController@showResetForm');
+  Route::resource('/venta', 'Admin\\VentaController');
 });

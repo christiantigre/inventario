@@ -14,7 +14,7 @@ class SucategoryTableSeeder extends Seeder
     {
         Subcategory::create( [
 'id'=>1,
-'subcategory'=>'Camisetas',
+'subcategory'=>'n/n',
 'content'=>'Camisetas',
 'active'=>1,
 'category_id'=>7

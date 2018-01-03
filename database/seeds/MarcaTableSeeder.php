@@ -14,7 +14,7 @@ class MarcaTableSeeder extends Seeder
     {
     	Marca::create( [
     		'id'=>1,
-    		'marca'=>'Kingstone',
+    		'marca'=>'n/n',
     		'detall'=>NULL,
     		'img'=>'uploads/marca/41522.kingstone.png',
     		'name_img'=>'41522.kingstone.png',

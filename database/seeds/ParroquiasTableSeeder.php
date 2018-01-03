@@ -1937,16 +1937,12 @@ class ParroquiasTableSeeder extends Seeder
 
 
 
-/*    	Parroquia::create( [
+    	Parroquia::create( [
     		'id'=>222,
     		'parroquia'=>' LA MATRIZ   ',
     		'cod_parr'=>'50104',
     		'cod_postal'=>'50104',
-    		'latitud'=>NULL,
-    		'longitud'=>NULL,
-    		'canton_id'=>36,
-    		'created_at'=>NULL,
-    		'updated_at'=>NULL
+    		'canton_id'=>36
     	] );
 
 
@@ -1956,11 +1952,7 @@ class ParroquiasTableSeeder extends Seeder
     		'parroquia'=>' SAN BUENAVENTURA    ',
     		'cod_parr'=>'50105',
     		'cod_postal'=>'50105',
-    		'latitud'=>NULL,
-    		'longitud'=>NULL,
-    		'canton_id'=>36,
-    		'created_at'=>NULL,
-    		'updated_at'=>NULL
+    		'canton_id'=>36
     	] );
 
 
@@ -1970,16 +1962,12 @@ class ParroquiasTableSeeder extends Seeder
     		'parroquia'=>' LATACUNGA   ',
     		'cod_parr'=>'50150',
     		'cod_postal'=>'50150',
-    		'latitud'=>NULL,
-    		'longitud'=>NULL,
-    		'canton_id'=>36,
-    		'created_at'=>NULL,
-    		'updated_at'=>NULL
+    		'canton_id'=>36
     	] );
 
 
 
-    	Parroquia::create( [
+    	/*Parroquia::create( [
     		'id'=>225,
     		'parroquia'=>' ALAQUES (ALÁQUEZ)   ',
     		'cod_parr'=>'50151',
