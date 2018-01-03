@@ -69,6 +69,7 @@ class ComponentController extends Controller
 
         $iva = Iva::where('activo', 1)->first();
         $iva_valor=$iva->iva;
+        $iva_id=$iva->id;
         $iva_mostrar = ($iva_valor*1);
         $mult = $iva_valor+100;
         $iva_final = $mult/100;
@@ -80,7 +81,8 @@ class ComponentController extends Controller
             'total' =>  $total,
             'iva' =>  $valor_con_iva,
             'subtotal' =>  $subtotal,
-            'ivavalor' =>  $iva_mostrar
+            'ivavalor' =>  $iva_mostrar,
+            'idiva' =>  $iva_id
         ));
     }
 

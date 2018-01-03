@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Cliente;
+use App\Admin;
 use App\Product;
 use App\Ventum;
 use App\ItemVenta;
+use App\detallVenta;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -60,6 +62,18 @@ class VentaController extends Controller
      */
     public function create()
     {
+        try {
+            $mailAdmin = auth('admin')->user()->email;
+            $adminid = auth('admin')->user()->id;
+            $administrador = Admin::findOrFail($adminid);
+            $dataArray['mail'] = $mailAdmin;          
+            $dataArray['iduser'] = $adminid;          
+        } catch (\Exception $e) {            
+            $administrador = Admin::findOrFail(1);
+        }
+        $username = $administrador['name'];
+        $userid = $administrador['id'];
+        $useremail = $administrador['email'];
         ItemVenta::truncate();
         $cant_ventas = Ventum::count();
         $clientes = Cliente::all();
@@ -69,7 +83,7 @@ class VentaController extends Controller
         $numero_venta = implode("", $numbers);
         $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
         $fecha_venta = $carbon->now()->format('Y-m-d H:i:s');
-        return view('admin.venta.create',compact('numero_venta','fecha_venta','clientes','products','cant_incr'));
+        return view('admin.venta.create',compact('numero_venta','fecha_venta','clientes','products','cant_incr','username','userid','useremail'));
     }
 
     public function extraerdatoscliente(Request $request){
@@ -97,12 +111,76 @@ class VentaController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $requestData = $request->all();
-        
-        Ventum::create($requestData);
+        $producto = ItemVenta::get();
 
+        $dataVenta['num_venta'] = $request['num_factura'];
+        $carbon = new Carbon();
+        $date = $carbon->now();
+        $dataVenta['fecha'] = $date->format('Y-m-d');
+        $dataVenta['cliente'] = $request['cliente'];
+        $dataVenta['cel_cli'] = $request['cel_cli'];
+        $dataVenta['ruc_cli'] = $request['ruc_cli'];
+        $dataVenta['cc_cli'] = $request['ced_cli'];
+        $dataVenta['dir_cli'] = $request['dir_cli'];
+        $dataVenta['mail_cli'] = $request['mail_cli'];
+        $dataVenta['total'] = $request['total'];
+        $dataVenta['subtotal'] = $request['subtotal'];
+        $dataVenta['iva_cero'] = $request['iva_cero'];
+        $dataVenta['iva_calculado'] = $request['iva_calculado'];
+        $dataVenta['porcentaje_iva'] = $request['porcentaje_iva'];
+        $dataVenta['can_items'] = ItemVenta::count();
+        $dataVenta['vendedor'] = $request['vendedor'];
+        $dataVenta['id_cliente'] = $request['id_cliente'];
+        //$id_user = $request['id_user'];
+        $dataVenta['id_iva'] = $request['idiva'];
+        
+        /*dd($dataVenta); $requestData = $request->all();        
+        Ventum::create($requestData);*/
+        try {
+            //Guarda cabecera de la factura
+            $venta = Ventum::create($dataVenta);
+            //envia los valore del detalle de la factura para guardar el detalle desde la funcion saveItem
+            foreach ($producto as $product) {
+                $requestData_returned = $this->saveItem($product,$venta->id);
+                $requestData_returned->save();
+            }
+            //actualiza en inventario pasandole el parametro idventa a la función actualizaInventario para que realize la lectura de todos los productos que se encuentran en el detalle de la factura y actualize el inventario de todos los producto que estan en el detalle.
+            $this->actualizaInventario($venta->id);
+        } catch (Exception $e) {
+            
+        }
         return redirect('admin/venta')->with('flash_message', 'Ventum added!');
+    }
+
+    protected function saveItem($product, $order_id)
+    {
+        $requestData = new detallVenta;
+        $requestData->producto = $product->producto;
+        $requestData->codbarra = $product->codbarra;
+        $requestData->precio = $product->precio;
+        $requestData->cant = $product->cant;
+        $requestData->total = $product->total;
+        $requestData->id_venta = $order_id;
+        $requestData->id_producto = $product->id;
+        return $requestData;
+    }
+
+    public function actualizaInventario($order_id)
+    {
+        $the_pedido = ItemVenta::select('id_producto','cant')->get();
+        foreach ($the_pedido as $item) {
+            $obj= Product::find($item->id_producto);
+            if(!is_null($obj)){
+                $cant=$obj->cantidad;
+                $cantidad=$item->cant;
+                $new_cant=$cantidad-$cant;
+                if($new_cant<0){
+                    $new_cant=$cant-$cantidad;
+                }
+                $obj->cantidad=$new_cant;
+                $obj->update();
+            }
+        }
     }
 
     /**

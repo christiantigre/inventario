@@ -25,7 +25,7 @@ class Ventum extends Model
      *
      * @var array
      */
-    protected $fillable = ['num_venta','fecha', 'cliente', 'cel_cli', 'ruc_cli','cc_cli', 'dir_cli', 'mail_cli', 'total', 'subtotal', 'iva_cero', 'iva_calculado', 'porcentaje_iva', 'can_items', 'vendedor', 'id_cliente', 'id_personal', 'id_iva','documento'];
+    protected $fillable = ["num_venta","fecha", "cliente", "cel_cli", "ruc_cli","cc_cli", "dir_cli", "mail_cli", "total", "subtotal", "iva_cero", "iva_calculado", "porcentaje_iva", "can_items", "vendedor", "id_cliente", "id_personal", "id_iva","documento"];
 
     public function itemventa(){
         return $this->hasMany(ItemVenta::class);

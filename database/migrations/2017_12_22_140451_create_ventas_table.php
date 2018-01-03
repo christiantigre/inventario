@@ -17,10 +17,10 @@ class CreateVentasTable extends Migration
             $table->string('num_venta',25)->nullable();
             $table->string('fecha',15)->nullable();
             $table->string('cliente',191)->nullable();
-            $table->string('cel_cli',15)->nullable();
+            $table->string('cel_cli',25)->nullable();
             $table->string('ruc_cli',15)->nullable();
             $table->string('cc_cli',15)->nullable();
-            $table->string('dir_cli',75)->nullable();
+            $table->string('dir_cli',191)->nullable();
             $table->string('mail_cli',75)->nullable();
             $table->double('total',15,2)->nullable();
             $table->double('subtotal',15,2)->nullable();

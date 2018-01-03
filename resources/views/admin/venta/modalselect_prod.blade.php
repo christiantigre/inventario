@@ -40,6 +40,7 @@
                   <th>Detalle</th>
                   <th>Cod</th>
                   <th>PVP</th>
+                  <th>Stock</th>
                   <th>Cantidad</th>
                   <th>Actions</th>
                 </tr>
@@ -57,6 +58,7 @@
                   <td>{{ $item->propaganda }}</td>
                   <td>{{ $item->cod_barra }}</td>
                   <td>{{ $item->pre_venta }}</td>
+                  <td>{{ $item->cantidad }}</td>
                   <td>
                     <input type="number" name="cant_prod" id="cant_prod" value="1" min="1" max="{{ $item->cantidad }}">
                   </td>

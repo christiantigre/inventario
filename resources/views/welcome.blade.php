@@ -123,6 +123,10 @@
               <div class="row">
                 <div class="col-lg-12">
                   <p>
+                    <a href="{{ url('admin/administracion') }}" class="btn btn-sq-lg btn-default">
+                        <i class="fa fa-laptop fa-5x"></i><br/>
+                        SISTEMA
+                    </a>
                     <a href="{{ url('person/venta') }}" class="btn btn-sq-lg btn-default">
                         <i class="fa fa-calculator fa-5x"></i><br/>
                         VENTAS
