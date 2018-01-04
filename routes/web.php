@@ -71,6 +71,8 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/listcartitems/', 'ComponentController@listallitems');
   Route::post('/trashItem/','ComponentController@trashItem');
   Route::post('/deleteItem/','ComponentController@deleteItem');
+  Route::get('/DetalleVenta/{id}', ['as' => 'detallventa', 'uses' => 'Admin\\VentaController@detallventa']);
+
 });
 
 

@@ -10,8 +10,11 @@ use App\Product;
 use App\Ventum;
 use App\ItemVenta;
 use App\detallVenta;
+use App\Almacen;
+use App\Iva;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Session;
 
 class VentaController extends Controller
 {
@@ -77,7 +80,8 @@ class VentaController extends Controller
         ItemVenta::truncate();
         $cant_ventas = Ventum::count();
         $clientes = Cliente::all();
-        $products = Product::all();
+        //$products = Product::orderBy('id','ASC')->where('cantidad'>'0')->get();
+        $products = \DB::table('products')->where('cantidad', '>', 0)->orderBy('id','ASC')->get();
         $cant_incr = $cant_ventas+1;
         $numbers     = $this->generate_numbers($cant_incr, 1, 8);
         $numero_venta = implode("", $numbers);
@@ -132,8 +136,7 @@ class VentaController extends Controller
         $dataVenta['vendedor'] = $request['vendedor'];
         $dataVenta['id_cliente'] = $request['id_cliente'];
         //$id_user = $request['id_user'];
-        $dataVenta['id_iva'] = $request['idiva'];
-        
+        $dataVenta['id_iva'] = $request['idiva'];        
         /*dd($dataVenta); $requestData = $request->all();        
         Ventum::create($requestData);*/
         try {
@@ -146,12 +149,22 @@ class VentaController extends Controller
             }
             //actualiza en inventario pasandole el parametro idventa a la función actualizaInventario para que realize la lectura de todos los productos que se encuentran en el detalle de la factura y actualize el inventario de todos los producto que estan en el detalle.
             $this->actualizaInventario($venta->id);
-        } catch (Exception $e) {
-            
+                Session::flash('flash_message', 'Guardado correctamente');
+        } catch (\Exception $e) {
+                Session::flash('warning', 'Error al Guardar');         
         }
-        return redirect('admin/venta')->with('flash_message', 'Ventum added!');
+        //Redireccióna a ventana show con parametros, para visualizar el detalle de la venta
+        return redirect()->route('detallventa', ['id' => $venta->id]);
     }
 
+    public function detallventa($id){
+        $ventum = Ventum::findOrFail($id);
+        $detallventa= detallVenta::where('id_venta',$id)->get();
+        $almacen = Almacen::first();
+        return view('admin.venta.show', compact('ventum','detallventa','almacen'));
+    }
+
+    //Recibe parametros de la funcion store para guardar el detalle de la factura.
     protected function saveItem($product, $order_id)
     {
         $requestData = new detallVenta;
@@ -164,7 +177,7 @@ class VentaController extends Controller
         $requestData->id_producto = $product->id;
         return $requestData;
     }
-
+    //Recibe parametros de funcion store para actualizar el inventario
     public function actualizaInventario($order_id)
     {
         $the_pedido = ItemVenta::select('id_producto','cant')->get();
@@ -193,8 +206,9 @@ class VentaController extends Controller
     public function show($id)
     {
         $ventum = Ventum::findOrFail($id);
-
-        return view('admin.venta.show', compact('ventum'));
+        $detallventa= detallVenta::where('id_venta',$id)->get();
+        $almacen = Almacen::first();
+        return view('admin.venta.show', compact('ventum','detallventa','almacen'));
     }
 
     /**
