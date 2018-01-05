@@ -89,6 +89,13 @@
             {!! $errors->first('dir_cli', '<p class="help-block">:message</p>') !!}
         </div>
     </div>
+    <div class="form-group {{ $errors->has('id_typepay') ? 'has-error' : ''}}">
+    <label for="id_typepay" class="col-md-4 control-label">{{ 'Pago' }}</label>
+    <div class="col-md-6">
+        {!! Form::select('id_typepay', $tipospagos, null, ['class' => 'form-control','id'=>'id_typepay']) !!}
+        {!! $errors->first('id_typepay', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
 </div>
 </fieldset>
 </div>

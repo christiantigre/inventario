@@ -12,6 +12,7 @@ use App\ItemVenta;
 use App\detallVenta;
 use App\Almacen;
 use App\Iva;
+use App\TypePay;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Session;
@@ -87,7 +88,9 @@ class VentaController extends Controller
         $numero_venta = implode("", $numbers);
         $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
         $fecha_venta = $carbon->now()->format('Y-m-d H:i:s');
-        return view('admin.venta.create',compact('numero_venta','fecha_venta','clientes','products','cant_incr','username','userid','useremail'));
+        $tipospagos = TypePay::orderBy('id', 'ASC')->pluck('type', 'id');
+
+        return view('admin.venta.create',compact('numero_venta','fecha_venta','clientes','products','cant_incr','username','userid','useremail','tipospagos'));
     }
 
     public function extraerdatoscliente(Request $request){
@@ -136,7 +139,8 @@ class VentaController extends Controller
         $dataVenta['vendedor'] = $request['vendedor'];
         $dataVenta['id_cliente'] = $request['id_cliente'];
         //$id_user = $request['id_user'];
-        $dataVenta['id_iva'] = $request['idiva'];        
+        $dataVenta['id_iva'] = $request['idiva'];  
+        $dataVenta['id_typepay'] = $request['id_typepay'];                
         /*dd($dataVenta); $requestData = $request->all();        
         Ventum::create($requestData);*/
         try {
@@ -251,6 +255,77 @@ class VentaController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
+
+    public function print($id) {
+        /*$clausulas  = FormatOrden::orderBy('id', 'DESC')->get();
+        $hoy        = new Carbon();
+        $hoy        = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $orden      = Order::orderBy('id', 'DESC')->where('id', $id)->get();
+        $ordenes    = Order::orderBy('id', 'DESC')->where('id', $id)->first();
+        $tot_abonos = \DB::table('abonos')
+            ->where('id_orden', $id)
+            ->sum('abono');
+        $anticipo = $ordenes->anticipo;
+
+        $valor_reparacion = $ordenes->valor;
+        $suma_anti_abono  = $tot_abonos + $anticipo;
+        $pre_final        = $valor_reparacion - $suma_anti_abono;
+
+        $empresa = Empres::orderBy('id', 'DESC')->where('id', 1)->get();
+        $pdf     = \PDF::loadView('adminlte::layouts.order.comprobante', ['orden' => $orden, 'empresa' => $empresa, 'hoy' => $hoy]);
+        $pdf     = \PDF::loadView('pdf.comprobante', [
+            'orden'      => $orden,
+            'empresa'    => $empresa,
+            'hoy'        => $hoy,
+            'tot_abonos' => $tot_abonos,
+            'pre_final'  => $pre_final,
+            'clausulas'  => $clausulas]);
+
+        return $pdf->download('orden-#.pdf');*/
+        $clausulas = "Clausulas";
+        $ventum = Ventum::orderBy('id', 'DESC')->where('id', $id)->get();
+        $venta = Ventum::findOrFail($id);
+        $num_venta = $venta->num_venta;
+        $nom_factura = "factura-#".$num_venta;
+        $numero_factura = $venta->num_venta;
+        $detallventa= detallVenta::where('id_venta',$id)->get();
+        $almacen = Almacen::orderBy('id', 'DESC')->where('id', 1)->get();
+        //return $almacen;
+        $pdf     = \PDF::loadView('pdf.factura', [
+            'ventum'      => $ventum,
+            'detallventa'    => $detallventa,
+            'almacen'        => $almacen,
+            'clausulas'  => $clausulas,
+            'nom_factura'  => $nom_factura,
+            'numero_factura'=>$numero_factura
+        ]);
+
+        return $pdf->download($nom_factura.'.pdf');
+    }
+
+    public function viewfactura($id){
+        $clausulas = "Clausulas";
+        $ventum = Ventum::orderBy('id', 'DESC')->where('id', $id)->get();
+        $venta = Ventum::findOrFail($id);
+        $num_venta = $venta->num_venta;
+        $nom_factura = "factura-#".$num_venta;
+        $numero_factura = $venta->num_venta;
+        $detallventa= detallVenta::where('id_venta',$id)->get();
+        $almacen = Almacen::orderBy('id', 'DESC')->where('id', 1)->get();
+        //return $almacen;
+        $pdf     = \PDF::loadView('pdf.factura', [
+            'ventum'      => $ventum,
+            'detallventa'    => $detallventa,
+            'almacen'        => $almacen,
+            'clausulas'  => $clausulas,
+            'nom_factura'  => $nom_factura,
+            'numero_factura'=>$numero_factura
+        ]);
+
+        //return $pdf->download($nom_factura.'.pdf');
+        return view('pdf.factura',compact('ventum','detallventa','almacen','clausulas','nom_factura','numero_factura'));
+    }
+
     public function destroy($id)
     {
         Ventum::destroy($id);

@@ -28,13 +28,36 @@
         <input class="form-control" name="razon_social" type="text" id="razon_social" value="{{ $almacen->razon_social or ''}}" >
         {!! $errors->first('razon_social', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('ruc') ? 'has-error' : ''}}">
+</div>
+<div class="form-group {{ $errors->has('ruc') ? 'has-error' : ''}}">
     <label for="ruc" class="col-md-4 control-label">{{ 'Ruc' }}</label>
     <div class="col-md-6">
         <input class="form-control" name="ruc" type="text" id="ruc" value="{{ $almacen->ruc or ''}}" >
         {!! $errors->first('ruc', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('email') ? 'has-error' : ''}}">
+</div>
+<div class="form-group {{ $errors->has('codestablecimiento') ? 'has-error' : ''}}">
+    <label for="codestablecimiento" class="col-md-4 control-label">{{ 'Cod: Establecimiento' }}</label>
+    <div class="col-md-6">
+        <input class="form-control" name="codestablecimiento" type="text" id="codestablecimiento" value="{{ $almacen->codestablecimiento or ''}}" >
+        {!! $errors->first('codestablecimiento', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+<div class="form-group {{ $errors->has('codpntemision') ? 'has-error' : ''}}">
+    <label for="codpntemision" class="col-md-4 control-label">{{ 'Cod: Punto Emisión' }}</label>
+    <div class="col-md-6">
+        <input class="form-control" name="codpntemision" type="text" id="codpntemision" value="{{ $almacen->codpntemision or ''}}" >
+        {!! $errors->first('codpntemision', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+<div class="form-group {{ $errors->has('auth_sri') ? 'has-error' : ''}}">
+    <label for="auth_sri" class="col-md-4 control-label">{{ 'Autorización SRI' }}</label>
+    <div class="col-md-6">
+        <input class="form-control" name="auth_sri" type="text" id="auth_sri" value="{{ $almacen->auth_sri or ''}}" >
+        {!! $errors->first('auth_sri', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+<div class="form-group {{ $errors->has('email') ? 'has-error' : ''}}">
     <label for="email" class="col-md-4 control-label">{{ 'Email' }}</label>
     <div class="col-md-6">
         <input class="form-control" name="email" type="email" id="email" value="{{ $almacen->email or ''}}" >
@@ -100,13 +123,22 @@
         <textarea class="form-control" rows="5" name="gg" type="textarea" id="gg" >{{ $almacen->gg or ''}}</textarea>
         {!! $errors->first('gg', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('funcion_empresa') ? 'has-error' : ''}}">
+</div>
+<div class="form-group {{ $errors->has('funcion_empresa') ? 'has-error' : ''}}">
     <label for="funcion_empresa" class="col-md-4 control-label">{{ 'Funcion Empresa' }}</label>
     <div class="col-md-6">
         <textarea class="form-control" rows="5" name="funcion_empresa" type="textarea" id="funcion_empresa" >{{ $almacen->funcion_empresa or ''}}</textarea>
         {!! $errors->first('funcion_empresa', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('dir') ? 'has-error' : ''}}">
+</div>
+<div class="form-group {{ $errors->has('slogan') ? 'has-error' : ''}}">
+    <label for="slogan" class="col-md-4 control-label">{{ 'Slogan' }}</label>
+    <div class="col-md-6">
+        <textarea class="form-control" rows="5" name="slogan" type="textarea" id="slogan" >{{ $almacen->slogan or ''}}</textarea>
+        {!! $errors->first('slogan', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+<div class="form-group {{ $errors->has('dir') ? 'has-error' : ''}}">
     <label for="dir" class="col-md-4 control-label">{{ 'Dir' }}</label>
     <div class="col-md-6">
         <input class="form-control" name="dir" type="text" id="dir" value="{{ $almacen->dir or ''}}" >

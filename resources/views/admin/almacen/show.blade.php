@@ -27,6 +27,9 @@
                                     <tr><th> Pagina web </th><td> {{ $almacen->pag_web }} </td></tr>
                                     <tr><th> Razon social </th><td> {{ $almacen->razon_social }} </td></tr>
                                     <tr><th> Ruc </th><td> {{ $almacen->ruc }} </td></tr>
+                                    <tr><th> Auth SRI </th><td> {{ $almacen->auth_sri }} </td></tr>
+                                    <tr><th> Cod: Establecimiento </th><td> {{ $almacen->codestablecimiento }} </td></tr>
+                                    <tr><th> Cod: Punto Emisión </th><td> {{ $almacen->codpntemision }} </td></tr>
                                     <tr><th> Fecha inicio </th><td> 
                                         {{ $almacen->fecha_inicio }} 
                                         ({{ $almacen->created_at->diffForHumans() }})
@@ -49,6 +52,7 @@
                                     <tr><th> Instagram </th><td> {{ $almacen->ins }} </td></tr>
                                     <tr><th> Google + </th><td> {{ $almacen->gg }} </td></tr>
                                     <tr><th> Detalle almacen </th><td> {{ $almacen->funcion_empresa }} </td></tr>
+                                    <tr><th> Slogan </th><td> {{ $almacen->slogan }} </td></tr>
                                     <tr><th> Dirección </th><td> {{ $almacen->dir }} </td></tr>
                                     <tr><th> Latitud </th><td> {{ $almacen->latitud }} </td></tr>
                                     <tr><th> Longitud </th><td> {{ $almacen->longitud }} </td></tr>

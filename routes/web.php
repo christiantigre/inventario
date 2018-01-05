@@ -72,7 +72,9 @@ Route::group(['prefix' => 'admin'], function () {
   Route::post('/trashItem/','ComponentController@trashItem');
   Route::post('/deleteItem/','ComponentController@deleteItem');
   Route::get('/DetalleVenta/{id}', ['as' => 'detallventa', 'uses' => 'Admin\\VentaController@detallventa']);
-
+  Route::get('/print/{id}', 'Admin\\VentaController@print');
+  Route::get('/viewfactura/{id}', 'Admin\\VentaController@viewfactura');  
+  Route::resource('/type-pay', 'Admin\\TypePayController');
 });
 
 

@@ -197,11 +197,12 @@ class AlmacenController extends Controller
         if ($request->hasFile('logo')) {
             $file = Input::file('logo');
             $uploadPath = public_path('uploads/logo/');
-            //$extension = $file->getClientOriginalExtension();
+            $extension_ext = $file->getClientOriginalExtension();
             $extension = $file->getClientOriginalName();
             $image  = Image::make($file->getRealPath());
             //$image->resize(1200, 900);
             $fileName = rand(11111, 99999) . '.' . $extension;
+            //$fileName = 'logo.' . $extension_ext;
             $image->save($uploadPath.$fileName);
             //$file->move($uploadPath, $fileName);
             $requestData['logo'] = 'uploads/logo/'.$fileName;

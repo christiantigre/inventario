@@ -30,6 +30,8 @@ php artisan crud:generate Almacen --fields='nom_almacen#string; propietario#stri
 
 php artisan crud:generate Category --fields='category#string; detall#string; gerente#string; activo#boolean' --view-path=admin --controller-namespace=Admin --route-group=admin --form-helper=html
 
+php artisan crud:generate TypePay --fields='type#string; status#boolean' --view-path=admin --controller-namespace=Admin --route-group=admin --form-helper=html
+
 php artisan crud:generate Marca --fields='marca#string; detall#string; img#file; name_img#string; activo#boolean' --view-path=admin --controller-namespace=Admin --route-group=admin --form-helper=html
 
 php artisan crud:generate Iva --fields='iva#integer; activo#boolean' --view-path=admin --controller-namespace=Admin --route-group=admin --form-helper=html

@@ -152,10 +152,6 @@ return [
             'icon'    => 'share',
             'submenu' => [
                 [
-                    'text' => 'Level One',
-                    'url'  => '#',
-                ],
-                [
                     'text'    => 'Configuración',
                     'url'     => '#',
                     'submenu' => [
@@ -210,6 +206,10 @@ return [
                                 [
                                     'text' => 'Iva',
                                     'url'  => 'admin/iva',
+                                ],
+                                [
+                                    'text' => 'Tipo pagos',
+                                    'url'  => 'admin/type-pay',
                                 ],
                             ],
                         ],

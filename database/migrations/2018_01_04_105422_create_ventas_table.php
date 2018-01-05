@@ -33,13 +33,14 @@ class CreateVentasTable extends Migration
             $table->integer('id_cliente')->unsigned()->nullable();
             $table->integer('id_user')->unsigned()->nullable();
             $table->integer('id_iva')->unsigned()->nullable();
+            $table->integer('id_typepay')->unsigned()->nullable();
             $table->foreign('id_cliente')->references('id')->on('clientes');
             $table->foreign('id_user')->references('id')->on('users');
             $table->foreign('id_iva')->references('id')->on('ivas');
+            $table->foreign('id_typepay')->references('id')->on('type_pays');
             $table->timestamps();
             });
     }
-
     /**
      * Reverse the migrations.
      *

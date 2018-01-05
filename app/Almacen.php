@@ -25,7 +25,7 @@ class Almacen extends Model
      *
      * @var array
      */
-    protected $fillable = ['almacen', 'propietario', 'gerente', 'pag_web', 'razon_social', 'ruc', 'email', 'fecha_inicio', 'logo', 'name_logo', 'activo', 'telefono', 'cel_movi', 'cel_claro', 'watsapp', 'fb', 'tw', 'ins', 'gg', 'funcion_empresa', 'dir', 'latitud', 'longitud', 'pais_id', 'provincia_id','canton_id'];
+    protected $fillable = ['almacen', 'propietario', 'gerente', 'pag_web', 'razon_social', 'ruc', 'email', 'fecha_inicio', 'logo', 'name_logo', 'activo', 'telefono', 'cel_movi', 'cel_claro', 'watsapp', 'fb', 'tw', 'ins', 'gg', 'funcion_empresa', 'dir', 'latitud', 'longitud', 'pais_id', 'provincia_id','canton_id','auth_sri','codestablecimiento','codpntemision','slogan'];
 
     public function almacen()
 	{

@@ -20,9 +20,13 @@ class CreateAlmacensTable extends Migration
             $table->text('pag_web',75)->nullable();
             $table->string('razon_social',75)->nullable();
             $table->string('ruc',15)->nullable();
+            $table->string('auth_sri',15)->nullable();
+            $table->string('codestablecimiento',15)->nullable();
+            $table->string('codpntemision',15)->nullable();
             $table->string('email',75)->nullable();
             $table->date('fecha_inicio')->nullable();
             $table->string('logo',191)->nullable();
+            $table->text('slogan')->nullable();
             $table->string('name_logo',191)->nullable();
             $table->boolean('activo')->default(1);
             $table->string('telefono',15)->nullable();
