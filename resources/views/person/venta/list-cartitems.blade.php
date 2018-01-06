@@ -52,7 +52,13 @@
         <tr>
           <th>Total:</th>
           <td>${{ number_format($total,2) }}</td>
-        </tr>       
+        </tr>
+        <input  name="total" type="hidden" id="total" value="{{ number_format($total,2) }}" >       
+        <input name="subtotal" type="hidden" id="subtotal" value="{{ number_format($subtotal,2) }}" >       
+        <input  name="iva_calculado" type="hidden" id="iva_calculado" value="{{ number_format($iva,2) }}" >       
+        <input  name="iva_cero" type="hidden" id="iva_cero" value="0" >       
+        <input  name="porcentaje_iva" type="hidden" id="porcentaje_iva" value="{{ number_format($ivavalor,2) }}" >       
+        <input  name="idiva" type="hidden" id="idiva" value="{{ $idiva }}" >       
       </table>
     </div>
   </div>

@@ -13,6 +13,7 @@ use App\detallVenta;
 use App\Almacen;
 use App\Iva;
 use App\TypePay;
+use App\Clausule;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Session;
@@ -282,7 +283,8 @@ class VentaController extends Controller
             'clausulas'  => $clausulas]);
 
         return $pdf->download('orden-#.pdf');*/
-        $clausulas = "Clausulas";
+        //$clausulas = "Clausulas";
+        $clausulas = Clausule::orderBy('id', 'DESC')->where('id', 1)->first();
         $ventum = Ventum::orderBy('id', 'DESC')->where('id', $id)->get();
         $venta = Ventum::findOrFail($id);
         $num_venta = $venta->num_venta;
@@ -297,7 +299,8 @@ class VentaController extends Controller
             'almacen'        => $almacen,
             'clausulas'  => $clausulas,
             'nom_factura'  => $nom_factura,
-            'numero_factura'=>$numero_factura
+            'numero_factura'=>$numero_factura,
+            'clausulas'=>$clausulas,
         ]);
 
         return $pdf->download($nom_factura.'.pdf');

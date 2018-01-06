@@ -46,7 +46,7 @@
 							<div class="box-body">
 								<div class="row">
 
-									<form method="POST" action="{{ url('/admin/cliente') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+									<form method="POST" action="{{ url('/person/cliente') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
 										{{ csrf_field() }}
 
 										<div class="col-md-12">
@@ -103,7 +103,7 @@
 
 										<div class="form-group">
 											<div class="col-md-offset-10 col-md-4">
-												<input class="btn btn-primary save_cli" type="submit" value="{{ $submitButtonText or 'Crear' }}">
+												<input class="btn btn-primary save_cli_person" type="submit" value="{{ $submitButtonText or 'Crear' }}">
 											</div>
 										</div>
 

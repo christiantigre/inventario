@@ -94,29 +94,25 @@ href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 
             <ul class="sidebar-menu" data-widget="tree">
 
                 <li class="active">
-                    <a href="http://localhost:8000/admin/venta"
+                    <a href="{{ url('person/venta') }}"
                     >
                     <i class="fa fa-fw fa-shopping-basket "></i>
                     <span>Ventas</span>
                 </a>
             </li>
             <li class="">
-                <a href="http://localhost:8000/admin/product"
-                >
-                <i class="fa fa-fw fa-cloud-upload "></i>
-                <span>Productos</span>
-            </a>
+                <a href="{{ url('person/product') }}"><i class="fa fa-fw fa-cloud-upload "></i>
+                <span>Productos</span></a>
         </li>
         <li class="">
-            <a href="http://localhost:8000/admin/proveedor"
+            <a href="{{ url('person/proveedor') }}"
             >
             <i class="fa fa-fw fa-group "></i>
             <span>Proveedor</span>
         </a>
     </li>
     <li class="">
-        <a href="http://localhost:8000/admin/cliente"
-        >
+        <a href="{{ url('person/cliente') }}">
         <i class="fa fa-fw fa-user "></i>
         <span>Cliente</span>
     </a>
@@ -141,46 +137,6 @@ href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 
         </span>
     </a>
     <ul class="treeview-menu">
-        <li class="treeview">
-            <a href="#"
-            >
-            <i class="fa fa-fw fa-circle-o "></i>
-            <span>Localidades</span>
-            <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-            </span>
-        </a>
-        <ul class="treeview-menu">
-            <li class="">
-                <a href="http://localhost:8000/admin/pais"
-                >
-                <i class="fa fa-fw fa-circle-o "></i>
-                <span>Pais</span>
-            </a>
-        </li>
-        <li class="">
-            <a href="http://localhost:8000/admin/provincia"
-            >
-            <i class="fa fa-fw fa-circle-o "></i>
-            <span>Provincia</span>
-        </a>
-    </li>
-    <li class="">
-        <a href="http://localhost:8000/admin/canton"
-        >
-        <i class="fa fa-fw fa-circle-o "></i>
-        <span>Cantón</span>
-    </a>
-</li>
-<li class="">
-    <a href="http://localhost:8000/admin/parroquia"
-    >
-    <i class="fa fa-fw fa-circle-o "></i>
-    <span>Parroquia</span>
-</a>
-</li>
-</ul>
-</li>
 <li class="treeview">
     <a href="#"
     >
@@ -192,14 +148,14 @@ href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 
 </a>
 <ul class="treeview-menu">
     <li class="">
-        <a href="http://localhost:8000/admin/category"
+        <a href="{{ url('person/category') }}"
         >
         <i class="fa fa-fw fa-circle-o "></i>
         <span>Categoría</span>
     </a>
 </li>
 <li class="">
-    <a href="http://localhost:8000/admin/subcategory"
+    <a href="{{ url('person/subcategory') }}"
     >
     <i class="fa fa-fw fa-circle-o "></i>
     <span>Subcategoría</span>
@@ -218,14 +174,14 @@ href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 
 </a>
 <ul class="treeview-menu">
     <li class="">
-        <a href="http://localhost:8000/admin/marca"
+        <a href="{{ url('person/marca') }}"
         >
         <i class="fa fa-fw fa-circle-o "></i>
         <span>Marca</span>
     </a>
 </li>
 <li class="">
-    <a href="http://localhost:8000/admin/iva"
+    <a href="{{ url('person/iva') }}"
     >
     <i class="fa fa-fw fa-circle-o "></i>
     <span>Iva</span>

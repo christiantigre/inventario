@@ -61,7 +61,7 @@
                   @endif
                 </td>
                 <td>
-                <button type='button' id="{{ $item->id }}" value="{{ $item->id }}" class="btn btn-info btn-xs select_cli" data-dismiss='modal'> Seleccionar</button>                  
+                <button type='button' id="{{ $item->id }}" value="{{ $item->id }}" class="btn btn-info btn-xs select_cli_person" data-dismiss='modal'> Seleccionar</button>                  
                 </td>
               </tr>
               @endforeach

@@ -277,7 +277,13 @@ tr.itemdetall td{
       @foreach($almacen as $dt_empres)
       <div class="row">
         <div class="col-xs-4"></div>
-        <div class="col-xs-4"><img src="uploads/logo/{{ $dt_empres->name_logo }}" height="30" width="130" alt="logo"/></div>
+        <div class="col-xs-4">
+          @if(empty($dt_empres->name_logo))
+            <h1>{{ $dt_empres->almacen }}</h1>
+          @else
+          <img src="uploads/logo/{{ $dt_empres->name_logo }}" height="30" width="130" alt="logo"/>
+          @endif
+        </div>
         <div class="col-xs-4"></div>
       </div>
       <p class="intro"> 
@@ -477,7 +483,7 @@ tr.itemdetall td{
       }
     </style>
     <label class="header_label">
-      ORIGINAL ADQUIRIENTE: Blanco Adquiriente / COPIA: Color Emisor (SUCURSAL).
+      {{ $clausulas->pre_clausula }}
     </label>
     <hr class="hr_fin_fac"/>
   </div>  
@@ -487,7 +493,7 @@ tr.itemdetall td{
     <em>
       <label class="header_label_clausula">
 
-        *datos de clausula--- En el modelo de caja CSS, cualquier elemento (texto, imagen, etc.) está metido dentro de una caja rectangular que puede tener borde, margen interior y margen exterior.  En el modelo de caja CSS, cualquier elemento (texto, imagen, etc.) está metido dentro de una caja rectangular que puede tener borde, margen interior y margen exterior. 
+        *{{ $clausulas->clausula }}
         
       </label>
     </em>

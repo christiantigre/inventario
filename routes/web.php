@@ -75,6 +75,7 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/print/{id}', 'Admin\\VentaController@print');
   Route::get('/viewfactura/{id}', 'Admin\\VentaController@viewfactura');  
   Route::resource('/type-pay', 'Admin\\TypePayController');
+  Route::resource('/clausule', 'Admin\\ClausuleController');
 });
 
 
@@ -90,5 +91,24 @@ Route::group(['prefix' => 'person'], function () {
   Route::post('/password/reset', 'PersonAuth\ResetPasswordController@reset')->name('password.email');
   Route::get('/password/reset', 'PersonAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
   Route::get('/password/reset/{token}', 'PersonAuth\ResetPasswordController@showResetForm');
-  Route::resource('/venta', 'Admin\\VentaController');
+  Route::resource('/venta', 'Person\\VentaController');
+  Route::get('/extraerdatoscli/','Person\\VentaController@extraerdatoscliente');
+  Route::post('/getClienteId/', 'ComponentController@getcliente');
+  Route::post('/savecli/', 'ComponentController@savecliente');
+  Route::post('/saveprod/', 'ComponentController@saveproducto');
+  Route::get('/listcartitems/', 'ComponentController@listallitems');
+  Route::post('/trashItem/','ComponentController@trashItem');
+  Route::post('/deleteItem/','ComponentController@deleteItem');
+  Route::get('/DetalleVenta/{id}', ['as' => 'detallventa', 'uses' => 'Person\\VentaController@detallventa']);
+  Route::get('/print/{id}', 'Person\\VentaController@print');
+  Route::get('/viewfactura/{id}', 'Person\\VentaController@viewfactura');
+  Route::resource('/cliente', 'Person\\ClienteController');
+  Route::resource('/product', 'Person\\ProductController');
+  Route::resource('/proveedor', 'Person\\ProveedorController');
+  Route::resource('/iva', 'Person\\IvaController');
+  Route::resource('/marca', 'Person\\MarcaController');
+  Route::resource('/category', 'Person\\CategoryController');
+  Route::resource('/subcategory', 'Person\\SubcategoryController');
 });
+
+//copiado category y subcategory (carpetas) Realizar la revicion de controladores

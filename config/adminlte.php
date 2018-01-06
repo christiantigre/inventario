@@ -211,6 +211,10 @@ return [
                                     'text' => 'Tipo pagos',
                                     'url'  => 'admin/type-pay',
                                 ],
+                                [
+                                    'text' => 'Clausulas doc',
+                                    'url'  => 'admin/clausule',
+                                ],
                             ],
                         ],
                     ],

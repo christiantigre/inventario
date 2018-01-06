@@ -1,4 +1,4 @@
-@extends('adminlte::page')
+@extends('person.page')
 @section('content')
 @include('errors.messages')
 <div class="row">
@@ -17,7 +17,7 @@
     <!-- SELECT2 EXAMPLE -->
     <div class="box box-default">
         <div class="panel-heading">
-            <a href="{{ url('/admin/venta') }}" title="Atras"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Atras</button></a>
+            <a href="{{ url('/person/venta') }}" title="Atras"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Atras</button></a>
             <br />
             <br />
             @if ($errors->any())
@@ -31,7 +31,7 @@
         <!-- /.box-header -->
         <div class="box-body">
           <div class="row">
-            <form method="POST" action="{{ url('/admin/venta') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+            <form method="POST" action="{{ url('/person/venta') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 @include ('admin.venta.form')
             </form>
@@ -47,13 +47,13 @@
 </section>
 </div>
 
-@include('admin.venta.modalselec_cli')
-@include('admin.venta.modalcrear_cli')
-@include('admin.venta.modalselect_prod')
+@include('person.venta.modalselec_cli')
+@include('person.venta.modalcrear_cli')
+@include('person.venta.modalselect_prod')
 
 <script type="text/javascript">
     $(document).ready(function(){
-        items_cart();
+        items_cart_person();
     });
 </script>
 

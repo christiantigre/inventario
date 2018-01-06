@@ -1,4 +1,4 @@
-@extends('adminlte::page')
+@extends('person.page')
 @section('content')
 @include('errors.messages')
         <div class="row">
@@ -6,11 +6,11 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Venta</div>
                     <div class="panel-body">
-                        <a href="{{ url('/admin/venta/create') }}" class="btn btn-success btn-sm" title="Nueva Venta">
+                        <a href="{{ url('/person/venta/create') }}" class="btn btn-success btn-sm" title="Nueva Venta">
                             <i class="fa fa-plus" aria-hidden="true"></i> Nueva Venta
                         </a>
 
-                        <form method="GET" action="{{ url('/admin/venta') }}" accept-charset="UTF-8" class="navbar-form navbar-right" role="search">
+                        <form method="GET" action="{{ url('/person/venta') }}" accept-charset="UTF-8" class="navbar-form navbar-right" role="search">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
                                 <span class="input-group-btn">
@@ -36,10 +36,10 @@
                                         <td>{{ $loop->iteration or $item->id }}</td>
                                         <td>{{ $item->fecha }}</td><td>{{ $item->cliente }}</td><td>{{ $item->cel_cli }}</td><td>{{ $item->ruc_cli }}</td><td>{{ $item->dir_cli }}</td><td>{{ $item->mail_cli }}</td>
                                         <td>
-                                            <a href="{{ url('/admin/venta/' . $item->id) }}" title="Ver Venta"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> Ver</button></a>
-                                            <a href="{{ url('/admin/venta/' . $item->id . '/edit') }}" title="Editar Venta"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>
+                                            <a href="{{ url('/person/venta/' . $item->id) }}" title="Ver Venta"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> Ver</button></a>
+                                            <a href="{{ url('/person/venta/' . $item->id . '/edit') }}" title="Editar Venta"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>
 
-                                            <form method="POST" action="{{ url('/admin/venta' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
+                                            <form method="POST" action="{{ url('/person/venta' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
                                                 {{ method_field('DELETE') }}
                                                 {{ csrf_field() }}
                                                 <button type="submit" class="btn btn-danger btn-xs" title="Eliminar venta" onclick="return confirm(&quot;Desea eliminar?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar</button>

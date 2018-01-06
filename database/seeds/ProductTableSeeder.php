@@ -67,15 +67,93 @@ Product::create( [
 'id_subcategory'=>1,
 ] );
 
-			
 
 Product::create( [
 'id'=>4,
-'producto'=>'perno 6 x 20',
+'producto'=>'Tuercas con perno metal 15mm',
+'cod_barra'=>'875986',
+'pre_compra'=>0.7,
+'pre_venta'=>0.30,
+'cantidad'=>150,
+'imagen'=>'uploads/product/82937.tuercas.jpg',
+'name_img'=>'82937.tuercas.jpg',
 'nuevo'=>1,
 'promo'=>1,
 'catalogo'=>1,
 'activo'=>1,
+'id_category'=>1,
+'id_subcategory'=>1,
 ] );
+
+Product::create( [
+'id'=>5,
+'producto'=>'Silicon color negro',
+'cod_barra'=>'875985',
+'pre_compra'=>1.50,
+'pre_venta'=>3.30,
+'cantidad'=>150,
+'imagen'=>'uploads/product/82937.tuercas.jpg',
+'name_img'=>'82937.tuercas.jpg',
+'nuevo'=>1,
+'promo'=>1,
+'catalogo'=>1,
+'activo'=>1,
+'id_category'=>1,
+'id_subcategory'=>1,
+] );
+
+Product::create( [
+'id'=>6,
+'producto'=>'Silicon color blanco',
+'cod_barra'=>'875984',
+'pre_compra'=>1.50,
+'pre_venta'=>3.30,
+'cantidad'=>150,
+'imagen'=>'uploads/product/82937.tuercas.jpg',
+'name_img'=>'82937.tuercas.jpg',
+'nuevo'=>1,
+'promo'=>1,
+'catalogo'=>1,
+'activo'=>1,
+'id_category'=>1,
+'id_subcategory'=>1,
+] );
+
+
+Product::create( [
+'id'=>7,
+'producto'=>'Seguros del tapisado color plomo',
+'cod_barra'=>'875983',
+'pre_compra'=>1.50,
+'pre_venta'=>3.30,
+'cantidad'=>150,
+'imagen'=>'uploads/product/82937.tuercas.jpg',
+'name_img'=>'82937.tuercas.jpg',
+'nuevo'=>1,
+'promo'=>1,
+'catalogo'=>1,
+'activo'=>1,
+'id_category'=>1,
+'id_subcategory'=>1,
+] );
+
+Product::create( [
+'id'=>8,
+'producto'=>'Visagras puerta forza 1',
+'cod_barra'=>'875982',
+'pre_compra'=>7.50,
+'pre_venta'=>15.50,
+'cantidad'=>150,
+'imagen'=>'uploads/product/82937.tuercas.jpg',
+'name_img'=>'82937.tuercas.jpg',
+'nuevo'=>1,
+'promo'=>1,
+'catalogo'=>1,
+'activo'=>1,
+'id_category'=>1,
+'id_subcategory'=>1,
+] );
+			
+
     }
 }

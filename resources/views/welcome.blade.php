@@ -121,9 +121,9 @@
 
             <div class="container">
               <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-12 col-md-12">
                   <p>
-                    <a href="{{ url('admin/administracion') }}" class="btn btn-sq-lg btn-default">
+                    <a href="{{ url('person/home') }}" class="btn btn-sq-lg btn-default">
                         <i class="fa fa-laptop fa-5x"></i><br/>
                         SISTEMA
                     </a>
@@ -131,15 +131,15 @@
                         <i class="fa fa-calculator fa-5x"></i><br/>
                         VENTAS
                     </a>
-                    <a href="#" class="btn btn-sq-lg btn-default">
+                    <a href="{{ url('person/product') }}" class="btn btn-sq-lg btn-default">
                       <i class="fa fa-institution fa-5x"></i><br/>
                       PRODUCTOS
                   </a>
-                  <a href="#" class="btn btn-sq-lg btn-default">
+                  <a href="{{ url('person/cliente') }}" class="btn btn-sq-lg btn-default">
                       <i class="fa fa-users fa-5x"></i><br/>
                       CLIENTES
                   </a>
-                  <a href="#" class="btn btn-sq-lg btn-default">
+                  <a href="{{ url('person/proveedor') }}" class="btn btn-sq-lg btn-default">
                       <i class="fa fa-handshake-o fa-5x"></i><br/>
                       PROVEEDORES
                   </a>

@@ -18,6 +18,7 @@
         <label for="fecha" class="col-md-9 control-label">{{ 'N° Venta:' }}</label>
         <div class="col-md-3">            
             <input class="form-control input-sm" name="idventa" type="hidden" id="idventa" value="{{ $cant_incr}}">
+            <input class="form-control input-sm" name="num_factura" type="hidden" id="num_factura" value="{{ $numero_venta}}">
             <label for="fecha" class="col-md-9 control-label">{{ $numero_venta }}</label>            
             {!! $errors->first('num_venta', '<p class="help-block">:message</p>') !!}
         </div>
@@ -33,9 +34,9 @@
     <div class="form-group {{ $errors->has('vendedor') ? 'has-error' : ''}}">
         <label for="vendedor" class="col-md-9 control-label">{{ 'Vendedor:' }}</label>
         <div class="col-md-3">
-            <label for="vendedor" class="col-md-9 control-label">Administrador</label>            
-            <input class="form-control input-sm" name="vendedor" type="hidden" id="vendedor" value="Administrador" >
-            {!! $errors->first('fecha', '<p class="help-block">:message</p>') !!}
+            <label for="vendedor" class="col-md-9 control-label">{{ $username }}</label>            
+            <label for="vendedor" class="col-md-9 control-label">{{ $useremail }}</label>            
+            <input class="form-control input-sm" name="vendedor" type="hidden" id="vendedor" value="{{ $userid }}" >
         </div>
     </div>
 </div>
@@ -88,6 +89,13 @@
             {!! $errors->first('dir_cli', '<p class="help-block">:message</p>') !!}
         </div>
     </div>
+    <div class="form-group {{ $errors->has('id_typepay') ? 'has-error' : ''}}">
+    <label for="id_typepay" class="col-md-4 control-label">{{ 'Pago' }}</label>
+    <div class="col-md-6">
+        {!! Form::select('id_typepay', $tipospagos, null, ['class' => 'form-control','id'=>'id_typepay']) !!}
+        {!! $errors->first('id_typepay', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
 </div>
 </fieldset>
 </div>
