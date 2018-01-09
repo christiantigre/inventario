@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Person;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\SvLog;
 use App\Product;
 use App\Category;
 use App\Subcategory;
@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Input;
 use Session;
 use DB;
 use Excel;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -50,8 +51,11 @@ class ProductController extends Controller
             ->orWhere('id_subcategory', 'LIKE', "%$keyword%")
             ->orWhere('id_proveedor', 'LIKE', "%$keyword%")
             ->paginate($perPage);
+
+            $this->genLog("Busqueda datos :".$keyword);
         } else {
             $product = Product::paginate($perPage);
+            $this->genLog("Visualizó sección.");
         }
 
         return view('person.product.index', compact('product'));
@@ -64,6 +68,7 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $this->genLog("Ingresó a nuevo registro.");
         $category = Category::orderBy('id', 'ASC')->where('activo', 1)->pluck('category', 'id');
         $subcategory = Subcategory::orderBy('id', 'ASC')->where('active', 1)->pluck('subcategory', 'id');
         $marca = Marca::orderBy('id', 'ASC')->where('activo', 1)->pluck('marca', 'id');
@@ -117,10 +122,11 @@ class ProductController extends Controller
         }
 
         Product::create($requestData);
-        Session::flash('flash_message', 'Guardado correctamente');            
-
+        Session::flash('flash_message', 'Guardado correctamente');     
+            $this->genLog("Registró nuevo : ".$requestData['producto']);       
     } catch (\Exception $e) {
-        Session::flash('warning', 'Error al registrar producto!!!');            
+        Session::flash('warning', 'Error al registrar producto!!!');       
+            $this->genLog("Error al registrar : ".$requestData['producto']);    
 
     }
 
@@ -138,6 +144,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
+        $this->genLog("Visualizó : ".$product['producto']);
         return view('person.product.show', compact('product'));
     }
 
@@ -151,7 +158,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
-
+        $this->genLog("Ingresó actualizar producto id: ".$id);
         $category = Category::orderBy('id', 'ASC')->where('activo', 1)->pluck('category', 'id');
         $subcategory = Subcategory::orderBy('id', 'ASC')->where('active', 1)->pluck('subcategory', 'id');
         $marca = Marca::orderBy('id', 'ASC')->where('activo', 1)->pluck('marca', 'id');
@@ -159,6 +166,7 @@ class ProductController extends Controller
     }
 
     public function downloadExcel($type){
+                $this->genLog("Descargó excel : ".$type);
         $data = Product::get()->toArray();
         return Excel::create('exportardatos', function($excel) use ($data) {
             $excel->sheet('mySheet', function($sheet) use ($data)
@@ -166,9 +174,16 @@ class ProductController extends Controller
                 $sheet->fromArray($data);
             });
         })->download($type);
+
     }
 
     public function importExcelProducts(Request $request){
+        $this->genLog("Importó excel productos");
+        $excel_file = $request->file('file');
+
+        $validator = Validator::make($request->all(), [
+         'file' => 'required'
+     ]);
         try {
             if(Input::hasFile('file')){
                 $path = Input::file('file')->getRealPath();
@@ -176,8 +191,12 @@ class ProductController extends Controller
                 })->get();
                 if(!empty($data) && $data->count()){
                     foreach ($data as $key => $value) {
+                        if($value == '')
+                        {
+                            $value = 'n/n';
+                        }
                         $insert[] = [
-                            "producto" => $value->producto, 
+                            'producto' => $value->producto, 
                             'cod_barra' => $value->cod_barra,
                             'pre_compra' => $value->pre_compra,
                             'pre_venta' => $value->pre_venta,
@@ -188,7 +207,7 @@ class ProductController extends Controller
                             'promo' => $value->promo,
                             'catalogo' => $value->catalogo,
                             'activo' => $value->activo,
-                            "propaganda" => $value->propaganda,
+                            'propaganda' => $value->propaganda,
                             'id_category' => $value->id_category,
                             'id_subcategory' => $value->id_subcategory,
                             'id_proveedor' => $value->id_proveedor,
@@ -196,16 +215,14 @@ class ProductController extends Controller
                         ];
                     }
                     if(!empty($insert)){
-                        //DB::table('products')->delete();
-                        /*DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-                        DB::table('products')->truncate();*/
+
                         DB::table('products')->insert($insert);
                     }
                 }
             }
             Session::flash('flash_message', 'Importación correctamente');            
         } catch (\Exception $e) {
-            Session::flash('warning', 'Error al procesar archivo!!!');                 
+            Session::flash('warning', 'Error al procesar archivo, reviselo y intentelo nuevamente !!!');                 
         }
         return redirect('person/product');
     }
@@ -302,9 +319,11 @@ class ProductController extends Controller
 
             $product = Product::findOrFail($id);
             $product->update($requestData);    
+            $this->genLog("Actualizó producto id: ".$id);
             Session::flash('flash_message', 'Actualizado correctamente');            
 
         } catch (\Exception $e) {
+            $this->genLog("Error al actualizar producto id: ".$id);
             Session::flash('warning', 'Error al actualizar!!!');            
         }
 
@@ -331,12 +350,20 @@ class ProductController extends Controller
                 }
             }
             Product::destroy($id);
-            Session::flash('flash_message', 'Eliminado correctamente');            
+            Session::flash('flash_message', 'Eliminado correctamente'); 
+            $this->genLog("Eliminó id:".$id);           
         } catch (\Exception $e) {
+            $this->genLog("Error al eliminar id: ".$id);      
             Session::flash('warning', 'Error al eliminar!!!');            
         }
 
         return redirect('person/product');
+    }
+
+    public function genLog($mensaje)
+    {
+        $area = 'Producto';
+        $logs = Svlog::log($mensaje,$area);
     }
 
     protected function guard()

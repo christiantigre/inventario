@@ -21,12 +21,10 @@ Route::get('/test', 'HomeController@index')->name('test');
 
 
 Route::group(['prefix' => 'admin'], function () {
-  Route::post('/product/importexcelProducts', 'Admin\\ProductController@importExcelProducts');
-  Route::get('/product/downloadExcel/{type}', 'Admin\\ProductController@downloadExcel');
-  Route::post('/proveedor/importexcelProveedor', 'Admin\\ProveedorController@importExcelProveedor');
-  Route::get('/proveedor/downloadExcel/{type}', 'Admin\\ProveedorController@downloadExcel');
   Route::get('almacen/getcanton/{id}', 'ComponentController@getCanton');
   Route::get('almacen/{var}/getcanton/{id}', 'ComponentController@getCanton');
+  Route::post('/proveedor/importexcelProveedor', 'Admin\\ProveedorController@importExcelProveedor');
+  Route::get('/proveedor/downloadExcel/{type}', 'Admin\\ProveedorController@downloadExcel');
   Route::get('proveedor/getcanton/{id}', 'ComponentController@getCanton');
   Route::get('proveedor/{var}/getcanton/{id}', 'ComponentController@getCanton');
   Route::get('/administracion', 'Admin\AdminController@index')->name('home');
@@ -58,6 +56,8 @@ Route::group(['prefix' => 'admin'], function () {
   Route::resource('/parroquia', 'Admin\\ParroquiaController');
   Route::resource('/proveedor', 'Admin\\ProveedorController');
   Route::resource('/product', 'Admin\\ProductController');
+  Route::post('/product/importexcelProducts', 'Admin\\ProductController@importExcelProducts');
+  Route::get('/product/downloadExcel/{type}', 'Admin\\ProductController@downloadExcel');
   Route::get('products/buscaproveedorruc','Admin\\ProveedorController@buscarrucproveedor');
   Route::get('products/buscaproveedorempresa','Admin\\ProveedorController@buscarempresaproveedor');
   Route::get('products/buscaproveedormail','Admin\\ProveedorController@buscarmailproveedor');
@@ -104,11 +104,18 @@ Route::group(['prefix' => 'person'], function () {
   Route::get('/viewfactura/{id}', 'Person\\VentaController@viewfactura');
   Route::resource('/cliente', 'Person\\ClienteController');
   Route::resource('/product', 'Person\\ProductController');
+  Route::post('/product/importexcelProducts', 'Person\\ProductController@importExcelProducts');
+  Route::get('/product/downloadExcel/{type}', 'Person\\ProductController@downloadExcel');
   Route::resource('/proveedor', 'Person\\ProveedorController');
   Route::resource('/iva', 'Person\\IvaController');
   Route::resource('/marca', 'Person\\MarcaController');
   Route::resource('/category', 'Person\\CategoryController');
   Route::resource('/subcategory', 'Person\\SubcategoryController');
+  ;
+  Route::post('/proveedor/importexcelProveedor', 'Person\\ProveedorController@importExcelProveedor');
+  Route::get('/proveedor/downloadExcel/{type}', 'Person\\ProveedorController@downloadExcel');
+  Route::get('proveedor/getcanton/{id}', 'ComponentController@getCanton');
+  Route::get('proveedor/{var}/getcanton/{id}', 'ComponentController@getCanton');
 });
 
 //copiado category y subcategory (carpetas) Realizar la revicion de controladores

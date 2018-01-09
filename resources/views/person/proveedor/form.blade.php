@@ -2,7 +2,7 @@
 <div class="form-group {{ $errors->has('proveedor') ? 'has-error' : ''}}">
     <label for="proveedor" class="col-md-4 col-lg-2 control-label">{{ 'Proveedor' }}</label>
     <div class="col-md-6 col-lg-8">
-        <input class="form-control" name="proveedor" type="text" id="proveedor" value="{{ $proveedor->proveedor or ''}}" autofocus="">
+        {!! Form::text('proveedor', null, ['class' => 'form-control','id'=>'proveedor','autofocus'=>'autofocus']) !!}
         {!! $errors->first('proveedor', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('dir') ? 'has-error' : ''}}">

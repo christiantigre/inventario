@@ -17,6 +17,7 @@ use App\Clausule;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Session;
+use App\SvLog;
 
 class VentaController extends Controller
 {
@@ -53,8 +54,10 @@ class VentaController extends Controller
                 ->orWhere('id_personal', 'LIKE', "%$keyword%")
                 ->orWhere('id_iva', 'LIKE', "%$keyword%")
                 ->paginate($perPage);
+            $this->genLog("Busqueda datos :".$keyword);
         } else {
             $venta = Ventum::paginate($perPage);
+            $this->genLog("Visualizó sección.");
         }
 
         return view('person.venta.index', compact('venta'));
@@ -67,6 +70,8 @@ class VentaController extends Controller
      */
     public function create()
     {
+        $this->genLog("Ingresó a nuevo registro.");
+
         try {
             $mailAdmin = auth('admin')->user()->email;
             $adminid = auth('admin')->user()->id;
@@ -155,8 +160,10 @@ class VentaController extends Controller
             //actualiza en inventario pasandole el parametro idventa a la función actualizaInventario para que realize la lectura de todos los productos que se encuentran en el detalle de la factura y actualize el inventario de todos los producto que estan en el detalle.
             $this->actualizaInventario($venta->id);
                 Session::flash('flash_message', 'Guardado correctamente');
+            $this->genLog("Registró nuevo : ".$venta->id);
         } catch (\Exception $e) {
-                Session::flash('warning', 'Error al Guardar');         
+                Session::flash('warning', 'Error al Guardar');  
+            $this->genLog("Error al registrar : ".$venta->id);       
         }
         //Redireccióna a ventana show con parametros, para visualizar el detalle de la venta
         return redirect()->route('detallventa', ['id' => $venta->id]);
@@ -213,6 +220,7 @@ class VentaController extends Controller
         $ventum = Ventum::findOrFail($id);
         $detallventa= detallVenta::where('id_venta',$id)->get();
         $almacen = Almacen::first();
+        $this->genLog("Visualizó venta id : ".$id);
         return view('person.venta.show', compact('ventum','detallventa','almacen'));
     }
 
@@ -227,6 +235,7 @@ class VentaController extends Controller
     {
         $ventum = Ventum::findOrFail($id);
 
+        $this->genLog("Ingresó actualizar venta id: ".$id);
         return view('person.venta.edit', compact('ventum'));
     }
 
@@ -242,9 +251,13 @@ class VentaController extends Controller
     {
         
         $requestData = $request->all();
-        
+        try {
         $ventum = Ventum::findOrFail($id);
         $ventum->update($requestData);
+            $this->genLog("Actualizó venta id: ".$id);
+        } catch (\Exception $e) {
+            $this->genLog("Error al actualizar proveedor id: ".$id);
+                    }
 
         return redirect('person/venta')->with('flash_message', 'Ventum updated!');
     }
@@ -258,6 +271,8 @@ class VentaController extends Controller
      */
 
     public function print($id) {
+            $this->genLog("Imprimio factura id: ".$id);
+
         /*$clausulas  = FormatOrden::orderBy('id', 'DESC')->get();
         $hoy        = new Carbon();
         $hoy        = Carbon::now(new \DateTimeZone('America/Guayaquil'));
@@ -307,6 +322,8 @@ class VentaController extends Controller
     }
 
     public function viewfactura($id){
+            $this->genLog("Visualizó factura id: ".$id);
+
         $clausulas = "Clausulas";
         $ventum = Ventum::orderBy('id', 'DESC')->where('id', $id)->get();
         $venta = Ventum::findOrFail($id);
@@ -331,9 +348,21 @@ class VentaController extends Controller
 
     public function destroy($id)
     {
+        try {
         Ventum::destroy($id);
+            $this->genLog("Eliminó id:".$id);            
+        } catch (\Exception $e) {
+            
+            $this->genLog("Error al eliminar id: ".$id);  
+        }
 
         return redirect('person/venta')->with('flash_message', 'Ventum deleted!');
+    }
+
+    public function genLog($mensaje)
+    {
+        $area = 'Venta';
+        $logs = Svlog::log($mensaje,$area);
     }
 
     protected function guard()

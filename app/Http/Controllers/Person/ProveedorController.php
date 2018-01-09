@@ -75,7 +75,6 @@ class ProveedorController extends Controller
     public function create()
     {
         $this->genLog("Ingresó a nuevo registro.");
-
         $paises = Pais::orderBy('id', 'DESC')->where('status', 1)->pluck('pais', 'id');
         $provincias = Provincias::orderBy('id', 'ASC')->pluck('provincia', 'id');
         $cantones = Canton::orderBy('id', 'ASC')->pluck('canton', 'id');
@@ -94,10 +93,10 @@ class ProveedorController extends Controller
         $this->validate($request, [
          'proveedor' => 'max:35',
          'dir' => 'max:150',
-         'tlfn' => 'max:15',
-         'cel_movi' => 'max:15|regex:/(01)[0-9]{9}/',
-         'cel_claro' => 'max:15|regex:/(01)[0-9]{9}/',
-         'watsapp' => 'max:15|regex:/(01)[0-9]{9}/',
+         'tlfn' => 'nullable|integer|max:999999999999999',
+         'cel_movi' => 'nullable|integer|max:999999999999999',
+         'cel_claro' => 'nullable|integer|max:999999999999999',
+         'watsapp' => 'nullable|integer|max:999999999999999',
          'fax' => 'max:150',
          'mail' => 'max:75',
          'web' => 'max:150',
@@ -120,8 +119,6 @@ class ProveedorController extends Controller
     }
 
     public function downloadExcel($type){
-
-        $this->genLog("Descargó excel : ".$requestData['proveedor']);
         $data = Proveedor::get()->toArray();
         return Excel::create('Proveedores', function($excel) use ($data) {
             $excel->sheet('mySheet', function($sheet) use ($data)
@@ -129,10 +126,11 @@ class ProveedorController extends Controller
                 $sheet->fromArray($data);
             });
         })->download($type);
+                $this->genLog("Descargó excel : ".$type);
     }
 
     public function importExcelProveedor(Request $request){
-        $this->genLog("Importó excel : ".$requestData['proveedor']);
+        $this->genLog("Importó excel proveedores");
         $excel_file = $request->file('file');
 
         $validator = Validator::make($request->all(), [
@@ -196,7 +194,7 @@ class ProveedorController extends Controller
     public function show($id)
     {
         $proveedor = Proveedor::findOrFail($id);
-        $this->genLog("Visualizó : ".$cliente['proveedor']);
+        $this->genLog("Visualizó : ".$proveedor['proveedor']);
 
         return view('person.proveedor.show', compact('proveedor'));
     }
@@ -236,7 +234,7 @@ class ProveedorController extends Controller
         $paises = Pais::orderBy('id', 'DESC')->where('status', 1)->pluck('pais', 'id');
         $provincias = Provincias::orderBy('id', 'ASC')->pluck('provincia', 'id');
         $cantones = Canton::orderBy('id', 'ASC')->pluck('canton', 'id');
-        $this->genLog("Ingresó actualizar : ".$cliente['proveedor']);
+        $this->genLog("Ingresó actualizar proveedor id: ".$id);
         return view('person.proveedor.edit', compact('proveedor','paises','provincias','cantones'));
     }
 
@@ -271,10 +269,10 @@ class ProveedorController extends Controller
         $proveedor = Proveedor::findOrFail($id);
         $proveedor->update($requestData);
         
-            $this->genLog("Actualizó : ".$requestData['proveedor']);
+            $this->genLog("Actualizó proveedor id: ".$id);
             Session::flash('flash_message', 'Actualizado correctamente');
         } catch (\Exception $e) {
-            $this->genLog("Error al actualizar : ".$requestData['proveedor']);
+            $this->genLog("Error al actualizar proveedor id: ".$id);
             Session::flash('warning', 'Error al actualizar!!!');  
             
         }
@@ -307,11 +305,11 @@ class ProveedorController extends Controller
             Session::flash('warning', 'Error al eliminar!!!');            
         }
 
-        return redirect('admin/proveedor')->with('flash_message', 'Proveedor deleted!');
+        return redirect('person/proveedor')->with('flash_message', 'Proveedor deleted!');
     }
 
     protected function guard()
     {
-        return Auth::guard('admin');
+        return Auth::guard('person');
     }
 }

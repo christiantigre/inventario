@@ -44,10 +44,12 @@
         <!-- /.box-header -->
         <div class="box-body">
           <div class="row">
-            <form method="POST" action="{{ url('/person/proveedor') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
-                {{ csrf_field() }}
+            <!--<form method="POST" action="{{ url('/person/proveedor') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">-->
+                {!! Form::open(['url' => '/person/proveedor','method'=>'POST', 'class' => 'form-horizontal', 'files' => true,'enctype'=>'multipart/form-data']) !!}
+
                 @include ('person.proveedor.form')
-            </form>
+            <!--</form>-->
+             {!! Form::close() !!}
         </div>
         <!-- /.row -->
     </div>
