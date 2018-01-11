@@ -149,7 +149,7 @@ class VentaController extends Controller
             $venta = Ventum::create($dataVenta);
             //envia los valore del detalle de la factura para guardar el detalle desde la funcion saveItem
             foreach ($producto as $product) {
-                $requestData_returned = $this->saveItem($product,$venta->id);
+                $requestData_returned = $this->saveItem($product,$venta->id, $dataVenta['fecha']);
                 $requestData_returned->save();
             }
             //actualiza en inventario pasandole el parametro idventa a la función actualizaInventario para que realize la lectura de todos los productos que se encuentran en el detalle de la factura y actualize el inventario de todos los producto que estan en el detalle.
@@ -159,7 +159,7 @@ class VentaController extends Controller
                 Session::flash('warning', 'Error al Guardar');         
         }
         //Redireccióna a ventana show con parametros, para visualizar el detalle de la venta
-        return redirect()->route('detallventa', ['id' => $venta->id]);
+        return redirect()->route('detallventaadmin', ['id' => $venta->id]);
     }
 
     public function detallventa($id){
@@ -170,7 +170,7 @@ class VentaController extends Controller
     }
 
     //Recibe parametros de la funcion store para guardar el detalle de la factura.
-    protected function saveItem($product, $order_id)
+    protected function saveItem($product, $order_id, $fecha)
     {
         $requestData = new detallVenta;
         $requestData->producto = $product->producto;
@@ -180,6 +180,7 @@ class VentaController extends Controller
         $requestData->total = $product->total;
         $requestData->id_venta = $order_id;
         $requestData->id_producto = $product->id;
+        $requestData->fecha_egreso = $fecha;
         return $requestData;
     }
     //Recibe parametros de funcion store para actualizar el inventario

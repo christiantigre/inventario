@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Input;
 use Session;
 use DB;
 use Excel;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
@@ -68,11 +69,13 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $fecha = $carbon->now()->format('Y-m-d');
         $this->genLog("Ingresó a nuevo registro.");
         $category = Category::orderBy('id', 'ASC')->where('activo', 1)->pluck('category', 'id');
         $subcategory = Subcategory::orderBy('id', 'ASC')->where('active', 1)->pluck('subcategory', 'id');
         $marca = Marca::orderBy('id', 'ASC')->where('activo', 1)->pluck('marca', 'id');
-        return view('person.product.create',compact('category','subcategory','marca'));
+        return view('person.product.create',compact('category','subcategory','marca','fecha'));
     }
 
     /**
@@ -142,6 +145,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
+
         $product = Product::findOrFail($id);
 
         $this->genLog("Visualizó : ".$product['producto']);
@@ -157,12 +161,16 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
+
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $fecha = $carbon->now()->format('Y-m-d');
+        
         $product = Product::findOrFail($id);
         $this->genLog("Ingresó actualizar producto id: ".$id);
         $category = Category::orderBy('id', 'ASC')->where('activo', 1)->pluck('category', 'id');
         $subcategory = Subcategory::orderBy('id', 'ASC')->where('active', 1)->pluck('subcategory', 'id');
         $marca = Marca::orderBy('id', 'ASC')->where('activo', 1)->pluck('marca', 'id');
-        return view('person.product.edit', compact('product','category','subcategory','marca'));
+        return view('person.product.edit', compact('product','category','subcategory','marca','fecha'));
     }
 
     public function downloadExcel($type){

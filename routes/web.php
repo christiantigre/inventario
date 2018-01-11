@@ -71,11 +71,18 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/listcartitems/', 'ComponentController@listallitems');
   Route::post('/trashItem/','ComponentController@trashItem');
   Route::post('/deleteItem/','ComponentController@deleteItem');
-  Route::get('/DetalleVenta/{id}', ['as' => 'detallventa', 'uses' => 'Admin\\VentaController@detallventa']);
+  Route::get('/DetalleVenta/{id}', ['as' => 'detallventaadmin', 'uses' => 'Admin\\VentaController@detallventa']);
   Route::get('/print/{id}', 'Admin\\VentaController@print');
   Route::get('/viewfactura/{id}', 'Admin\\VentaController@viewfactura');  
   Route::resource('/type-pay', 'Admin\\TypePayController');
   Route::resource('/clausule', 'Admin\\ClausuleController');
+  Route::resource('/inventario', 'Admin\\InventarioController');
+  Route::get('/inventario/ingresos/{dato}', 'Admin\\InventarioController@ingresos');  
+  Route::get('/inventario/egresos/{dato}', 'Admin\\InventarioController@egresos');  
+  Route::post('/inventario/bymonthingre', 'Admin\\InventarioController@bymonthingre');
+  Route::post('/inventario/byrangoingre', 'Admin\\InventarioController@byrangoingre');
+  Route::post('/inventario/bymonthegre', 'Admin\\InventarioController@bymonthegre');
+  Route::post('/inventario/byrangoegre', 'Admin\\InventarioController@byrangoegre');
 });
 
 

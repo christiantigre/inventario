@@ -3,10 +3,18 @@
 @include('errors.messages')
 <div class="row">
     <div class="col-md-12">
+
         <section class="invoice">
           <!-- title row -->
           <div class="row">
             <div class="col-xs-12">
+              <a href="{{ url('/admin/venta/create') }}" class="btn btn-success btn-sm" title="Nueva Venta">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Nueva Venta
+                        </a>
+                        <a href="{{ url('/admin/venta') }}" class="btn btn-success btn-sm" title="Ventas">
+                            <i class="fa fa-calculator" aria-hidden="true"></i> Ventas
+                        </a>
+
               <h2 class="page-header">
                 <i class="fa fa-globe"></i> Venta, {{ $ventum->num_venta }}.
                 <small class="pull-right">Fecha: {{ $ventum->fecha }}</small>

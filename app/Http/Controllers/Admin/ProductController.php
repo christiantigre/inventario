@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Input;
 use Session;
 use DB;
 use Excel;
+use Carbon\Carbon;
 
 class ProductController extends Controller
 {
@@ -64,10 +65,12 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $fecha = $carbon->now()->format('Y-m-d');
         $category = Category::orderBy('id', 'ASC')->where('activo', 1)->pluck('category', 'id');
         $subcategory = Subcategory::orderBy('id', 'ASC')->where('active', 1)->pluck('subcategory', 'id');
         $marca = Marca::orderBy('id', 'ASC')->where('activo', 1)->pluck('marca', 'id');
-        return view('admin.product.create',compact('category','subcategory','marca'));
+        return view('admin.product.create',compact('category','subcategory','marca','fecha'));
     }
 
     /**
@@ -150,12 +153,14 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $fecha = $carbon->now()->format('Y-m-d');
         $product = Product::findOrFail($id);
 
         $category = Category::orderBy('id', 'ASC')->where('activo', 1)->pluck('category', 'id');
         $subcategory = Subcategory::orderBy('id', 'ASC')->where('active', 1)->pluck('subcategory', 'id');
         $marca = Marca::orderBy('id', 'ASC')->where('activo', 1)->pluck('marca', 'id');
-        return view('admin.product.edit', compact('product','category','subcategory','marca'));
+        return view('admin.product.edit', compact('product','category','subcategory','marca','fecha'));
     }
 
     public function downloadExcel($type){

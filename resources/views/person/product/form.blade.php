@@ -1,11 +1,18 @@
 <div class="col-md-6">
-    <div class="form-group {{ $errors->has('producto') ? 'has-error' : ''}}">
+    <div class="form-group {{ $errors->has('fecha_ingreso') ? 'has-error' : ''}}">
+        <label for="fecha_ingreso" class="col-md-4 col-lg-2 control-label">{{ 'Fecha Ingreso' }}</label>
+        <div class="col-md-6 col-lg-8">
+            {!! Form::text('fecha_ingreso', $fecha, ['class' => 'form-control datepicker', 'id'=>'fecha_ingreso']) !!}
+            {!! $errors->first('fecha_ingreso', '<p class="help-block">:message</p>') !!}
+        </div>
+    </div><div class="form-group {{ $errors->has('producto') ? 'has-error' : ''}}">
         <label for="producto" class="col-md-4 col-lg-2 control-label">{{ 'Producto' }}</label>
         <div class="col-md-6 col-lg-8">
             {!! Form::text('producto', null, ['class' => 'form-control', 'required' => 'required','id'=>'producto','autofocus'=>'autofocus']) !!}
             {!! $errors->first('producto', '<p class="help-block">:message</p>') !!}
         </div>
-    </div><div class="form-group {{ $errors->has('cod_barra') ? 'has-error' : ''}}">
+    </div>
+    <div class="form-group {{ $errors->has('cod_barra') ? 'has-error' : ''}}">
         <label for="cod_barra" class="col-md-4 col-lg-2 control-label">{{ 'Código Barra' }}</label>
         <div class="col-md-6 col-lg-8">
             {!! Form::text('cod_barra', null, ['class' => 'form-control', 'id'=>'cod_barra']) !!}
@@ -23,8 +30,14 @@
             {!! Form::text('pre_venta', null, ['class' => 'form-control', 'id'=>'pre_venta']) !!}
             {!! $errors->first('pre_venta', '<p class="help-block">:message</p>') !!}
         </div>
+    </div><div class="form-group {{ $errors->has('compras') ? 'has-error' : ''}}">
+        <label for="compras" class="col-md-4 col-lg-2 control-label">{{ 'Cant. Ingreso' }}</label>
+        <div class="col-md-6 col-lg-8">
+            {!! Form::text('compras', null, ['class' => 'form-control', 'id'=>'compras','placeholder'=>'Cantidad de ingreso']) !!}
+            {!! $errors->first('compras', '<p class="help-block">:message</p>') !!}
+        </div>
     </div><div class="form-group {{ $errors->has('cantidad') ? 'has-error' : ''}}">
-        <label for="cantidad" class="col-md-4 col-lg-2 control-label">{{ 'Cantidad' }}</label>
+        <label for="cantidad" class="col-md-4 col-lg-2 control-label">{{ 'Stock' }}</label>
         <div class="col-md-6 col-lg-8">
             {!! Form::text('cantidad', null, ['class' => 'form-control', 'id'=>'cantidad']) !!}
             {!! $errors->first('cantidad', '<p class="help-block">:message</p>') !!}
@@ -251,3 +264,10 @@
   </div>
   <!-- /.modal -->
 
+<script>
+    $('.datepicker').datepicker({
+        format: "yyyy-mm-dd",
+        language: "es",
+        autoclose: true
+    });
+</script>

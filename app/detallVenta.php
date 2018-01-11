@@ -25,7 +25,7 @@ class detallVenta extends Model
      *
      * @var array
      */
-    protected $fillable = ["producto", "codbarra", "precio", "cant", "total", "id_producto","id_venta"];
+    protected $fillable = ["producto", "codbarra", "precio", "cant", "total", "id_producto","id_venta","fecha_egreso"];
 
     public function venta()
     {

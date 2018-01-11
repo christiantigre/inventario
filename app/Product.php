@@ -25,7 +25,7 @@ class Product extends Model
      *
      * @var array
      */
-    protected $fillable = ['producto', 'cod_barra', 'pre_compra', 'pre_venta', 'cantidad', 'imagen', 'name_img', 'nuevo', 'promo', 'catalogo', 'activo', 'propaganda', 'id_category', 'id_subcategory', 'id_proveedor'];
+    protected $fillable = ['producto', 'cod_barra', 'pre_compra', 'pre_venta', 'cantidad', 'imagen', 'name_img', 'nuevo', 'promo', 'catalogo', 'activo', 'propaganda', 'id_category', 'id_subcategory', 'id_proveedor','compras','ventas','saldo','fecha_ingreso'];
 
     public function Category()
     {

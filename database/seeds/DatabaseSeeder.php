@@ -15,16 +15,18 @@ class DatabaseSeeder extends Seeder
         $this->call(AdminsTableSeeder::class);
         $this->call(PaisesTableSeeder::class);
         $this->call(ProvinciasTableSeeder::class);
+        $this->call(IvaTableSeeder::class);
+        $this->call(TypepayTableseeder::class);
+        $this->call(ClausuleTableSeeder::class);
         $this->call(CantonesTableSeeder::class);
+        //
         $this->call(AlmacenTableSeeder::class);
         $this->call(ParroquiasTableSeeder::class);
         $this->call(CategoryTableSeeder::class);
         $this->call(SucategoryTableSeeder::class);
         $this->call(MarcaTableSeeder::class);
         $this->call(ClientTableSeeder::class);
+        //
         $this->call(ProductTableSeeder::class);
-        $this->call(IvaTableSeeder::class);
-        $this->call(TypepayTableseeder::class);
-        $this->call(ClausuleTableSeeder::class);
     }
 }

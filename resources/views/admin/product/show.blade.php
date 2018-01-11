@@ -22,6 +22,9 @@
                                 <th>ID</th><td>{{ $product->id }}</td>
                             </tr>
                             <tr>
+                                <th> Fecha Ingreso </th><td> {{ $product->fecha_ingreso }} </td>
+                            </tr>
+                            <tr>
                                 <th> Producto </th><td> {{ $product->producto }} </td>
                             </tr>
                             <tr>
@@ -34,7 +37,10 @@
                                 <th> Pre Venta </th><td> {{ $product->pre_venta }} </td>
                             </tr>
                             <tr>
-                                <th> Cantidad </th><td> {{ $product->cantidad }} </td>
+                                <th> Cantidad Ingreso </th><td> {{ $product->compras }} </td>
+                            </tr>
+                            <tr>
+                                <th> Stock </th><td> {{ $product->cantidad }} </td>
                             </tr>
                             <tr>
                                 <th> Detalle </th><td> {{ $product->propaganda }} </td>

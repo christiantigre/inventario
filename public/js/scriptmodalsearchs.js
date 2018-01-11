@@ -413,10 +413,10 @@ $('.select_prod').click(function(){
 	var stock = $(this).parents("tr").find("td")[6].innerHTML;
 	var cantidad = $(this).parents("tr").find('#cant_prod').val();
 	var total = cantidad*precio;
-	if(cantidad>stock){
+	/*if(cantidad>stock){
 		alert("Error!!!...La cantidad seleccionada supera al stock actual. No se puede agregar esta cantidad");
 		return false;
-	}
+	}*/
 	//console.log(nombre);
 	var parametros = {
 		"id" :dataId,

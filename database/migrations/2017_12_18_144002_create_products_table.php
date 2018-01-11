@@ -19,6 +19,10 @@ class CreateProductsTable extends Migration
             $table->double('pre_compra')->nullable();
             $table->double('pre_venta')->nullable();
             $table->integer('cantidad')->nullable();
+            $table->date('fecha_ingreso')->nullable();
+            $table->integer('compras')->nullable();
+            $table->integer('ventas')->default(0);
+            $table->integer('saldo')->nullable();
             $table->string('imagen')->nullable();
             $table->string('name_img')->nullable();
             $table->boolean('nuevo')->default(1);

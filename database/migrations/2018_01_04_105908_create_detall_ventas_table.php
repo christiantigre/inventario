@@ -14,6 +14,7 @@ class CreateDetallVentasTable extends Migration
         Schema::create('detall_ventas', function (Blueprint $table) {
             $table->increments('id');
             $table->text('producto')->nullable();
+            $table->date('fecha_egreso')->nullable();
             $table->string('codbarra',35)->nullable();
             $table->string('precio',35)->nullable();
             $table->string('cant',20)->nullable();

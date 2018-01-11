@@ -148,6 +148,11 @@ return [
             'icon' => 'user',
         ],
         [
+            'text' => 'Inventario',
+            'url'  => 'admin/inventario',
+            'icon' => 'line-chart',
+        ],
+        [
             'text'    => 'Sistema',
             'icon'    => 'share',
             'submenu' => [
