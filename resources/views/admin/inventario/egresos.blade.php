@@ -11,7 +11,10 @@
 
                         <h3>Inventario egreso periodo {{ $year }}
                             @if(!empty($mensaje))
-                            {{ ($mensaje) }}
+                            {{ ($mes) }}
+                            @endif
+                            @if(!empty($mensajerangos))
+                            {{ ($mensajerangos) }}
                             @endif
                         </h3>
 
@@ -25,23 +28,33 @@
                             <i class="fa fa-arrows-h" aria-hidden="true"></i> INGRESOS / EGRESOS
                         </a>
 
-                    <form method="GET" action="{{ url('/admin/almacen') }}" accept-charset="UTF-8" class="navbar-form navbar-right" role="search">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="submit">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </form>
+                   
                 </div>
             </div>
+            <br/>
+                <!--Sección para botones de exportar y descarga-->
+                 <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                         <a href="{{ URL::to('/admin/inventario/downloadExcelEgresos/xls',['year'=>$year,'month'=>$mensaje,'randostart'=>$rangostart,'rangofinish'=>$rangofinish]) }}">
+                            <button class="btn btn-success btn-sm">Descargar Excel xls</button>
+                        </a>
+                        <a href="{{ URL::to('/admin/inventario/downloadExcelEgresos/xlsx',['year'=>$year,'month'=>$mensaje,'randostart'=>$rangostart,'rangofinish'=>$rangofinish]) }}">
+                            <button class="btn btn-success btn-sm">Descargar Excel xlsx</button>
+                        </a>
+                        <a href="{{ URL::to('/admin/inventario/downloadExcelEgresos/csv',['year'=>$year,'month'=>$mensaje,'randostart'=>$rangostart,'rangofinish'=>$rangofinish]) }}">
+                            <button class="btn btn-success btn-sm">Descargar CSV</button>
+                        </a>
+                    </div>
+                </div>
 
             <div class="row">
                 <div class="col-lg-4 col-md-4">
                     <form method="POST" action="{{ URL::to('/admin/inventario/bymonthegre') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+                                <div class="form-group">      
+                                <div class="panel-heading">                  
                         Busqueda por periodos mensuales
+                    </div>
+                    </div>
                         <div class="form-group {{ $errors->has('mes') ? 'has-error' : ''}}">
                             {{ csrf_field() }}
                             <label for="mes" class="col-md-4 control-label">{{ 'Mes' }}</label>
@@ -73,7 +86,9 @@
                 <div class="col-lg-4 col-md-4">
                     <form method="POST" action="{{ URL::to('/admin/inventario/byrangoegre') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
                        {{ csrf_field() }}
-                       Busque entre rango de fechas
+                                <div class="form-group">
+                                    <div class="panel-heading">Busque entre rango de fechas</div>                                        
+                   </div>
                        <div class="form-group {{ $errors->has('fecha_inicio') ? 'has-error' : ''}}">
                         <label for="fecha_inicio" class="col-md-4 col-lg-2 control-label">{{ 'Fecha inicio' }}</label>
                         <div class="col-md-6 col-lg-8">

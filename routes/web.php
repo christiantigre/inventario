@@ -76,6 +76,8 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/viewfactura/{id}', 'Admin\\VentaController@viewfactura');  
   Route::resource('/type-pay', 'Admin\\TypePayController');
   Route::resource('/clausule', 'Admin\\ClausuleController');
+
+  /*Modulo de inventario admin*/
   Route::resource('/inventario', 'Admin\\InventarioController');
   Route::get('/inventario/ingresos/{dato}', 'Admin\\InventarioController@ingresos');  
   Route::get('/inventario/egresos/{dato}', 'Admin\\InventarioController@egresos');  
@@ -83,6 +85,18 @@ Route::group(['prefix' => 'admin'], function () {
   Route::post('/inventario/byrangoingre', 'Admin\\InventarioController@byrangoingre');
   Route::post('/inventario/bymonthegre', 'Admin\\InventarioController@bymonthegre');
   Route::post('/inventario/byrangoegre', 'Admin\\InventarioController@byrangoegre');
+  Route::post('/inventario/bymonthinv', 'Admin\\InventarioController@inventariobymonth');
+  Route::get('/inventario/downloadExcel/{type}/{year}/', 'Admin\\InventarioController@downloadExcelYearInv');
+  Route::get('/inventario/downloadExcel/{type}/{year}/{month}/', 'Admin\\InventarioController@downloadExcelMonthInv');
+
+  Route::get('/inventario/downloadExcelingresos/{type}/{year}/', 'Admin\\InventarioController@downloadExcelYearInvIngresos');
+  Route::get('/inventario/downloadExcelingresos/{type}/{year}/{month}/', 'Admin\\InventarioController@downloadExcelMonthInvIngresos');
+  Route::get('/inventario/downloadExcelingresos/{type}/{year}/{month}/{rangostart}/{rangofinish}', 'Admin\\InventarioController@downloadExcelMonthInvIngresosRangos');
+
+  Route::get('/inventario/downloadExcelEgresos/{type}/{year}/','Admin\\InventarioController@downloadExcelYearInvEgresos');
+  Route::get('/inventario/downloadExcelEgresos/{type}/{year}/{month}/','Admin\\InventarioController@downloadExcelMonthInvEgresos');
+  Route::get('/inventario/downloadExcelEgresos/{type}/{year}/{month}/{rangostart}/{rangofinish}', 'Admin\\InventarioController@downloadExcelMonthInvEgresosRangos');
+
 });
 
 

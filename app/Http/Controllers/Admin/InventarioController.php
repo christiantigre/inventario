@@ -9,6 +9,7 @@ use App\SvLogAdmin;
 use App\Product;
 use Carbon\Carbon;
 use App\detallVenta;
+use Excel;
 use DB;
 
 class InventarioController extends Controller
@@ -26,44 +27,45 @@ class InventarioController extends Controller
 
     public function index(Request $request)
     {
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $year = $carbon->now()->format('Y');
 
         $keyword = $request->get('search');
         $perPage = 25;
+        $mensaje = "";
 
         if (!empty($keyword)) {
-            $product = Product::where('producto', 'LIKE', "%$keyword%")
-            ->orWhere('cod_barra', 'LIKE', "%$keyword%")
-            ->orWhere('pre_compra', 'LIKE', "%$keyword%")
-            ->orWhere('pre_venta', 'LIKE', "%$keyword%")
-            ->orWhere('cantidad', 'LIKE', "%$keyword%")
-            ->orWhere('imagen', 'LIKE', "%$keyword%")
-            ->orWhere('name_img', 'LIKE', "%$keyword%")
-            ->orWhere('nuevo', 'LIKE', "%$keyword%")
-            ->orWhere('promo', 'LIKE', "%$keyword%")
-            ->orWhere('catalogo', 'LIKE', "%$keyword%")
-            ->orWhere('activo', 'LIKE', "%$keyword%")
-            ->orWhere('propaganda', 'LIKE', "%$keyword%")
-            ->orWhere('id_category', 'LIKE', "%$keyword%")
-            ->orWhere('id_subcategory', 'LIKE', "%$keyword%")
-            ->orWhere('id_proveedor', 'LIKE', "%$keyword%")
+
+            $product = DB::table("products")
+            ->select("products.*","items_count.cantidadventas","items_count.totalventa")
+            ->leftJoin(DB::raw("(SELECT codbarra, COUNT(*) AS cantidadventas, coalesce(SUM(cant),0) AS totalventa FROM detall_ventas WHERE date_format(fecha_egreso, '%Y') = ".$year."  GROUP BY codbarra) as items_count"),function($join){
+                $join->on("items_count.codbarra","=","products.cod_barra");
+            })
+            ->whereYear('products.fecha_ingreso','=',$year)
+            ->where('products.producto', 'LIKE', "%$keyword%")
+            ->orWhere('products.cod_barra', 'LIKE', "%$keyword%")
+            ->orWhere('products.pre_compra', 'LIKE', "%$keyword%")
+            ->orWhere('products.pre_venta', 'LIKE', "%$keyword%")
+            ->orWhere('products.cantidad', 'LIKE', "%$keyword%")
+            ->orWhere('products.propaganda', 'LIKE', "%$keyword%")
+            ->orderBy('products.fecha_ingreso','ASC')
             ->paginate($perPage);
 
-            $this->genLog("Busqueda datos :".$keyword);
+            $this->genLog("Busqueda datos inventario ingreso/egreso palabra :".$keyword);
         } else {
-            /*$fecha = '2018-02-10';
-            $product = DB::select(DB::raw('SELECT * FROM products C LEFT JOIN (SELECT codbarra, COUNT(*) AS CANTIDAD, SUM(cant) AS TOTALVENTA FROM detall_ventas GROUP BY codbarra) AS D ON C.cod_barra = D.codbarra where C.fecha_ingreso=:fecha'), array(
-   'fecha' => $fecha,
-    ));
-    dd($product);*/
+            $product = DB::table("products")
+            ->select("products.*","items_count.cantidadventas","items_count.totalventa")
+            ->leftJoin(DB::raw("(SELECT codbarra, COUNT(*) AS cantidadventas, coalesce(SUM(cant),0) AS totalventa FROM detall_ventas WHERE date_format(fecha_egreso, '%Y') = ".$year."  GROUP BY codbarra) as items_count"),function($join){
+                $join->on("items_count.codbarra","=","products.cod_barra");
+            })
+            ->whereYear('products.fecha_ingreso','=',$year)
+            ->orderBy('products.fecha_ingreso','ASC')
+            ->paginate($perPage);
 
-    /*revisar esta parte*/
-    
-            $product = DB::select(DB::raw('SELECT * FROM products C LEFT JOIN (SELECT codbarra, COUNT(*) AS cantidadventas, coalesce(SUM(cant),0) AS totalventa FROM detall_ventas GROUP BY codbarra) AS D ON C.cod_barra = D.codbarra'));
-
-                $this->genLog("Visualizó sección.");
+            $this->genLog("Visualizó sección año ".$year);
         }
 
-        return view('admin.inventario.index', compact('product'));
+        return view('admin.inventario.index', compact('product','year','mensaje'));
     }
 
     /**
@@ -111,42 +113,41 @@ class InventarioController extends Controller
 
         $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
         $year = $carbon->now()->format('Y');
+        $mensaje = "";
+        $rangostart = "";
+        $rangofinish = "";
 
         if (!empty($keyword)) {
-            $product = Product::where('producto', 'LIKE', "%$keyword%")
+            dd($request);
+            $product = Product::orderBy('fecha_ingreso','ASC')
+            ->whereYear('fecha_ingreso','=',$year)
+            ->where('producto', 'LIKE', "%$keyword%")
             ->orWhere('cod_barra', 'LIKE', "%$keyword%")
             ->orWhere('pre_compra', 'LIKE', "%$keyword%")
             ->orWhere('pre_venta', 'LIKE', "%$keyword%")
             ->orWhere('cantidad', 'LIKE', "%$keyword%")
-            ->orWhere('imagen', 'LIKE', "%$keyword%")
-            ->orWhere('name_img', 'LIKE', "%$keyword%")
-            ->orWhere('nuevo', 'LIKE', "%$keyword%")
-            ->orWhere('promo', 'LIKE', "%$keyword%")
-            ->orWhere('catalogo', 'LIKE', "%$keyword%")
-            ->orWhere('activo', 'LIKE', "%$keyword%")
             ->orWhere('propaganda', 'LIKE', "%$keyword%")
-            ->orWhere('id_category', 'LIKE', "%$keyword%")
-            ->orWhere('id_subcategory', 'LIKE', "%$keyword%")
-            ->orWhere('id_proveedor', 'LIKE', "%$keyword%")
             ->paginate($perPage);
 
             $this->genLog("Busqueda datos :".$keyword);
         } else {
             $product = Product::orderBy('fecha_ingreso','ASC')->whereYear('fecha_ingreso','=',$year)->paginate($perPage);
-            /*MUESTRA LA CANTIDAD DE VENTAS GENERADAS Y Y LA CANTIDAD DE PRODUCTOS VENDIDOS
+            /*MUESTRA LA CANTIDAD DE VENTAS GENERADAS Y LA CANTIDAD DE PRODUCTOS VENDIDOS
         SELECT * FROM products C LEFT JOIN (SELECT codbarra, COUNT(*) AS CANTIDAD, SUM(cant) AS TOTALVENTA FROM detall_ventas GROUP BY codbarra) AS D ON C.cod_barra = D.codbarra 
         */
         //$product = Product::orderBy()
         $this->genLog("Visualizó sección ingresos.");
     }
 
-    return view('admin.inventario.ingresos', compact('product','year'));
+    return view('admin.inventario.ingresos', compact('product','year','mensaje','mes','rangostart','rangofinish'));
 }
 /*Ingreso filtro por mes*/
 public function bymonthingre(Request $request){
     $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
     $year = $carbon->now()->format('Y');
     $mes = $this->gen_month($request->month);
+    $rangostart = "";
+    $rangofinish = "";
 
     $perPage = 25;
     try {
@@ -157,8 +158,8 @@ public function bymonthingre(Request $request){
         $this->genLog("Error al visualizar inventario ingresos por mes id :" .$request->month);  
         Session::flash('warning', 'Error al realizar busqueda!!!');           
     }
-    $mensaje = $mes;
-    return view('admin.inventario.ingresos', compact('product','year','mensaje'));
+    $mensaje = $request->month;
+    return view('admin.inventario.ingresos', compact('product','year','mensaje','mes','rangostart','rangofinish'));
 }
 /*Ingreso filtro por rango de fechas*/
 public function byrangoingre(Request $request){
@@ -166,16 +167,20 @@ public function byrangoingre(Request $request){
     $year = $carbon->now()->format('Y');
 
     $perPage = 25;
-    $mensaje = 'Desde '.$request->fecha_inicio. ' a '. $request->fecha_fin;
+    $mensaje = '3';
+    $mensajerangos = 'Desde '.$request->fecha_inicio. ' a '. $request->fecha_fin;
+    $mes = "";
+    $rangostart = $request->fecha_inicio;
+    $rangofinish = $request->fecha_fin;
     try {
-        $product = Product::orderBy('fecha_ingreso','ASC')->whereBetween('fecha_ingreso', [$request->fecha_inicio, $request->fecha_fin])->paginate($perPage);
-        $this->genLog("Visualizó inventario ingresos por rango de fecha :" .$mensaje);
+        $product = Product::orderBy('fecha_ingreso','ASC')->whereBetween('fecha_ingreso', [$request->fecha_inicio, $request->fecha_fin])->whereYear('fecha_ingreso','=',$year)->paginate($perPage);
+        $this->genLog("Visualizó inventario ingresos rango de fecha :" .$mensaje);
         Session::flash('flash_message', 'Consulta realizada correctamente');            
     } catch (\Exception $e) {
-        $this->genLog("Error al visualizar inventario ingresos fecha:" .$mensaje);  
+        $this->genLog("Error vizualizando inventario ingresos fecha:" .$mensaje);  
         Session::flash('warning', 'Error al realizar busqueda!!!');           
     }
-    return view('admin.inventario.ingresos', compact('product','year','mensaje'));
+    return view('admin.inventario.ingresos', compact('product','year','mensaje','mensajerangos','mes','rangostart','rangofinish'));
 }
 
 /*Egreso por mes*/
@@ -183,21 +188,24 @@ public function bymonthegre(Request $request){
     $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
     $year = $carbon->now()->format('Y');
     $mes = $this->gen_month($request->month);
+    $rangostart = "";
+    $rangofinish = "";
 
     $perPage = 25;
     try {
         $product = detallVenta::groupBy('codbarra','producto','precio')
         ->select('codbarra','producto','precio',\DB::raw('SUM(cant) as cant'))
         ->whereMonth('fecha_egreso','=',$request->month)
+        ->whereYear('fecha_egreso','=',$year)
         ->paginate($perPage);
-        $this->genLog("Visualizó inventario egresos por mes id :" .$request->month);
+        $this->genLog("Visualizó inventario egresos mes id :" .$request->month);
         Session::flash('flash_message', 'Consulta realizada correctamente');            
     } catch (\Exception $e) {
-        $this->genLog("Error al visualizar inventario egresos por mes id :" .$request->month);  
+        $this->genLog("Error vizualizando inventario egresos mes id :" .$request->month);  
         Session::flash('warning', 'Error al realizar busqueda!!!');           
     }
-    $mensaje = $mes;
-    return view('admin.inventario.egresos', compact('product','year','mensaje'));
+    $mensaje = $request->month;
+    return view('admin.inventario.egresos', compact('product','year','mensaje','mes','rangostart','rangofinish'));
 }
 /*Egreso filtro por rango de fechas*/
 public function byrangoegre(Request $request){
@@ -206,23 +214,32 @@ public function byrangoegre(Request $request){
 
     $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
     $year = $carbon->now()->format('Y');
+    $rangostart = $request->fecha_inicio;
+    $rangofinish = $request->fecha_fin;
 
     $perPage = 25;
-    $mensaje = 'Desde '.$request->fecha_inicio. ' a '. $request->fecha_fin;
+    $mensaje = "3";
+    $mensajerangos = 'Desde '.$request->fecha_inicio. ' a '. $request->fecha_fin;
+    $mes = "";
+
     try {
         $product = detallVenta::groupBy('codbarra','producto','precio')
         ->select('codbarra','producto','precio',\DB::raw('SUM(cant) as cant'))
-        ->whereMonth('fecha_egreso','=',$request->month)
+        ->whereBetween('fecha_egreso', [$request->fecha_inicio, $request->fecha_fin])
+        ->whereYear('fecha_egreso','=',$year)
         ->paginate($perPage);
         $this->genLog("Visualizó inventario egresos por rango de fecha :" .$mensaje);
         Session::flash('flash_message', 'Consulta realizada correctamente');            
     } catch (\Exception $e) {
-        $this->genLog("Error al visualizar inventario egresos fecha:" .$mensaje);  
+        $this->genLog("Error al visualizar inventario por rango egresos fecha:" .$mensaje);  
         Session::flash('warning', 'Error al realizar busqueda!!!');           
     }
-    return view('admin.inventario.egresos', compact('product','year','mensaje'));
+    return view('admin.inventario.egresos', compact('product','year','mensaje','mes','mensajerangos','rangostart','rangofinish'));
 }
 
+
+
+/*Visualiza los egresos de productos que tiene la empresa*/
 public function egresos(Request $request)
 {
     $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
@@ -230,6 +247,10 @@ public function egresos(Request $request)
 
     $keyword = $request->get('search');
     $perPage = 25;
+
+    $mensaje = "";
+        $rangostart = "";
+        $rangofinish = "";
 
     if (!empty($keyword)) {
         $product = Product::where('producto', 'LIKE', "%$keyword%")
@@ -251,11 +272,44 @@ public function egresos(Request $request)
 
         $this->genLog("Busqueda datos :".$keyword);
     } else {
-        $product = detallVenta::groupBy('codbarra','producto','precio')->select('codbarra','producto','precio',\DB::raw('SUM(cant) as cant'))->paginate($perPage);
+        $product = detallVenta::groupBy('codbarra','producto','precio')->select('codbarra','producto','precio',\DB::raw('SUM(cant) as cant'))->whereYear('fecha_egreso','=',$year)->paginate($perPage);
         $this->genLog("Visualizó sección egresos.");
     }
 
-    return view('admin.inventario.egresos', compact('product','year'));
+    return view('admin.inventario.egresos', compact('product','year','mensaje','rangostart','rangofinish'));
+}
+/*Muestra el inventario por mes
+SELECT * FROM products LEFT JOIN (
+    SELECT detall_ventas.codbarra, 
+    COUNT(*) AS cantidadventas, 
+    coalesce(SUM(detall_ventas.cant),0) AS totalventa 
+    FROM detall_ventas GROUP BY detall_ventas.codbarra) 
+   as tabla ON products.cod_barra = tabla.codbarra
+*/
+   public function inventariobymonth(Request $request){
+    $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+    $year = $carbon->now()->format('Y');
+    $mes = $this->gen_month($request->month);
+    $mensaje = $request->month;
+    
+    $perPage = 25;    
+
+    try {
+
+        $product = DB::table("products")
+        ->select("products.*","items_count.cantidadventas","items_count.totalventa")
+        ->leftJoin(DB::raw("(SELECT codbarra, COUNT(*) AS cantidadventas, coalesce(SUM(cant),0) AS totalventa FROM detall_ventas WHERE date_format(fecha_egreso, '%m') = ".$request->month." and date_format(fecha_egreso, '%Y') = ".$year." GROUP BY codbarra) as items_count"),function($join){
+            $join->on("items_count.codbarra","=","products.cod_barra");
+        })
+        ->whereYear('products.fecha_ingreso','=',$year)
+        ->whereMonth('products.fecha_ingreso','=',$request->month)
+        ->paginate($perPage);
+        $this->genLog("Visualizó inventario completo por mes ".$mes);
+    } catch (\Exception $e) {
+        $this->genLog("Error visualizando inventario completo mes ".$mes);
+    }
+
+    return view('admin.inventario.index', compact('product','year','mensaje','mes'));
 }
 
     /**
@@ -290,6 +344,336 @@ public function egresos(Request $request)
     public function destroy($id)
     {
         //
+    }
+
+    public function downloadExcelYearInv($type,$year){
+        try {
+            $this->genLog("Exportó inventario ingresos año ".$year." formato ".$type);
+
+            return Excel::create('exportardatosinventario', function($excel) use ($type,$year) {
+                $excel->sheet('mySheet', function($sheet) use ($type,$year){                    
+
+                    $sheet->mergeCells('A1:D1');
+                    $sheet->row(1,['INVENTARIO DE PRODUCTOS PERIODO '.$year]);
+                    $sheet->row(2,['CÓDIGO', 'PRODUCTO', 'FECHA DE INGRESO', 'INGRESO','STOCK','PVP COMPRA','PVP COM. X INGRESO','PVP VENTA','PVP VENTA X STOCK','GANANCIA FUTURA','ORD. Ventas','VENDIDOS','TOT VENDIDO','MOV GANANCIA']);
+
+                    $productos = Product::orderBy('fecha_ingreso','ASC')->whereYear('fecha_ingreso','=',$year)->get();
+                    $productos = DB::table("products")
+                    ->select("products.*","items_count.cantidadventas","items_count.totalventa")
+                    ->leftJoin(DB::raw("(SELECT codbarra, COUNT(*) AS cantidadventas, coalesce(SUM(cant),0) AS totalventa FROM detall_ventas WHERE date_format(fecha_egreso, '%Y') = ".$year."  GROUP BY codbarra) as items_count"),function($join){
+                        $join->on("items_count.codbarra","=","products.cod_barra");
+                    })
+                    ->whereYear('products.fecha_ingreso','=',$year)
+                    ->orderBy('products.fecha_ingreso','ASC')
+                    ->get();
+
+                    foreach ($productos as $producto) {
+                        $row = [];
+                        $row[0] = $producto->cod_barra;
+                        $row[1] = $producto->producto;
+                        $row[2] = $producto->fecha_ingreso;
+                        $row[3] = $producto->compras;
+                        $row[4] = $producto->cantidad;
+                        $row[5] = $producto->pre_compra;
+                        $row[6] = ($producto->pre_compra * $producto->compras);
+                        $row[7] = $producto->pre_venta;
+                        $row[8] = ($producto->pre_venta * $producto->compras);
+                        $row[9] = ($producto->pre_venta * $producto->compras) - ($producto->pre_compra * $producto->compras);
+                        $row[10] = $producto->cantidadventas;
+                        $row[11] = $producto->totalventa;
+                        $row[12] = ($producto->pre_venta * $producto->totalventa);
+                        $row[13] = ($producto->pre_venta * $producto->totalventa)-($producto->pre_compra * $producto->compras);
+                        $sheet->appendRow($row);
+                    }
+                });
+            })->download($type); 
+        } catch (\Exception $e) {
+            $this->genLog("Error exporatando inventario completo año ".$year." formato ".$type);
+        }     
+    }
+
+    public function downloadExcelMonthInv($type,$year,$month){
+        try {
+            $mes = $this->gen_month($month);
+            $this->genLog("Exportó inventario completo año ".$year." mes ".$mes." formato ".$type);
+            
+
+            return Excel::create('exportardatosinventario', function($excel) use ($type,$year,$month,$mes) {
+                $excel->sheet('mySheet', function($sheet) use ($type,$year,$month,$mes){                    
+
+                    $sheet->mergeCells('A1:D1');
+                    $sheet->row(1,['INVENTARIO DE PRODUCTOS PERIODO '.$year.' MES '.$mes]);
+                    $sheet->row(2,['CÓDIGO', 'PRODUCTO', 'FECHA DE INGRESO', 'INGRESO','STOCK','PVP COMPRA','PVP COM. X INGRESO','PVP VENTA','PVP VENTA X STOCK','GANANCIA FUTURA','ORD. Ventas','VENDIDOS','TOT VENDIDO','MOV GANANCIA']);
+
+                    $productos = DB::table("products")
+                    ->select("products.*","items_count.cantidadventas","items_count.totalventa")
+                    ->leftJoin(DB::raw("(SELECT codbarra, COUNT(*) AS cantidadventas, coalesce(SUM(cant),0) AS totalventa FROM detall_ventas WHERE date_format(fecha_egreso, '%Y') = ".$year."  GROUP BY codbarra) as items_count"),function($join){
+                        $join->on("items_count.codbarra","=","products.cod_barra");
+                    })
+                    ->whereYear('products.fecha_ingreso','=',$year)
+                    ->whereMonth('products.fecha_ingreso','=',$month)
+                    ->orderBy('products.fecha_ingreso','ASC')
+                    ->get();
+
+
+                    foreach ($productos as $producto) {
+                        $row = [];
+                        $row[0] = $producto->cod_barra;
+                        $row[1] = $producto->producto;
+                        $row[2] = $producto->fecha_ingreso;
+                        $row[3] = $producto->compras;
+                        $row[4] = $producto->cantidad;
+                        $row[5] = $producto->pre_compra;
+                        $row[6] = ($producto->pre_compra * $producto->compras);
+                        $row[7] = $producto->pre_venta;
+                        $row[8] = ($producto->pre_venta * $producto->compras);
+                        $row[9] = ($producto->pre_venta * $producto->compras) - ($producto->pre_compra * $producto->compras);
+                        $row[10] = $producto->cantidadventas;
+                        $row[11] = $producto->totalventa;
+                        $row[12] = ($producto->pre_venta * $producto->totalventa);
+                        $row[13] = ($producto->pre_venta * $producto->totalventa)-($producto->pre_compra * $producto->compras);
+                        $sheet->appendRow($row);
+                    }
+                });
+            })->download($type);  
+        } catch (\Exception $e) {
+            $this->genLog("Error exportando inventario completo año ".$year." mes ".$mes." formato ".$type);
+        }
+    }
+
+
+
+    /*Descargas de inventarios ingresos */
+
+    public function downloadExcelYearInvIngresos($type,$year){
+        try {
+            $this->genLog("Exportó inventario completo año ".$year." formato ".$type);
+
+            return Excel::create('exportardatosinventarioingresos', function($excel) use ($type,$year) {
+                $excel->sheet('mySheet', function($sheet) use ($type,$year){                    
+
+                    $sheet->mergeCells('A1:D1');
+                    $sheet->row(1,['INVENTARIO DE INGRESOS DE PRODUCTOS PERIODO '.$year]);
+                    $sheet->row(2,['CÓDIGO', 'PRODUCTO', 'FECHA DE INGRESO', 'INGRESO','STOCK','PVP COMPRA','PVP COM. X INGRESO']);
+
+
+                    $productos = DB::table("products")
+                    ->select("products.*","items_count.cantidadventas","items_count.totalventa")
+                    ->leftJoin(DB::raw("(SELECT codbarra, COUNT(*) AS cantidadventas, coalesce(SUM(cant),0) AS totalventa FROM detall_ventas WHERE date_format(fecha_egreso, '%Y') = ".$year."  GROUP BY codbarra) as items_count"),function($join){
+                        $join->on("items_count.codbarra","=","products.cod_barra");
+                    })
+                    ->whereYear('products.fecha_ingreso','=',$year)
+                    ->orderBy('products.fecha_ingreso','ASC')
+                    ->get();
+
+                    foreach ($productos as $producto) {
+                        $row = [];
+                        $row[0] = $producto->cod_barra;
+                        $row[1] = $producto->producto;
+                        $row[2] = $producto->fecha_ingreso;
+                        $row[3] = $producto->compras;
+                        $row[4] = $producto->cantidad;
+                        $row[5] = $producto->pre_compra;
+                        $row[6] = ($producto->pre_compra * $producto->compras);
+                        $sheet->appendRow($row);
+                    }
+                });
+            })->download($type); 
+        } catch (\Exception $e) {
+            $this->genLog("Error exportando inventario ingresos año ".$year." formato ".$type);
+        }     
+    }
+
+    public function downloadExcelMonthInvIngresos($type,$year,$month){
+        try {
+            $mes = $this->gen_month($month);
+            $this->genLog("Exportó inventario ingresos año ".$year." mes ".$mes." formato ".$type);
+            
+
+            return Excel::create('exportardatosinventarioingresos', function($excel) use ($type,$year,$month,$mes) {
+                $excel->sheet('mySheet', function($sheet) use ($type,$year,$month,$mes){                    
+
+                    $sheet->mergeCells('A1:D1');
+                    $sheet->row(1,['INVENTARIO DE PRODUCTOS PERIODO '.$year.' MES '.$mes]);
+                    $sheet->row(2,['CÓDIGO', 'PRODUCTO', 'FECHA DE INGRESO', 'INGRESO','STOCK','PVP COMPRA','PVP COM. X INGRESO']);
+
+                    $productos = DB::table("products")
+                    ->select("products.*","items_count.cantidadventas","items_count.totalventa")
+                    ->leftJoin(DB::raw("(SELECT codbarra, COUNT(*) AS cantidadventas, coalesce(SUM(cant),0) AS totalventa FROM detall_ventas WHERE date_format(fecha_egreso, '%Y') = ".$year."  GROUP BY codbarra) as items_count"),function($join){
+                        $join->on("items_count.codbarra","=","products.cod_barra");
+                    })
+                    ->whereYear('products.fecha_ingreso','=',$year)
+                    ->whereMonth('products.fecha_ingreso','=',$month)
+                    ->orderBy('products.fecha_ingreso','ASC')
+                    ->get();
+
+
+                    foreach ($productos as $producto) {
+                        $row = [];
+                        $row[0] = $producto->cod_barra;
+                        $row[1] = $producto->producto;
+                        $row[2] = $producto->fecha_ingreso;
+                        $row[3] = $producto->compras;
+                        $row[4] = $producto->cantidad;
+                        $row[5] = $producto->pre_compra;
+                        $row[6] = ($producto->pre_compra * $producto->compras);
+                        $sheet->appendRow($row);
+                    }
+                });
+            })->download($type);  
+        } catch (\Exception $e) {
+            $this->genLog("Error exportando inventario ingresos año ".$year." y mes ".$mes." formato ".$type);
+        }
+    }
+
+    public function downloadExcelMonthInvIngresosRangos($type,$year,$month,$rangostart,$rangofinish){
+        try {
+            $mes = $this->gen_month($month);
+            $this->genLog("Exportó inventario ingresos año ".$year." rango ".$rangostart."/".$rangofinish);
+            
+
+            return Excel::create('exportardatosinventarioingresos', function($excel) use ($type,$year,$rangostart,$rangofinish) {
+                $excel->sheet('mySheet', function($sheet) use ($type,$year,$rangostart,$rangofinish){                    
+
+                    $sheet->mergeCells('A1:D1');
+                    $sheet->row(1,['INVENTARIO DE PRODUCTOS PERIODO '.$year.' RANGO '.$rangostart.'/'.$rangofinish]);
+                    $sheet->row(2,['CÓDIGO', 'PRODUCTO', 'FECHA DE INGRESO', 'INGRESO','STOCK','PVP COMPRA','PVP COM. X INGRESO']);
+
+                    $productos = DB::table("products")
+                    ->select("products.*","items_count.cantidadventas","items_count.totalventa")
+                    ->leftJoin(DB::raw("(SELECT codbarra, COUNT(*) AS cantidadventas, coalesce(SUM(cant),0) AS totalventa FROM detall_ventas WHERE date_format(fecha_egreso, '%Y') = ".$year."  GROUP BY codbarra) as items_count"),function($join){
+                        $join->on("items_count.codbarra","=","products.cod_barra");
+                    })
+                    ->whereBetween('fecha_ingreso', [$rangostart,$rangofinish])
+                    ->whereYear('products.fecha_ingreso','=',$year)
+                    ->orderBy('products.fecha_ingreso','ASC')
+                    ->get();
+
+
+                    foreach ($productos as $producto) {
+                        $row = [];
+                        $row[0] = $producto->cod_barra;
+                        $row[1] = $producto->producto;
+                        $row[2] = $producto->fecha_ingreso;
+                        $row[3] = $producto->compras;
+                        $row[4] = $producto->cantidad;
+                        $row[5] = $producto->pre_compra;
+                        $row[6] = ($producto->pre_compra * $producto->compras);
+                        $sheet->appendRow($row);
+                    }
+                });
+            })->download($type);  
+        } catch (\Exception $e) {
+            $this->genLog("Error exportando inventario ingresos por año ".$year." rango ".$rangostart.'/'.$rangofinish);
+        }
+
+    }
+
+
+    /*Descargas de inventarios Egresos */
+
+    public function downloadExcelYearInvEgresos($type,$year){
+        try {
+            $this->genLog("Exportó inventario completo año ".$year." formato ".$type);
+
+            return Excel::create('exportardatosinventarioegresos', function($excel) use ($type,$year) {
+                $excel->sheet('mySheet', function($sheet) use ($type,$year){                    
+
+                    $sheet->mergeCells('A1:D1');
+                    $sheet->row(1,['INVENTARIO DE EGRESOS DE PRODUCTOS PERIODO '.$year]);
+                    $sheet->row(2,['CÓDIGO', 'PRODUCTO', 'VENDIDOS','PVP VENTA','TOTAL']);
+
+
+                    $productos = detallVenta::groupBy('codbarra','producto','precio')->select('codbarra','producto','precio',\DB::raw('SUM(cant) as cant'))->whereYear('fecha_egreso','=',$year)
+                    ->get();
+
+                    foreach ($productos as $producto) {
+                        $row = [];
+                        $row[0] = $producto->codbarra;
+                        $row[1] = $producto->producto;
+                        $row[2] = $producto->cant;
+                        $row[3] = $producto->precio;
+                        $row[4] = ($producto->precio * $producto->cant);
+                        $sheet->appendRow($row);
+                    }
+                });
+            })->download($type); 
+        } catch (\Exception $e) {
+            $this->genLog("Error exportando inventario egresos año ".$year." formato ".$type);
+        }     
+    }
+
+    public function downloadExcelMonthInvEgresos($type,$year,$month){
+        try {
+            $mes = $this->gen_month($month);
+            $this->genLog("Exportó inventario egresos año ".$year." mes ".$mes." formato ".$type);
+            
+
+            return Excel::create('exportardatosinventarioegresos', function($excel) use ($type,$year,$month,$mes) {
+                $excel->sheet('mySheet', function($sheet) use ($type,$year,$month,$mes){                    
+
+                    $sheet->mergeCells('A1:D1');
+                    $sheet->row(1,['INVENTARIO DE PRODUCTOS PERIODO '.$year.' MES '.$mes]);
+                    $sheet->row(2,['CÓDIGO', 'PRODUCTO', 'VENDIDOS','PVP VENTA','TOTAL']);
+
+                    $productos = detallVenta::groupBy('codbarra','producto','precio')->select('codbarra','producto','precio',\DB::raw('SUM(cant) as cant'))
+                    ->whereYear('fecha_egreso','=',$year)
+                    ->whereMonth('fecha_egreso','=',$month)
+                    ->get();
+
+
+                    foreach ($productos as $producto) {
+                        $row = [];
+                        $row[0] = $producto->codbarra;
+                        $row[1] = $producto->producto;
+                        $row[2] = $producto->cant;
+                        $row[3] = $producto->precio;
+                        $row[4] = ($producto->precio * $producto->cant);
+                        $sheet->appendRow($row);
+                    }
+                });
+            })->download($type);  
+        } catch (\Exception $e) {
+            $this->genLog("Error exportando inventario egresos año ".$year." mes ".$mes." formato ".$type);
+        }
+    }
+
+    public function downloadExcelMonthInvEgresosRangos($type,$year,$month,$rangostart,$rangofinish){
+        try {
+            $mes = $this->gen_month($month);
+            $this->genLog("Exportó inventario egresos año ".$year." rango ".$rangostart."/".$rangofinish);
+            
+
+            return Excel::create('exportardatosinventarioegresos', function($excel) use ($type,$year,$rangostart,$rangofinish) {
+                $excel->sheet('mySheet', function($sheet) use ($type,$year,$rangostart,$rangofinish){                    
+
+                    $sheet->mergeCells('A1:D1');
+                    $sheet->row(1,['INVENTARIO DE PRODUCTOS EGRESO PERIODO '.$year.' RANGO '.$rangostart.'/'.$rangofinish]);
+                    $sheet->row(2,['CÓDIGO', 'PRODUCTO', 'VENDIDOS','PVP VENTA','TOTAL']);
+
+
+                    $productos = detallVenta::groupBy('codbarra','producto','precio')
+        ->select('codbarra','producto','precio',\DB::raw('SUM(cant) as cant'))
+        ->whereBetween('fecha_egreso', [$rangostart, $rangofinish])
+        ->whereYear('fecha_egreso','=',$year)
+        ->get();
+
+
+                    foreach ($productos as $producto) {
+                        $row = [];
+                        $row[0] = $producto->codbarra;
+                        $row[1] = $producto->producto;
+                        $row[2] = $producto->cant;
+                        $row[3] = $producto->precio;
+                        $row[4] = ($producto->precio * $producto->cant);
+                        $sheet->appendRow($row);
+                    }
+                });
+            })->download($type);  
+        } catch (\Exception $e) {
+            $this->genLog("Error exportando inventario egresos por año ".$year." rango ".$rangostart.'/'.$rangofinish);
+        }
+
     }
 
     public function genLog($mensaje)

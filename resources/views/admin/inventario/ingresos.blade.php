@@ -12,7 +12,10 @@
 
                         <h3>Inventario ingreso periodo {{ $year }}
                             @if(!empty($mensaje))
-                            {{ ($mensaje) }}
+                            {{ ($mes) }}
+                            @endif
+                            @if(!empty($mensajerangos))
+                            {{ ($mensajerangos) }}
                             @endif
                         </h3>
                         <a href="{{ url('/admin/inventario/ingresos','1') }}" class="btn btn-success btn-sm" title="Add New Almacen">
@@ -25,29 +28,40 @@
                             <i class="fa fa-arrows-h" aria-hidden="true"></i> INGRESOS / EGRESOS
                         </a>
 
-                        <form method="GET" action="{{ url('/admin/almacen') }}" accept-charset="UTF-8" class="navbar-form navbar-right" role="search">
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="submit">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                            </div>
-                        </form>
+                        
 
+                    </div>
+                </div>
+
+                <br/>
+                <!--Sección para botones de exportar y descarga-->
+                 <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                         <a href="{{ URL::to('/admin/inventario/downloadExcelingresos/xls',['year'=>$year,'month'=>$mensaje,'randostart'=>$rangostart,'rangofinish'=>$rangofinish]) }}">
+                            <button class="btn btn-success btn-sm">Descargar Excel xls</button>
+                        </a>
+                        <a href="{{ URL::to('/admin/inventario/downloadExcelingresos/xlsx',['year'=>$year,'month'=>$mensaje,'randostart'=>$rangostart,'rangofinish'=>$rangofinish]) }}">
+                            <button class="btn btn-success btn-sm">Descargar Excel xlsx</button>
+                        </a>
+                        <a href="{{ URL::to('/admin/inventario/downloadExcelingresos/csv',['year'=>$year,'month'=>$mensaje,'randostart'=>$rangostart,'rangofinish'=>$rangofinish]) }}">
+                            <button class="btn btn-success btn-sm">Descargar CSV</button>
+                        </a>
                     </div>
                 </div>
                 <!--Seccion de botones para filtrar inventario-->
                 <div class="row">
                     <div class="col-lg-4 col-md-4">
                         <form method="POST" action="{{ URL::to('/admin/inventario/bymonthingre') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+                                <div class="form-group">  
+                                <div class="panel-heading">                          
                             Busqueda por periodos mensuales
+                        </div>
+                        </div>
                             <div class="form-group {{ $errors->has('mes') ? 'has-error' : ''}}">
                                 {{ csrf_field() }}
                                 <label for="mes" class="col-md-4 control-label">{{ 'Mes' }}</label>
                                 <div class="col-md-6">
-                                    <select class="form-control" name="month" id="month">
+                                    <select class="form-control input-sm" name="month" id="month">
                                         <option value="1">Enero</option>
                                         <option value="2">Febrero</option>
                                         <option value="3">Marzo</option>
@@ -66,7 +80,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-2">
-                                    <input class="btn btn-primary" type="submit" value="{{ $submitButtonText or 'BUSCAR' }}">
+                                    <input class="btn btn-primary btn-sm" type="submit" value="{{ $submitButtonText or 'BUSCAR' }}">
                                 </div>
                             </div>
                         </form>
@@ -74,24 +88,28 @@
                     <div class="col-lg-4 col-md-4">
                         <form method="POST" action="{{ URL::to('/admin/inventario/byrangoingre') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
                          {{ csrf_field() }}
+                                <div class="form-group">    
+                                <div class="panel-heading">                     
                          Busque entre rango de fechas
+                     </div>
+                     </div>
                          <div class="form-group {{ $errors->has('fecha_inicio') ? 'has-error' : ''}}">
-                            <label for="fecha_inicio" class="col-md-4 col-lg-2 control-label">{{ 'Fecha inicio' }}</label>
+                            <label for="fecha_inicio" class="col-md-4 col-lg-2 control-label ">{{ 'Fecha inicio' }}</label>
                             <div class="col-md-6 col-lg-8">
-                                {!! Form::text('fecha_inicio', null, ['class' => 'form-control datepicker', 'id'=>'fecha_inicio']) !!}
+                                {!! Form::text('fecha_inicio', null, ['class' => 'form-control datepicker input-sm', 'id'=>'fecha_inicio']) !!}
                                 {!! $errors->first('fecha_inicio', '<p class="help-block">:message</p>') !!}
                             </div>
                         </div>
                         <div class="form-group {{ $errors->has('fecha_fin') ? 'has-error' : ''}}">
                             <label for="fecha_fin" class="col-md-4 col-lg-2 control-label">{{ 'Fecha fin' }}</label>
                             <div class="col-md-6 col-lg-8">
-                                {!! Form::text('fecha_fin', null, ['class' => 'form-control datepicker', 'id'=>'fecha_fin']) !!}
+                                {!! Form::text('fecha_fin', null, ['class' => 'form-control datepicker input-sm', 'id'=>'fecha_fin']) !!}
                                 {!! $errors->first('fecha_fin', '<p class="help-block">:message</p>') !!}
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-2">
-                                <input class="btn btn-primary" type="submit" value="{{ $submitButtonText or 'BUSCAR' }}">
+                                <input class="btn btn-primary btn-sm" type="submit" value="{{ $submitButtonText or 'BUSCAR' }}">
                             </div>
                         </div>
                     </form>
@@ -124,7 +142,7 @@
                             <td><center>{{ $item->compras }}</center></td>
                             <td><center>{{ $item->cantidad }}</center></td>
                             <td><center>{{ $item->pre_compra }}</center></td>
-                            <td><center>{{ $item->pre_compra * $item->cantidad }}</center></td>
+                            <td><center>{{ $item->pre_compra * $item->compras }}</center></td>
                         </tr>
                         @endforeach
                     </tbody>
