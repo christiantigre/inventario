@@ -97,6 +97,14 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/inventario/downloadExcelEgresos/{type}/{year}/{month}/','Admin\\InventarioController@downloadExcelMonthInvEgresos');
   Route::get('/inventario/downloadExcelEgresos/{type}/{year}/{month}/{rangostart}/{rangofinish}', 'Admin\\InventarioController@downloadExcelMonthInvEgresosRangos');
 
+  /*Audotoria desde Admin*/
+
+  Route::resource('/logs', 'Admin\\LogController');
+  Route::post('/registro', [
+      'as' => 'admin.seguridad.logfecha',
+      'uses' => 'Admin\LogController@revisarLogfecha'
+      ]);
+
 });
 
 

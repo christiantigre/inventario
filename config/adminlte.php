@@ -226,6 +226,17 @@ return [
                 ],
             ],
         ],
+        [
+            'text'    => 'Auditoría',
+            'icon'    => 'binoculars',
+            'url'     => '#',
+            'submenu' => [
+                [
+                    'text' => 'Seguimiento',
+                    'url'  => 'admin/logs',
+                ],
+            ],
+        ],
     ],
 
     /*
