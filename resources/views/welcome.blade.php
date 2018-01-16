@@ -147,7 +147,7 @@
                       <i class="fa fa-line-chart fa-5x"></i><br/>
                       INVENTARIOS
                   </a>
-                  <a href="#" class="btn btn-sq-lg btn-default">
+                  <a href="{{ url('person/almacen') }}" class="btn btn-sq-lg btn-default">
                       <i class="fa fa-gears fa-5x"></i><br/>
                       PARAMETROS
                   </a>
