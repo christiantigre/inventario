@@ -93,7 +93,15 @@ href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu" data-widget="tree">
 
-                <li class="active">
+                <li class="">
+                    <a href="{{ url('person/inicio') }}"
+                    >
+                    <i class="fa fa-fw fa-desktop "></i>
+                    <span>Sistema</span>
+                </a>
+            </li>
+
+                <li class="">
                     <a href="{{ url('person/venta') }}"
                     >
                     <i class="fa fa-fw fa-shopping-basket "></i>
@@ -117,6 +125,12 @@ href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 
         <span>Cliente</span>
     </a>
 </li>
+<li class="">
+        <a href="{{ url('person/inventario') }}">
+            <i class="fa fa-fw fa-line-chart "></i>
+            <span>Inventario</span>
+        </a>
+</li>
 <li class="treeview">
     <a href="#"
     >
@@ -136,6 +150,13 @@ href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 
             <i class="fa fa-angle-left pull-right"></i>
         </span>
     </a>
+    <li class="">
+        <a href="{{ url('person/almacen') }}"
+        >
+        <i class="fa fa-fw fa-circle-o "></i>
+        <span>Almacen</span>
+    </a>
+</li>
     <ul class="treeview-menu">
 <li class="treeview">
     <a href="#"

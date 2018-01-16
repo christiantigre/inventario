@@ -123,7 +123,7 @@
               <div class="row">
                 <div class="col-lg-12 col-md-12">
                   <p>
-                    <a href="{{ url('person/home') }}" class="btn btn-sq-lg btn-default">
+                    <a href="{{ url('person/inicio') }}" class="btn btn-sq-lg btn-default">
                         <i class="fa fa-laptop fa-5x"></i><br/>
                         SISTEMA
                     </a>
@@ -143,7 +143,7 @@
                       <i class="fa fa-handshake-o fa-5x"></i><br/>
                       PROVEEDORES
                   </a>
-                  <a href="#" class="btn btn-sq-lg btn-default">
+                  <a href="{{ url('person/inventario') }}" class="btn btn-sq-lg btn-default">
                       <i class="fa fa-line-chart fa-5x"></i><br/>
                       INVENTARIOS
                   </a>

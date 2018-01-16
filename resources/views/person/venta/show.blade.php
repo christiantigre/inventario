@@ -3,7 +3,8 @@
 @include('errors.messages')
 <div class="row">
     <div class="col-md-12">
-      <a href="{{ url('/person/venta') }}" title="Atras"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> VENTAS</button></a>
+     {{--
+      <a href="{{ url('/person/venta') }}" title="Atras"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> VENTAS</button></a>--}}
         <section class="invoice">
           <!-- title row -->
           <div class="row">
@@ -14,6 +15,7 @@
             </h2>
         </div>
         <!-- /.col -->
+     }
     </div>
     <!-- info row -->
     <div class="row invoice-info">

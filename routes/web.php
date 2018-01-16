@@ -15,9 +15,9 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-
+/*
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/test', 'HomeController@index')->name('test');
+Route::get('/test', 'HomeController@index')->name('test');*/
 
 
 Route::group(['prefix' => 'admin'], function () {
@@ -89,13 +89,19 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/inventario/downloadExcel/{type}/{year}/', 'Admin\\InventarioController@downloadExcelYearInv');
   Route::get('/inventario/downloadExcel/{type}/{year}/{month}/', 'Admin\\InventarioController@downloadExcelMonthInv');
 
-  Route::get('/inventario/downloadExcelingresos/{type}/{year}/', 'Admin\\InventarioController@downloadExcelYearInvIngresos');
-  Route::get('/inventario/downloadExcelingresos/{type}/{year}/{month}/', 'Admin\\InventarioController@downloadExcelMonthInvIngresos');
-  Route::get('/inventario/downloadExcelingresos/{type}/{year}/{month}/{rangostart}/{rangofinish}', 'Admin\\InventarioController@downloadExcelMonthInvIngresosRangos');
+  Route::get('/inventario/downloadExcelingresos/{type}/{year}/', 
+    'Admin\\InventarioController@downloadExcelYearInvIngresos');
+  Route::get('/inventario/downloadExcelingresos/{type}/{year}/{month}/', 
+    'Admin\\InventarioController@downloadExcelMonthInvIngresos');
+  Route::get('/inventario/downloadExcelingresos/{type}/{year}/{month}/{rangostart}/{rangofinish}', 
+    'Admin\\InventarioController@downloadExcelMonthInvIngresosRangos');
 
-  Route::get('/inventario/downloadExcelEgresos/{type}/{year}/','Admin\\InventarioController@downloadExcelYearInvEgresos');
-  Route::get('/inventario/downloadExcelEgresos/{type}/{year}/{month}/','Admin\\InventarioController@downloadExcelMonthInvEgresos');
-  Route::get('/inventario/downloadExcelEgresos/{type}/{year}/{month}/{rangostart}/{rangofinish}', 'Admin\\InventarioController@downloadExcelMonthInvEgresosRangos');
+  Route::get('/inventario/downloadExcelEgresos/{type}/{year}/',
+    'Admin\\InventarioController@downloadExcelYearInvEgresos');
+  Route::get('/inventario/downloadExcelEgresos/{type}/{year}/{month}/',
+    'Admin\\InventarioController@downloadExcelMonthInvEgresos');
+  Route::get('/inventario/downloadExcelEgresos/{type}/{year}/{month}/{rangostart}/{rangofinish}', 
+    'Admin\\InventarioController@downloadExcelMonthInvEgresosRangos');
 
   /*Audotoria desde Admin*/
 
@@ -109,6 +115,7 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 Route::group(['prefix' => 'person'], function () {
+  Route::get('/inicio', 'Person\\InicioController@index');
   Route::get('/login', 'PersonAuth\LoginController@showLoginForm')->name('login');
   Route::post('/login', 'PersonAuth\LoginController@login');
   Route::post('/logout', 'PersonAuth\LoginController@logout')->name('logout');
@@ -145,6 +152,27 @@ Route::group(['prefix' => 'person'], function () {
   Route::get('/proveedor/downloadExcel/{type}', 'Person\\ProveedorController@downloadExcel');
   Route::get('proveedor/getcanton/{id}', 'ComponentController@getCanton');
   Route::get('proveedor/{var}/getcanton/{id}', 'ComponentController@getCanton');
+  /*Modulo de inventario admin*/
+  Route::resource('/inventario', 'Person\\InventarioController');
+  Route::get('/inventario/ingresos/{dato}', 'Person\\InventarioController@ingresos');  
+  Route::get('/inventario/egresos/{dato}', 'Person\\InventarioController@egresos');  
+  Route::post('/inventario/bymonthingre', 'Person\\InventarioController@bymonthingre');
+  Route::post('/inventario/byrangoingre', 'Person\\InventarioController@byrangoingre');
+  Route::post('/inventario/bymonthegre', 'Person\\InventarioController@bymonthegre');
+  Route::post('/inventario/byrangoegre', 'Person\\InventarioController@byrangoegre');
+  Route::post('/inventario/bymonthinv', 'Person\\InventarioController@inventariobymonth');
+  Route::get('/inventario/downloadExcel/{type}/{year}/', 'Person\\InventarioController@downloadExcelYearInv');
+  Route::get('/inventario/downloadExcel/{type}/{year}/{month}/', 'Person\\InventarioController@downloadExcelMonthInv');
+
+  Route::get('/inventario/downloadExcelingresos/{type}/{year}/', 'Person\\InventarioController@downloadExcelYearInvIngresos');
+  Route::get('/inventario/downloadExcelingresos/{type}/{year}/{month}/', 'Person\\InventarioController@downloadExcelMonthInvIngresos');
+  Route::get('/inventario/downloadExcelingresos/{type}/{year}/{month}/{rangostart}/{rangofinish}', 'Person\\InventarioController@downloadExcelMonthInvIngresosRangos');
+
+  Route::get('/inventario/downloadExcelEgresos/{type}/{year}/','Person\\InventarioController@downloadExcelYearInvEgresos');
+  Route::get('/inventario/downloadExcelEgresos/{type}/{year}/{month}/','Person\\InventarioController@downloadExcelMonthInvEgresos');
+  Route::get('/inventario/downloadExcelEgresos/{type}/{year}/{month}/{rangostart}/{rangofinish}', 'Person\\InventarioController@downloadExcelMonthInvEgresosRangos');
+
+  Route::resource('/almacen', 'Person\\AlmaceController');
 });
 
 //copiado category y subcategory (carpetas) Realizar la revicion de controladores

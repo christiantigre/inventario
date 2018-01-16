@@ -483,7 +483,9 @@ tr.itemdetall td{
       }
     </style>
     <label class="header_label">
-      {{ $clausulas->pre_clausula }}
+      @if(!empty($clausulas->pre_clausula))
+        {{ $clausulas->pre_clausula }}
+      @endif
     </label>
     <hr class="hr_fin_fac"/>
   </div>  
@@ -492,8 +494,10 @@ tr.itemdetall td{
   <p class="intro">
     <em>
       <label class="header_label_clausula">
+      @if(!empty($clausulas->clausula))
 
         *{{ $clausulas->clausula }}
+      @endif
         
       </label>
     </em>

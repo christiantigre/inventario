@@ -18,7 +18,8 @@ class RedirectIfPerson
 	public function handle($request, Closure $next, $guard = 'person')
 	{
 	    if (Auth::guard($guard)->check()) {
-	        return redirect('person/home');
+	        //return redirect('person/home');
+	        return redirect('person/inicio');
 	    }
 
 	    return $next($request);
