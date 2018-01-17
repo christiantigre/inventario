@@ -110,7 +110,8 @@ Route::group(['prefix' => 'admin'], function () {
       'as' => 'admin.seguridad.logfecha',
       'uses' => 'Admin\LogController@revisarLogfecha'
       ]);
-
+  /*Modulo de contabilidad*/
+  
 });
 
 

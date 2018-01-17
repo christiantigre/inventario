@@ -101,88 +101,88 @@ href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 
                 </a>
             </li>
 
+            <li class="">
+                <a href="{{ url('person/venta') }}"
+                >
+                <i class="fa fa-fw fa-shopping-basket "></i>
+                <span>Ventas</span>
+            </a>
+        </li>
+        <li class="">
+            <a href="{{ url('person/product') }}"><i class="fa fa-fw fa-cloud-upload "></i>
+                <span>Productos</span></a>
+            </li>
+            <li class="">
+                <a href="{{ url('person/proveedor') }}"
+                >
+                <i class="fa fa-fw fa-group "></i>
+                <span>Proveedor</span>
+            </a>
+        </li>
+        <li class="">
+            <a href="{{ url('person/cliente') }}">
+                <i class="fa fa-fw fa-user "></i>
+                <span>Cliente</span>
+            </a>
+        </li>
+        <li class="">
+            <a href="{{ url('person/inventario') }}">
+                <i class="fa fa-fw fa-line-chart "></i>
+                <span>Inventario</span>
+            </a>
+        </li>
+        <li class="treeview">
+            <a href="#"
+            >
+            <i class="fa fa-fw fa-share "></i>
+            <span>Sistema</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">    
+            <li class="">
+                <a href="{{ url('person/almacen') }}"
+                >
+                <i class="fa fa-fw fa-circle-o "></i>
+                <span>Almacen</span>
+            </a>
+        </li>
+        <li class="treeview">
+            <a href="#"
+            >
+            <i class="fa fa-fw fa-circle-o "></i>
+            <span>Configuración</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li class="treeview">
+                <a href="#"
+                >
+                <i class="fa fa-fw fa-circle-o "></i>
+                <span>Categoría</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
                 <li class="">
-                    <a href="{{ url('person/venta') }}"
+                    <a href="{{ url('person/category') }}"
                     >
-                    <i class="fa fa-fw fa-shopping-basket "></i>
-                    <span>Ventas</span>
+                    <i class="fa fa-fw fa-circle-o "></i>
+                    <span>Categoría</span>
                 </a>
             </li>
             <li class="">
-                <a href="{{ url('person/product') }}"><i class="fa fa-fw fa-cloud-upload "></i>
-                <span>Productos</span></a>
+                <a href="{{ url('person/subcategory') }}"
+                >
+                <i class="fa fa-fw fa-circle-o "></i>
+                <span>Subcategoría</span>
+            </a>
         </li>
-        <li class="">
-            <a href="{{ url('person/proveedor') }}"
-            >
-            <i class="fa fa-fw fa-group "></i>
-            <span>Proveedor</span>
-        </a>
-    </li>
-    <li class="">
-        <a href="{{ url('person/cliente') }}">
-        <i class="fa fa-fw fa-user "></i>
-        <span>Cliente</span>
-    </a>
-</li>
-<li class="">
-        <a href="{{ url('person/inventario') }}">
-            <i class="fa fa-fw fa-line-chart "></i>
-            <span>Inventario</span>
-        </a>
-</li>
-<li class="treeview">
-    <a href="#"
-    >
-    <i class="fa fa-fw fa-share "></i>
-    <span>Sistema</span>
-    <span class="pull-right-container">
-        <i class="fa fa-angle-left pull-right"></i>
-    </span>
-</a>
-<ul class="treeview-menu">
-    <li class="treeview">
-        <a href="#"
-        >
-        <i class="fa fa-fw fa-circle-o "></i>
-        <span>Configuración</span>
-        <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-        </span>
-    </a>
-    <li class="">
-        <a href="{{ url('person/almacen') }}"
-        >
-        <i class="fa fa-fw fa-circle-o "></i>
-        <span>Almacen</span>
-    </a>
-</li>
-    <ul class="treeview-menu">
-<li class="treeview">
-    <a href="#"
-    >
-    <i class="fa fa-fw fa-circle-o "></i>
-    <span>Categoría</span>
-    <span class="pull-right-container">
-        <i class="fa fa-angle-left pull-right"></i>
-    </span>
-</a>
-<ul class="treeview-menu">
-    <li class="">
-        <a href="{{ url('person/category') }}"
-        >
-        <i class="fa fa-fw fa-circle-o "></i>
-        <span>Categoría</span>
-    </a>
-</li>
-<li class="">
-    <a href="{{ url('person/subcategory') }}"
-    >
-    <i class="fa fa-fw fa-circle-o "></i>
-    <span>Subcategoría</span>
-</a>
-</li>
-</ul>
+    </ul>
 </li>
 <li class="treeview">
     <a href="#"
