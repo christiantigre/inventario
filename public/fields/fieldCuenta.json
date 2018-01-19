@@ -1,0 +1,44 @@
+{
+    "fields": [
+        {
+            "name": "subauxiliar",
+            "type": "text"
+        },
+        {
+            "name": "codigo",
+            "type": "text"
+        },
+        {
+            "name": "detall",
+            "type": "text"
+        },
+        {
+            "name": "activo",
+            "type": "boolean"
+        },
+        {
+            "name": "auxiliar_id",
+            "type": "integer#unsigned"
+        }
+    ],
+    "foreign_keys": [
+        {
+            "column": "auxiliar_id",
+            "references": "id",
+            "on": "auxiliars"
+        }
+    ],
+    "relationships": [
+        {
+            "name": "auxiliars",
+            "type": "belongsTo",
+            "class": "App\\auxiliars"
+        }
+    ],
+    "validations": [
+        {
+            "field": "subauxiliar",
+            "rules": "required|max:200"
+        }
+    ]
+}

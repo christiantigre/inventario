@@ -1,0 +1,44 @@
+{
+    "fields": [
+        {
+            "name": "grupo",
+            "type": "text"
+        },
+        {
+            "name": "codigo",
+            "type": "text"
+        },
+        {
+            "name": "detall",
+            "type": "text"
+        },
+        {
+            "name": "activo",
+            "type": "boolean"
+        },
+        {
+            "name": "clase_id",
+            "type": "integer#unsigned"
+        }
+    ],
+    "foreign_keys": [
+        {
+            "column": "clase_id",
+            "references": "id",
+            "on": "clase"
+        }
+    ],
+    "relationships": [
+        {
+            "name": "clase",
+            "type": "belongsTo",
+            "class": "App\\clase"
+        }
+    ],
+    "validations": [
+        {
+            "field": "clase",
+            "rules": "required|max:75"
+        }
+    ]
+}

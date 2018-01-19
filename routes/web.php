@@ -112,6 +112,14 @@ Route::group(['prefix' => 'admin'], function () {
       ]);
   /*Modulo de contabilidad*/
   
+  Route::resource('/tipocuenta', 'Admin\\tipocuentaController');
+
+Route::resource('/clase', 'Admin\\claseController');
+Route::resource('/grupo', 'Admin\\GrupoController');
+Route::resource('/cuenta', 'Admin\\CuentaController');
+Route::resource('/subcuenta', 'Admin\\subcuentaController');
+Route::resource('/auxiliar', 'Admin\\auxiliarController');
+Route::resource('/subauxiliar', 'Admin\\subauxiliarController');
 });
 
 

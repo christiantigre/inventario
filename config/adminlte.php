@@ -153,6 +153,11 @@ return [
             'icon' => 'line-chart',
         ],
         [
+            'text' => 'Contabilidad',
+            'url'  => 'admin/tipocuenta',
+            'icon' => 'calculator',
+        ],        
+        [
             'text'    => 'Sistema',
             'icon'    => 'share',
             'submenu' => [
