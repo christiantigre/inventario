@@ -15,6 +15,11 @@ class auxiliarController extends Controller
      *
      * @return \Illuminate\View\View
      */
+    public function __construct()
+    {
+        $this->middleware('admin', ['except' => 'logout']);
+    }
+    
     public function index(Request $request)
     {
         $dato = $this->gen_section();
@@ -140,4 +145,10 @@ class auxiliarController extends Controller
 
         return redirect('admin/auxiliar')->with('flash_message', 'auxiliar deleted!');
     }
+
+    protected function guard()
+    {
+        return Auth::guard('admin');
+    }
+
 }

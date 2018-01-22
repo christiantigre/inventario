@@ -29,9 +29,11 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 10),
+    'lifetime' => env('SESSION_LIFETIME', 1),
 
-    'expire_on_close' => true,
+    /*'expired-session-redirect' => url('auth/login'),*/
+
+    'expire_on_close' => false,
 
     /*
     |--------------------------------------------------------------------------

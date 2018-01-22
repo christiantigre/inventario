@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\Grupo;
 use Illuminate\Http\Request;
+use App\clase;
 
 class GrupoController extends Controller
 {
@@ -15,6 +16,11 @@ class GrupoController extends Controller
      *
      * @return \Illuminate\View\View
      */
+    public function __construct()
+    {
+        $this->middleware('admin', ['except' => 'logout']);
+    }
+    
     public function index(Request $request)
     {
         $dato = $this->gen_section();
@@ -44,8 +50,9 @@ class GrupoController extends Controller
     public function create()
     {
         $dato = $this->gen_section();
+        $clases = clase::orderBy('id', 'ASC')->where('activo', 1)->pluck('clase', 'id');
 
-        return view('admin.grupo.create',compact('dato'));
+        return view('admin.grupo.create',compact('dato','clases'));
     }
 
     /**
@@ -145,4 +152,10 @@ class GrupoController extends Controller
 
         return redirect('admin/grupo')->with('flash_message', 'Grupo deleted!');
     }
+
+    protected function guard()
+    {
+        return Auth::guard('admin');
+    }
+
 }

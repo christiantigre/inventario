@@ -15,6 +15,11 @@ class subauxiliarController extends Controller
      *
      * @return \Illuminate\View\View
      */
+    public function __construct()
+    {
+        $this->middleware('admin', ['except' => 'logout']);
+    }
+    
     public function index(Request $request)
     {
         $dato = $this->gen_section();
@@ -141,4 +146,10 @@ class subauxiliarController extends Controller
 
         return redirect('admin/subauxiliar')->with('flash_message', 'subauxiliar deleted!');
     }
+
+    protected function guard()
+    {
+        return Auth::guard('admin');
+    }
+
 }

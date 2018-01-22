@@ -120,6 +120,9 @@ Route::resource('/cuenta', 'Admin\\CuentaController');
 Route::resource('/subcuenta', 'Admin\\subcuentaController');
 Route::resource('/auxiliar', 'Admin\\auxiliarController');
 Route::resource('/subauxiliar', 'Admin\\subauxiliarController');
+
+
+  Route::get('/extraercontadorclases/','ComponentController@extraercantidadclases');
 });
 
 

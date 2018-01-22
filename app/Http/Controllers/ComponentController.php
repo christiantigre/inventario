@@ -7,6 +7,7 @@ use App\Canton;
 use App\Cliente;
 use App\ItemVenta;
 use App\Iva;
+use App\Grupo;
 
 class ComponentController extends Controller
 {
@@ -112,5 +113,17 @@ public function trashItem(Request $request){
 }
 
 
+/*
+Modulo de contabilidad
+*/
+
+
+    public function extraercantidadclases(Request $request){
+    if ($request->ajax()) {
+        $cantidad = Grupo::where('clase_id', $request->id)->count();
+        $cantidad = $cantidad+1;
+        return response()->json($cantidad);
+    }
+}
 
 }

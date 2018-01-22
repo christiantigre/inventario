@@ -15,6 +15,11 @@ class claseController extends Controller
      *
      * @return \Illuminate\View\View
      */
+    public function __construct()
+    {
+        $this->middleware('admin', ['except' => 'logout']);
+    }
+
     public function index(Request $request)
     {
         $dato = $this->gen_section();
@@ -138,4 +143,10 @@ class claseController extends Controller
 
         return redirect('admin/clase')->with('flash_message', 'clase deleted!');
     }
+
+    protected function guard()
+    {
+        return Auth::guard('admin');
+    }
+    
 }

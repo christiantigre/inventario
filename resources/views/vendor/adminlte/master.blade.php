@@ -77,6 +77,7 @@ $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
 
     {!! Html::script('js/dropdown.js') !!}
     {!! Html::script('js/scriptmodalsearchs.js') !!}
+    {!! Html::script('js/modulocontabilidad.js') !!}
 
 @yield('adminlte_js')
 

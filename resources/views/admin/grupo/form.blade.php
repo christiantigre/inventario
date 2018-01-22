@@ -1,19 +1,26 @@
+<div class="form-group {{ $errors->has('clase_id') ? 'has-error' : ''}}">
+    <label for="clase_id" class="col-md-4 control-label">{{ 'Clase' }}</label>
+    <div class="col-md-6">
+        {!! Form::select('clase_id', $clases, null, ['class' => 'form-control','id'=>'clase_id','autofocus'=>'autofocus','onchange'=>'evento()']) !!}
+        {!! $errors->first('clase_id', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
 <div class="form-group {{ $errors->has('grupo') ? 'has-error' : ''}}">
     <label for="grupo" class="col-md-4 control-label">{{ 'Grupo' }}</label>
     <div class="col-md-6">
-        <textarea class="form-control" rows="5" name="grupo" type="textarea" id="grupo" >{{ $grupo->grupo or ''}}</textarea>
+        {!! Form::text('grupo', null, ['class' => 'form-control','autofocus'=>'autofocus']) !!}
         {!! $errors->first('grupo', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('codigo') ? 'has-error' : ''}}">
     <label for="codigo" class="col-md-4 control-label">{{ 'Codigo' }}</label>
     <div class="col-md-6">
-        <textarea class="form-control" rows="5" name="codigo" type="textarea" id="codigo" >{{ $grupo->codigo or ''}}</textarea>
+        {!! Form::text('codigo', null, ['id'=>'codigo','class' => 'form-control','autofocus'=>'autofocus']) !!}
         {!! $errors->first('codigo', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('detall') ? 'has-error' : ''}}">
     <label for="detall" class="col-md-4 control-label">{{ 'Detall' }}</label>
     <div class="col-md-6">
-        <textarea class="form-control" rows="5" name="detall" type="textarea" id="detall" >{{ $grupo->detall or ''}}</textarea>
+        {!! Form::text('detall', null, ['class' => 'form-control','autofocus'=>'autofocus']) !!}
         {!! $errors->first('detall', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('activo') ? 'has-error' : ''}}">
@@ -26,12 +33,6 @@
 </select>
         {!! $errors->first('activo', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('clase_id') ? 'has-error' : ''}}">
-    <label for="clase_id" class="col-md-4 control-label">{{ 'Clase Id' }}</label>
-    <div class="col-md-6">
-        <input class="form-control" name="clase_id" type="number" id="clase_id" value="{{ $grupo->clase_id or ''}}" >
-        {!! $errors->first('clase_id', '<p class="help-block">:message</p>') !!}
-    </div>
 </div>
 
 <div class="form-group">
@@ -39,3 +40,6 @@
         <input class="btn btn-primary" type="submit" value="{{ $submitButtonText or 'Create' }}">
     </div>
 </div>
+
+
+    <!--la funcion de onchange en el selec esta en el js. modulocontabilidad
