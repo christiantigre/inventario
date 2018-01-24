@@ -25,9 +25,9 @@ class auxiliar extends Model
      *
      * @var array
      */
-    protected $fillable = ['auxiliar','secuencia', 'codigo', 'detall', 'activo', 'subcuenta_id'];
+    protected $fillable = ['auxiliar','secuencia', 'codigo', 'detall', 'activo', 'subcuenta','subcuenta_id'];
 
-    public function subcuentum()
+    public function Subcuenta()
 	{
 		return $this->belongsTo('App\subcuentum');
 	}

@@ -90,3 +90,61 @@ function cuentaCuentas(){
 		}  
 	});
 }
+
+
+function cuentaCuentasVarias(){
+	var token = $("input[name=_token]").val();
+	var cuenta_id= $("#cuenta_id").val();
+	var route = '/admin/extraercontadorcuentasvarias/';
+	var parametros = {
+		"id" :cuenta_id
+	}
+	$.ajax({
+		url:route,
+		headers:{'X-CSRF-TOKEN':token},
+		type:'get',
+		dataType: 'json',
+		data:parametros,
+		success:function(data)
+		{
+			console.log(data);
+			document.getElementById("secuencia").value = data.cantidad;
+			document.getElementById("codigo").value = data.cuenta_codigo+'.'+data.cantidad;
+			document.getElementById("cuenta").value = data.cuenta_codigo;
+			console.log("copy data succefull");
+		},
+		error:function(data)
+		{
+			console.log('Error '+data);
+		}  
+	});
+}
+
+function cuentaSubCuentas(){
+	var token = $("input[name=_token]").val();
+	var subcuenta_id= $("#subcuenta_id").val();
+	var route = '/admin/extraercontadorsubcuentas/';
+	var parametros = {
+		"id" :subcuenta_id
+	}
+	console.log(parametros);
+	$.ajax({
+		url:route,
+		headers:{'X-CSRF-TOKEN':token},
+		type:'get',
+		dataType: 'json',
+		data:parametros,
+		success:function(data)
+		{
+			console.log(data);
+			document.getElementById("secuencia").value = data.cantidad;
+			document.getElementById("codigo").value = data.cuenta_codigo+'.'+data.cantidad;
+			document.getElementById("subcuenta").value = data.cuenta_codigo;
+			console.log("copy data succefull");
+		},
+		error:function(data)
+		{
+			console.log('Error '+data);
+		}  
+	});
+}

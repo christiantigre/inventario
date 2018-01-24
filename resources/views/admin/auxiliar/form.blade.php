@@ -1,19 +1,38 @@
+<div class="form-group {{ $errors->has('cuenta_id') ? 'has-error' : ''}}">
+    <label for="cuenta_id" class="col-md-4 control-label">{{ 'Cuenta' }}</label>
+    <div class="col-md-6">
+        {!! Form::select('subcuenta_id', $subcuentas, null, ['class' => 'form-control','id'=>'subcuenta_id','autofocus'=>'autofocus','onchange'=>'cuentaSubCuentas()']) !!}
+
+        {!! Form::hidden('subcuenta', null, ['id'=>'subcuenta','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('subcuenta') !!}
+
+        {!! $errors->first('cuenta_id', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+<div class="form-group {{ $errors->has('secuencia') ? 'has-error' : ''}}">
+    <label for="secuencia" class="col-md-4 control-label">{{ 'secuencia' }}</label>
+    <div class="col-md-6">
+        {!! Form::text('secuencia', null, ['id'=>'secuencia','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('secuencia') !!}        
+        {!! $errors->first('secuencia', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+<div class="form-group {{ $errors->has('codigo') ? 'has-error' : ''}}">
+    <label for="codigo" class="col-md-4 control-label">{{ 'Codigo' }}</label>
+    <div class="col-md-6">
+        {!! Form::text('codigo', null, ['class' => 'form-control input-sm','id'=>'codigo','autofocus'=>'autofocus','readonly'=>'readonly']), old('codigo') !!}
+        {!! $errors->first('codigo', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
 <div class="form-group {{ $errors->has('auxiliar') ? 'has-error' : ''}}">
     <label for="auxiliar" class="col-md-4 control-label">{{ 'Auxiliar' }}</label>
     <div class="col-md-6">
-        <textarea class="form-control" rows="5" name="auxiliar" type="textarea" id="auxiliar" required>{{ $auxiliar->auxiliar or ''}}</textarea>
+        {!! Form::text('auxiliar', null, ['class' => 'form-control input-sm','id'=>'auxiliar','autofocus'=>'autofocus']), old('auxiliar') !!}
         {!! $errors->first('auxiliar', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('codigo') ? 'has-error' : ''}}">
-    <label for="codigo" class="col-md-4 control-label">{{ 'Codigo' }}</label>
-    <div class="col-md-6">
-        <textarea class="form-control" rows="5" name="codigo" type="textarea" id="codigo" >{{ $auxiliar->codigo or ''}}</textarea>
-        {!! $errors->first('codigo', '<p class="help-block">:message</p>') !!}
-    </div>
-</div><div class="form-group {{ $errors->has('detall') ? 'has-error' : ''}}">
+</div>
+<div class="form-group {{ $errors->has('detall') ? 'has-error' : ''}}">
     <label for="detall" class="col-md-4 control-label">{{ 'Detall' }}</label>
     <div class="col-md-6">
-        <textarea class="form-control" rows="5" name="detall" type="textarea" id="detall" >{{ $auxiliar->detall or ''}}</textarea>
+        {!! Form::text('detall', null, ['class' => 'form-control input-sm','id'=>'detall','autofocus'=>'autofocus']), old('detall') !!}
         {!! $errors->first('detall', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('activo') ? 'has-error' : ''}}">
@@ -26,16 +45,10 @@
 </select>
         {!! $errors->first('activo', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('subcuenta_id') ? 'has-error' : ''}}">
-    <label for="subcuenta_id" class="col-md-4 control-label">{{ 'Subcuenta Id' }}</label>
-    <div class="col-md-6">
-        <input class="form-control" name="subcuenta_id" type="number" id="subcuenta_id" value="{{ $auxiliar->subcuenta_id or ''}}" >
-        {!! $errors->first('subcuenta_id', '<p class="help-block">:message</p>') !!}
-    </div>
 </div>
 
 <div class="form-group">
     <div class="col-md-offset-4 col-md-4">
-        <input class="btn btn-primary" type="submit" value="{{ $submitButtonText or 'Create' }}">
+        <input class="btn btn-primary" type="submit" value="{{ $submitButtonText or 'Crear' }}">
     </div>
 </div>

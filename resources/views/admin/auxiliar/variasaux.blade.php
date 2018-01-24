@@ -70,7 +70,7 @@
 
 <script type="text/javascript">
   $(document).ready(function(){
-    list_subcuentas();
+    //list_subcuentas();
   });
 </script>
 @endsection

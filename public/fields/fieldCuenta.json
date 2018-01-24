@@ -1,7 +1,7 @@
 {
     "fields": [
         {
-            "name": "subcuenta",
+            "name": "subauxiliar",
             "type": "text"
         },        
         {
@@ -21,26 +21,26 @@
             "type": "boolean"
         },        
         {
-            "name": "cuenta",
+            "name": "auxiliar",
             "type": "text"
         },
         {
-            "name": "cuenta_id",
+            "name": "auxiliar_id",
             "type": "integer#unsigned"
         }
     ],
     "foreign_keys": [
         {
-            "column": "cuenta_id",
+            "column": "auxiliar_id",
             "references": "id",
-            "on": "cuentas"
+            "on": "auxiliar"
         }
     ],
     "relationships": [
         {
-            "name": "cuentas",
+            "name": "auxiliar",
             "type": "belongsTo",
-            "class": "App\\Cuentum"
+            "class": "App\\auxiliar"
         }
     ]
 }

@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateSubauxiliarsTable extends Migration
+class CreateTempauxctasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,16 +12,16 @@ class CreateSubauxiliarsTable extends Migration
      */
     public function up()
     {
-        Schema::create('subauxiliars', function (Blueprint $table) {
+        Schema::create('tempauxctas', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('subauxiliar');
+            $table->text('auxiliar')->nullable();
             $table->text('secuencia')->nullable();
             $table->text('codigo')->nullable();
             $table->text('detall')->nullable();
-            $table->text('auxiliar')->nullable();
             $table->boolean('activo')->default(1);
-            $table->integer('auxiliar_id')->unsigned();
-            $table->foreign('auxiliar_id')->references('id')->on('auxiliars');
+            $table->text('subcuenta')->nullable();
+            $table->integer('subcuenta_id')->unsigned();
+            $table->foreign('subcuenta_id')->references('id')->on('subcuentas');
             $table->timestamps();
             });
     }
@@ -33,6 +33,6 @@ class CreateSubauxiliarsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('subauxiliars');
+        Schema::drop('tempauxctas');
     }
 }

@@ -31,5 +31,6 @@ class subcuentum extends Model
 	{
 		return $this->belongsTo('App\Cuentum');
 	}
+
 	
 }

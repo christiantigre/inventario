@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class subauxiliar extends Model
+class Tempsubauxctum extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'subauxiliars';
+    protected $table = 'tempsubauxctas';
 
     /**
     * The database primary key value.
@@ -25,11 +25,11 @@ class subauxiliar extends Model
      *
      * @var array
      */
-    protected $fillable = ['subauxiliar','secuencia', 'codigo', 'detall', 'activo', 'auxiliar','auxiliar_id'];
+    protected $fillable = ['subauxiliar', 'secuencia', 'codigo', 'detall', 'activo', 'auxiliar', 'auxiliar_id'];
 
-    public function auxiliars()
+    public function auxiliar()
 	{
-		return $this->belongsTo('App\auxiliars');
+		return $this->belongsTo('App\auxiliar');
 	}
 	
 }

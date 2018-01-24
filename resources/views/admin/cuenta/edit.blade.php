@@ -23,7 +23,7 @@
 
                        <!-- <form method="POST" action="{{ url('/admin/cuenta/' . $cuentum->id) }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">-->
 
-                        {!! Form::model($cuentum, [
+                            {!! Form::model($cuentum, [
                             'method' => 'PATCH',
                             'url' => ['/admin/cuenta', $cuentum->id],
                             'class' => 'form-horizontal', 

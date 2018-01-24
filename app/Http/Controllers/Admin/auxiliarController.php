@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\auxiliar;
 use Illuminate\Http\Request;
+use App\subcuentum;
 
 class auxiliarController extends Controller
 {
@@ -37,7 +38,6 @@ class auxiliarController extends Controller
         } else {
             $auxiliar = auxiliar::paginate($perPage);
         }
-
         return view('admin.auxiliar.index', compact('auxiliar','dato'));
     }
 
@@ -48,7 +48,19 @@ class auxiliarController extends Controller
      */
     public function create()
     {
-        return view('admin.auxiliar.create');
+        $dato = $this->gen_section();
+
+        $subcuentas = subcuentum::orderBy('codigo', 'ASC')->where('activo', 1)->pluck('subcuenta', 'id');
+        return view('admin.auxiliar.create',compact('dato','subcuentas'));
+    }
+    
+    public function variasaux(Request $request)
+    {        
+        $dato = $this->gen_section();
+
+        $subcuentas = subcuentum::orderBy('codigo', 'ASC')->where('activo', 1)->pluck('subcuenta', 'id');
+        return view('admin.auxiliar.variasaux',compact('dato','subcuentas'));
+
     }
 
     /**
@@ -94,8 +106,11 @@ class auxiliarController extends Controller
     public function edit($id)
     {
         $auxiliar = auxiliar::findOrFail($id);
+        $dato = $this->gen_section();
 
-        return view('admin.auxiliar.edit', compact('auxiliar'));
+        $subcuentas = subcuentum::orderBy('codigo', 'ASC')->where('activo', 1)->pluck('subcuenta', 'id');
+
+        return view('admin.auxiliar.edit', compact('auxiliar','dato','subcuentas'));
     }
 
     /**

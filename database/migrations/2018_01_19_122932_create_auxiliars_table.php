@@ -18,7 +18,8 @@ class CreateAuxiliarsTable extends Migration
             $table->text('secuencia')->nullable();
             $table->text('codigo')->nullable();
             $table->text('detall')->nullable();
-            $table->boolean('activo')->nullable();
+            $table->text('subcuenta')->nullable();
+            $table->boolean('activo')->default(1);
             $table->integer('subcuenta_id')->unsigned();
             $table->foreign('subcuenta_id')->references('id')->on('subcuentas');
             $table->timestamps();

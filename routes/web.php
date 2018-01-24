@@ -125,12 +125,19 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/extraercontadorclases/','ComponentController@extraercantidadclases');
   Route::get('/extraercontadorgrupos/','ComponentController@extraercantidadgrupos');
   Route::get('/extraercontadorcuentas/','ComponentController@extraercontadorcuentas');
+  Route::get('/extraercontadorcuentasvarias/','ComponentController@extraercontadorcuentasvarias');
+  Route::get('/extraercontadorsubcuentas/','ComponentController@extraercontadorsubcuentas');
 
   Route::get('/variassubctas','Admin\\subcuentaController@variassubctas');
+  Route::get('/variasaux','Admin\\auxiliarController@variasaux');
 
   Route::resource('/tempsubcta', 'Admin\\TempsubctaController');
-  
-  Route::get('/listcartitems/', 'ComponentController@listallitems');
+
+  Route::get('/listsubcuentas/', 'ComponentController@listaSubcuentas');  
+  Route::post('/savesubcuenta/', 'ComponentController@savesubcuenta');
+  Route::post('/trashSubcuentas/','ComponentController@trashSubcuentas');
+  Route::get('/guardarsubcuentas/','ComponentController@guardarsubcuentas');
+
 });
 
 
@@ -196,3 +203,5 @@ Route::group(['prefix' => 'person'], function () {
 });
 
 //copiado category y subcategory (carpetas) Realizar la revicion de controladores
+Route::resource('admin/tempauxcta', 'Admin\\TempauxctaController');
+Route::resource('admin/tempsubauxcta', 'Admin\\TempsubauxctaController');

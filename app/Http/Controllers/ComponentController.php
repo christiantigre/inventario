@@ -11,10 +11,12 @@ use App\Grupo;
 use App\Cuentum;
 use App\subcuentum;
 use App\Tempsubctum;
+use App\auxiliar;
+use Session;
 
 class ComponentController extends Controller
 {
-    
+
 
     public function getCanton(Request $request, $id){
         if($request->ajax()){
@@ -126,8 +128,8 @@ public function extraercantidadclases(Request $request){
         $cantidad = Grupo::where('clase_id', $request->id)->count();
         $cantidad = $cantidad+1;
         return response()->json($cantidad);
-        }
     }
+}
 
 public function extraercantidadgrupos(Request $request){
     if ($request->ajax()) {
@@ -139,10 +141,10 @@ public function extraercantidadgrupos(Request $request){
         $dato['grupo_codigo'] = $grupo->codigo;
         $dato['cantidad'] = $cantidad;
         return response()->json($dato);
-        }
     }
+}
 
-    public function extraercontadorcuentas(Request $request){
+public function extraercontadorcuentas(Request $request){
     if ($request->ajax()) {
         $cuenta = Cuentum::where('id', $request->id)->first();
         $cantidad = subcuentum::where('cuenta', $cuenta->codigo)->count();
@@ -152,13 +154,109 @@ public function extraercantidadgrupos(Request $request){
         $dato['cuenta_codigo'] = $cuenta->codigo;
         $dato['cantidad'] = $cantidad;
         return response()->json($dato);
+    }
+}
+
+public function listaSubcuentas()
+{
+    $tempsubcta = Tempsubctum::orderBy('codigo','ASC')->get();
+    return view('admin/subcuenta/list_tempsubcuenta', compact('tempsubcta'));
+}
+
+public function savesubcuenta(Request $request){    
+    if($request->ajax()){
+        $item = new Tempsubctum;        
+        $item->cuenta_id = $request->cuenta_id;
+        $item->cuenta = $request->cuenta;
+        $item->secuencia = $request->secuencia;
+        $item->subcuenta = $request->subcuenta;
+        $item->codigo = $request->codigo;
+
+        if($item->save()){
+            return response()->json(["mensaje"=>"Registrado con exito","data"=>$request->all()]);
+        }else{
+            return response()->json(["mensaje"=>"Error !!! al guardar","data"=>$request->all()]);
+        }
+            /*$cliente = ItemVenta::create($requestData);
+            return response()->json($cliente);*/
         }
     }
 
-    public function listaSubcuentas()
+
+
+    public function extraercontadorcuentasvarias(Request $request){
+        if ($request->ajax()) {
+            $cuenta = Cuentum::where('id', $request->id)->first();
+            $cantidad = subcuentum::where('cuenta', $cuenta->codigo)->count();
+            $cantidad_temp = Tempsubctum::where('cuenta', $cuenta->codigo)->count();
+            $cantidad = $cantidad+1+$cantidad_temp;
+            $cuenta_id = $cuenta->id;
+            $dato['cuenta_id'] = $cuenta_id;
+            $dato['cuenta_codigo'] = $cuenta->codigo;
+            $dato['cantidad'] = $cantidad;
+            return response()->json($dato);
+        }
+    }
+
+    public function trashSubcuentas(Request $request){
+        if ($request->ajax()) {        
+            if(Tempsubctum::truncate()){
+                return response()->json(["mensaje"=>"Vaciado con exito","data"=>"Vaciado"]);
+            }else{
+                return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
+            }
+        }else{
+           return response()->json(["mensaje"=>$request->all()]);   
+       }
+   }
+
+   public function guardarsubcuentas(Request $request){
+    try {
+
+        $subcuentas = Tempsubctum::get();
+        foreach ($subcuentas as $subcuenta) {
+            $requestData_returned = $this->saveItem($subcuenta);
+            $requestData_returned->save();
+        }
+
+        Tempsubctum::truncate();
+
+        Session::flash('flash_message', 'Guardado correctamente');
+    } catch (\Exception $e) {
+        Session::flash('warning', 'Error al Guardar');  
+
+        return redirect()->back();
+
+    }
+    return redirect('admin/subcuenta');
+}
+
+
+    protected function saveItem($subcuenta)
     {
-        $tempsubcta = Tempsubctum::orderBy('codigo','ASC')->get();
-        return view('admin/subcuenta/list_tempsubcuenta', compact('tempsubcta'));
+        $requestData = new subcuentum;
+        $requestData->subcuenta = $subcuenta->subcuenta;
+        $requestData->secuencia = $subcuenta->secuencia;
+        $requestData->codigo = $subcuenta->codigo;
+        $requestData->detall = $subcuenta->detall;
+        $requestData->activo = $subcuenta->activo;
+        $requestData->cuenta = $subcuenta->cuenta;
+        $requestData->cuenta_id = $subcuenta->cuenta_id;
+        return $requestData;
+    }
+
+
+    public function extraercontadorsubcuentas(Request $request){
+        if ($request->ajax()) {
+            $subcuenta = subcuentum::where('id', $request->id)->first();
+            $cantidad = auxiliar::where('subcuenta', $subcuenta->codigo)->count();
+            $cantidad = $cantidad+1;
+            $subcuenta_id = $subcuenta->id;
+            $dato['subcuenta_id'] = $subcuenta_id;
+            $dato['cuenta_codigo'] = $subcuenta->codigo;
+            $dato['cantidad'] = $cantidad;
+            return response()->json($dato);
+        }
     }
 
 }

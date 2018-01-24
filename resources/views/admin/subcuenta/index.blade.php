@@ -5,10 +5,13 @@
 <section class="content">
         <div class="row">
             @include('admin.tipocuenta.sidebar')
-            <div class="col-md-10 col-lg-10 col-xs-10 col-sm-10">
+            <div class="col-md-10 col-lg-10 col-xs-12 col-sm-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">Subcuenta</div>
                     <div class="panel-body">
+
+        <div class="row">
+            <div class="col-md-6 col-lg-6 col-xs-12 col-sm-6">
 
                         <a href="{{ url('/admin/subcuenta/create') }}" class="btn btn-success btn-sm" title="Registrar Subcuenta">
                             <i class="fa fa-plus" aria-hidden="true"></i> Nuevo
@@ -17,7 +20,8 @@
                         <a href="{{ URL::to('/admin/variassubctas') }}" class="btn btn-success btn-sm" title="Registrar Varias Subcuenta">
                             <i class="fa fa-plus" aria-hidden="true"></i> Varios
                         </a>
-
+                    </div>
+            <div class="col-md-6 col-lg-6 col-xs-12 col-sm-6">
                         <form method="GET" action="{{ url('/admin/subcuenta') }}" accept-charset="UTF-8" class="navbar-form navbar-right" role="search">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
@@ -28,6 +32,8 @@
                                 </span>
                             </div>
                         </form>
+</div>
+</div>
 
                         <br/>
                         <br/>

@@ -58,6 +58,8 @@ php artisan crud:generate Subcategory --fields_from_file="/home/pcsolution/Dropb
 
 php artisan crud:generate Tempsubcta --fields_from_file="/home/pcsolution/Dropbox/inventario/public/fields/fieldCuenta.json" --view-path=admin --controller-namespace=Admin --route-group=admin
 
+php artisan crud:generate Tempauxcta --fields_from_file="/home/pcsolution/Dropbox/inventario/public/fields/fieldCuenta.json" --view-path=admin --controller-namespace=Admin --route-group=admin
+
 php artisan crud:generate Venta --fields_from_file="/home/pcsolution/Dropbox/inventario/public/fields/fieldsVenta.json" --view-path=admin --controller-namespace=Admin --route-group=admin
 
 php artisan crud:generate Product --fields_from_file="/home/pcsolution/Dropbox/webpageveterinaria/public/fields/fieldsproducts.json" --view-path=admin --controller-namespace=Admin --route-group=admin
