@@ -14,11 +14,11 @@ class CreateClasesTable extends Migration
     {
         Schema::create('clases', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
             $table->string('clase')->nullable();
             $table->string('codigo')->nullable();
             $table->string('detall')->nullable();
             $table->boolean('activo')->nullable();
+            $table->timestamps();
             });
     }
 

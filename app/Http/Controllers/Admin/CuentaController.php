@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Grupo;
 use App\Cuentum;
 use Illuminate\Http\Request;
+use Session;
 
 class CuentaController extends Controller
 {
@@ -28,14 +30,14 @@ class CuentaController extends Controller
         $perPage = 25;
 
         if (!empty($keyword)) {
-            $cuenta = Cuentum::where('cuenta', 'LIKE', "%$keyword%")
-                ->orWhere('codigo', 'LIKE', "%$keyword%")
-                ->orWhere('detall', 'LIKE', "%$keyword%")
-                ->orWhere('activo', 'LIKE', "%$keyword%")
-                ->orWhere('grupo_id', 'LIKE', "%$keyword%")
-                ->paginate($perPage);
+            $cuenta = Cuentum::orderBy('codigo','ASC')->where('cuenta', 'LIKE', "%$keyword%")
+            ->orWhere('codigo', 'LIKE', "%$keyword%")
+            ->orWhere('detall', 'LIKE', "%$keyword%")
+            ->orWhere('activo', 'LIKE', "%$keyword%")
+            ->orWhere('grupo_id', 'LIKE', "%$keyword%")
+            ->paginate($perPage);
         } else {
-            $cuenta = Cuentum::paginate($perPage);
+            $cuenta = Cuentum::orderBy('codigo','ASC')->paginate($perPage);
         }
 
         return view('admin.cuenta.index', compact('cuenta','dato'));
@@ -48,7 +50,9 @@ class CuentaController extends Controller
      */
     public function create()
     {
-        return view('admin.cuenta.create');
+        $dato = $this->gen_section();
+        $grupos = Grupo::orderBy('codigo', 'ASC')->where('activo', 1)->pluck('grupo', 'id');
+        return view('admin.cuenta.create',compact('dato','grupos'));
     }
 
     /**
@@ -61,13 +65,25 @@ class CuentaController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-			'cuenta' => 'required|max:200'
-		]);
+            'cuenta' => 'required|max:200',
+            'codigo' => 'required|max:75|unique:cuentas',
+        ]);
         $requestData = $request->all();
-        
-        Cuentum::create($requestData);
+        $requestData['grupo'] = $request->grupo;
+        try {        
 
-        return redirect('admin/cuenta')->with('flash_message', 'Cuentum added!');
+            Cuentum::create($requestData);
+
+            Session::flash('flash_message', 'Guardado correctamente');
+
+        } catch (\Exception $e) {
+
+            Session::flash('warning', 'Error al Guardar');  
+            return redirect()->back()->withInput();
+
+        }
+
+        return redirect('admin/cuenta');
     }
 
     /**
@@ -93,9 +109,10 @@ class CuentaController extends Controller
      */
     public function edit($id)
     {
+        $dato = $this->gen_section();
         $cuentum = Cuentum::findOrFail($id);
-
-        return view('admin.cuenta.edit', compact('cuentum'));
+        $grupos = Grupo::orderBy('codigo', 'ASC')->where('activo', 1)->pluck('grupo', 'id');
+        return view('admin.cuenta.edit', compact('cuentum','grupos','dato'));
     }
 
     /**
@@ -109,14 +126,27 @@ class CuentaController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-			'cuenta' => 'required|max:200'
-		]);
+            'cuenta' => 'required|max:200',
+            'codigo' => 'required|max:10|unique:cuentas,codigo,'.$id,
+        ]);
         $requestData = $request->all();
         
-        $cuentum = Cuentum::findOrFail($id);
-        $cuentum->update($requestData);
+        $requestData['grupo'] = $request->grupo;
 
-        return redirect('admin/cuenta')->with('flash_message', 'Cuentum updated!');
+        try {
+
+            $cuentum = Cuentum::findOrFail($id);
+
+            $cuentum->update($requestData);
+
+            Session::flash('flash_message', 'Aztualizado correctamente');
+
+        } catch (\Exception $e) {
+            Session::flash('warning', 'Error al Actualizar');  
+            return redirect()->back()->withInput();
+        }
+
+        return redirect('admin/cuenta');
     }
 
     public function gen_section(){
@@ -143,7 +173,7 @@ class CuentaController extends Controller
     {
         Cuentum::destroy($id);
 
-        return redirect('admin/cuenta')->with('flash_message', 'Cuentum deleted!');
+        return redirect('admin/cuenta')->with('flash_message', 'Cuenta deleted!');
     }
 
     protected function guard()

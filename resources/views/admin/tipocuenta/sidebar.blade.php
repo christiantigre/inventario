@@ -1,4 +1,4 @@
-<div class="col-md-2">
+<div class="col-md-2 col-xs-12 col-sm-4">
     <div class="panel panel-default panel-flush">
         <div class="panel-heading">
             Plan de Cuentas

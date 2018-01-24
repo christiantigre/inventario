@@ -37,7 +37,7 @@
                                 <tbody>
                                 @foreach($clase as $item)
                                     <tr>
-                                        <td>{{ $loop->iteration or $item->id }}</td><td>{{ $item->codigo }}</td>
+                                        <td>{{ $loop->iteration or $item->id }}</td><td>{{ $item->codigo }}.</td>
                                         <td>{{ $item->clase }}</td><td>{{ $item->detall }}</td>
                                         <td>
                                             @if(($item->activo)=='1')

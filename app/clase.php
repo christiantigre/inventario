@@ -27,5 +27,8 @@ class clase extends Model
      */
     protected $fillable = ['clase', 'codigo', 'detall', 'activo'];
 
+    public function grupo(){
+        return $this->hasMany(Grupo::class);
+    }
     
 }

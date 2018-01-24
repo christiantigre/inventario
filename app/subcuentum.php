@@ -25,11 +25,11 @@ class subcuentum extends Model
      *
      * @var array
      */
-    protected $fillable = ['subcuenta', 'codigo', 'detall', 'activo', 'cuenta_id'];
+    protected $fillable = ['subcuenta','secuencia', 'codigo', 'detall', 'activo', 'cuenta','cuenta_id'];
 
     public function Cuenta()
 	{
-		return $this->belongsTo('App\Cuenta');
+		return $this->belongsTo('App\Cuentum');
 	}
 	
 }

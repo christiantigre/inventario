@@ -31,15 +31,28 @@
                             <table class="table table-borderless">
                                 <thead>
                                     <tr>
-                                        <th>#</th><th>Codigo</th><th>Grupo</th><th>Detall</th><th>Activo</th><th>Clase</th><th>Actions</th>
+                                        <th>#</th>
+                                        <th>Codigo</th>
+                                        <th>Grupo</th>
+                                        <th>Clase</th>
+                                        <th>Activo</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($grupo as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->codigo }}</td>
-                                        <td>{{ $item->grupo }}</td><td>{{ $item->detall }}</td><td>{{ $item->activo }}</td><td>{{ $item->clase_id }}</td>
+                                        <td>{{ $item->codigo }}.</td>
+                                        <td>{{ $item->grupo }}</td>
+                                        <td>{{ $item->clase->clase }}</td>
+                                        <td>
+                                            @if(($item->activo)=='1')
+                                    <small class="label label-success">Activo</small>
+                                    @else
+                                    <small class="label label-danger">Inactivo</small>
+                                    @endif
+                                        </td>
                                         <td>
                                             <a href="{{ url('/admin/grupo/' . $item->id) }}" title="Ver Grupo"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> Ver</button></a>
                                             <a href="{{ url('/admin/grupo/' . $item->id . '/edit') }}" title="Editar Grupo"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>

@@ -9,8 +9,13 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Subcuenta</div>
                     <div class="panel-body">
-                        <a href="{{ url('/admin/subcuenta/create') }}" class="btn btn-success btn-sm" title="Add New subcuentum">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Add New
+
+                        <a href="{{ url('/admin/subcuenta/create') }}" class="btn btn-success btn-sm" title="Registrar Subcuenta">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Nuevo
+                        </a>
+
+                        <a href="{{ URL::to('/admin/variassubctas') }}" class="btn btn-success btn-sm" title="Registrar Varias Subcuenta">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Varios
                         </a>
 
                         <form method="GET" action="{{ url('/admin/subcuenta') }}" accept-charset="UTF-8" class="navbar-form navbar-right" role="search">
@@ -30,22 +35,36 @@
                             <table class="table table-borderless">
                                 <thead>
                                     <tr>
-                                        <th>#</th><th>Subcuenta</th><th>Codigo</th><th>Detall</th><th>Activo</th><th>Cuenta Id</th><th>Actions</th>
+                                        <th>#</th>
+                                        <th>Codigo</th>
+                                        <th>Subcuenta</th>
+                                        <th>Cuenta</th>
+                                        <th>Activo</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($subcuenta as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->subcuenta }}</td><td>{{ $item->codigo }}</td><td>{{ $item->detall }}</td><td>{{ $item->activo }}</td><td>{{ $item->cuenta_id }}</td>
+                                        <td>{{ $item->codigo }}.</td>
+                                        <td>{{ $item->subcuenta }}</td>
+                                        <td>{{ $item->Cuenta->cuenta }}</td>
                                         <td>
-                                            <a href="{{ url('/admin/subcuenta/' . $item->id) }}" title="View subcuentum"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
-                                            <a href="{{ url('/admin/subcuenta/' . $item->id . '/edit') }}" title="Edit subcuentum"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
+                                            @if(($item->activo)=='1')
+                                    <small class="label label-success">Activo</small>
+                                    @else
+                                    <small class="label label-danger">Inactivo</small>
+                                    @endif  
+                                        </td>
+                                        <td>
+                                            <a href="{{ url('/admin/subcuenta/' . $item->id) }}" title="Ver Subcuenta"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> Ver</button></a>
+                                            <a href="{{ url('/admin/subcuenta/' . $item->id . '/edit') }}" title="Editar Subcuenta"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>
 
                                             <form method="POST" action="{{ url('/admin/subcuenta' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
                                                 {{ method_field('DELETE') }}
                                                 {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-xs" title="Delete subcuentum" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                                <button type="submit" class="btn btn-danger btn-xs" title="Elimnar Subcuenta" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Elimnar</button>
                                             </form>
                                         </td>
                                     </tr>

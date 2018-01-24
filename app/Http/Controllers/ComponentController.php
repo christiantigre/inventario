@@ -8,6 +8,9 @@ use App\Cliente;
 use App\ItemVenta;
 use App\Iva;
 use App\Grupo;
+use App\Cuentum;
+use App\subcuentum;
+use App\Tempsubctum;
 
 class ComponentController extends Controller
 {
@@ -118,12 +121,44 @@ Modulo de contabilidad
 */
 
 
-    public function extraercantidadclases(Request $request){
+public function extraercantidadclases(Request $request){
     if ($request->ajax()) {
         $cantidad = Grupo::where('clase_id', $request->id)->count();
         $cantidad = $cantidad+1;
         return response()->json($cantidad);
+        }
     }
-}
+
+public function extraercantidadgrupos(Request $request){
+    if ($request->ajax()) {
+        $grupo = Grupo::where('id', $request->id)->first();
+        $cantidad = Cuentum::where('grupo', $grupo->codigo)->count();
+        $cantidad = $cantidad+1;
+        $grupo_id = $grupo->id;
+        $dato['grupo_id'] = $grupo_id;
+        $dato['grupo_codigo'] = $grupo->codigo;
+        $dato['cantidad'] = $cantidad;
+        return response()->json($dato);
+        }
+    }
+
+    public function extraercontadorcuentas(Request $request){
+    if ($request->ajax()) {
+        $cuenta = Cuentum::where('id', $request->id)->first();
+        $cantidad = subcuentum::where('cuenta', $cuenta->codigo)->count();
+        $cantidad = $cantidad+1;
+        $cuenta_id = $cuenta->id;
+        $dato['cuenta_id'] = $cuenta_id;
+        $dato['cuenta_codigo'] = $cuenta->codigo;
+        $dato['cantidad'] = $cantidad;
+        return response()->json($dato);
+        }
+    }
+
+    public function listaSubcuentas()
+    {
+        $tempsubcta = Tempsubctum::orderBy('codigo','ASC')->get();
+        return view('admin/subcuenta/list_tempsubcuenta', compact('tempsubcta'));
+    }
 
 }

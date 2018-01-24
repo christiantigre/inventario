@@ -1,11 +1,11 @@
-@extends('layouts.app')
-
+@extends('adminlte::page')
 @section('content')
-    <div class="container">
+@include('errors.messages')
+@include('admin.contabilidad.infosection')
+<section class="content">
         <div class="row">
-            @include('admin.sidebar')
-
-            <div class="col-md-9">
+            @include('admin.tipocuenta.sidebar')
+            <div class="col-md-10 col-lg-10 col-xs-10 col-sm-10">
                 <div class="panel panel-default">
                     <div class="panel-heading">Edit Grupo #{{ $grupo->id }}</div>
                     <div class="panel-body">
@@ -21,11 +21,18 @@
                             </ul>
                         @endif
 
-                        <form method="POST" action="{{ url('/admin/grupo/' . $grupo->id) }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
-                            {{ method_field('PATCH') }}
+                            {!! Form::model($grupo, [
+                            'method' => 'PATCH',
+                            'url' => ['/admin/grupo', $grupo->id],
+                            'class' => 'form-horizontal', 
+                            'enctype'=>'multipart/form-data',
+                            'files' => true,
+                            'accept-charset'=>'UTF-8'
+                            ]) !!}
+                        
                             {{ csrf_field() }}
 
-                            @include ('admin.grupo.form', ['submitButtonText' => 'Update'])
+                            @include ('admin.grupo.form', ['submitButtonText' => 'Actualizar'])
 
                         </form>
 
@@ -33,5 +40,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 @endsection

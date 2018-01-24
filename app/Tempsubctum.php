@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Cuentum extends Model
+class Tempsubctum extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'cuentas';
+    protected $table = 'tempsubctas';
 
     /**
     * The database primary key value.
@@ -25,13 +25,11 @@ class Cuentum extends Model
      *
      * @var array
      */
-    protected $fillable = ['cuenta', 'secuencia','codigo', 'detall', 'activo','grupo', 'grupo_id'];
+    protected $fillable = ['subcuenta', 'secuencia', 'codigo', 'detall', 'activo', 'cuenta', 'cuenta_id'];
 
-    public function Grupo()
+    public function cuentas()
 	{
-		return $this->belongsTo('App\Grupo');
+		return $this->belongsTo('App\Cuentum');
 	}
-
-    
 	
 }

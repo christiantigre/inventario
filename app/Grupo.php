@@ -25,7 +25,7 @@ class Grupo extends Model
      *
      * @var array
      */
-    protected $fillable = ['grupo', 'codigo', 'detall', 'activo', 'clase_id'];
+    protected $fillable = ['grupo', 'secuencia','codigo', 'detall', 'activo', 'clase_id'];
 
     public function clase()
 	{

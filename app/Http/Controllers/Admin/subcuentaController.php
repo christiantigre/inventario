@@ -6,7 +6,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\subcuentum;
+use App\Cuentum;
 use Illuminate\Http\Request;
+use Session;
 
 class subcuentaController extends Controller
 {
@@ -29,11 +31,11 @@ class subcuentaController extends Controller
 
         if (!empty($keyword)) {
             $subcuenta = subcuentum::where('subcuenta', 'LIKE', "%$keyword%")
-                ->orWhere('codigo', 'LIKE', "%$keyword%")
-                ->orWhere('detall', 'LIKE', "%$keyword%")
-                ->orWhere('activo', 'LIKE', "%$keyword%")
-                ->orWhere('cuenta_id', 'LIKE', "%$keyword%")
-                ->paginate($perPage);
+            ->orWhere('codigo', 'LIKE', "%$keyword%")
+            ->orWhere('detall', 'LIKE', "%$keyword%")
+            ->orWhere('activo', 'LIKE', "%$keyword%")
+            ->orWhere('cuenta_id', 'LIKE', "%$keyword%")
+            ->paginate($perPage);
         } else {
             $subcuenta = subcuentum::paginate($perPage);
         }
@@ -47,8 +49,18 @@ class subcuentaController extends Controller
      * @return \Illuminate\View\View
      */
     public function create()
-    {
-        return view('admin.subcuenta.create');
+    {        
+        $dato = $this->gen_section(); 
+        $cuentas = Cuentum::orderBy('codigo', 'ASC')->where('activo', 1)->pluck('cuenta', 'id');
+        return view('admin.subcuenta.create',compact('dato','cuentas'));
+    }
+
+    
+    public function variassubctas(Request $request)
+    {        
+        $dato = $this->gen_section(); 
+        $cuentas = Cuentum::orderBy('codigo', 'ASC')->where('activo', 1)->pluck('cuenta', 'id');
+        return view('admin.subcuenta.variassubctas',compact('dato','cuentas'));
     }
 
     /**
@@ -61,13 +73,23 @@ class subcuentaController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-			'subcuenta' => 'required|max:200'
-		]);
+         'subcuenta' => 'required|max:200'
+     ]);
         $requestData = $request->all();
-        
-        subcuentum::create($requestData);
 
-        return redirect('admin/subcuenta')->with('flash_message', 'subcuentum added!');
+        $requestData['cuenta'] = $request->cuenta;
+        
+        try {
+
+            subcuentum::create($requestData);
+            Session::flash('flash_message', 'Guardado correctamente');
+        } catch (\Exception $e) {
+
+            Session::flash('warning', 'Error al Guardar');  
+            return redirect()->back()->withInput();
+        }
+
+        return redirect('admin/subcuenta');
     }
 
     /**
@@ -93,9 +115,13 @@ class subcuentaController extends Controller
      */
     public function edit($id)
     {
+        $dato = $this->gen_section(); 
+
         $subcuentum = subcuentum::findOrFail($id);
 
-        return view('admin.subcuenta.edit', compact('subcuentum'));
+        $cuentas = Cuentum::orderBy('codigo', 'ASC')->where('activo', 1)->pluck('cuenta', 'id');
+
+        return view('admin.subcuenta.edit', compact('subcuentum','cuentas','dato'));
     }
 
     /**
@@ -109,9 +135,11 @@ class subcuentaController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-			'subcuenta' => 'required|max:200'
-		]);
+         'subcuenta' => 'required|max:200'
+     ]);
         $requestData = $request->all();
+
+        $requestData['cuenta'] = $request->cuenta;
         
         $subcuentum = subcuentum::findOrFail($id);
         $subcuentum->update($requestData);

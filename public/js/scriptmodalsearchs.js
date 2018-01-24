@@ -521,3 +521,15 @@ function trash(id){
 		}  
 	});
 }
+
+//llena de datos tabla temporal subcuentas en modulo contable
+function list_subcuentas(){
+	console.log('loading items cart');
+	$.ajax({
+		type:'get',
+		url:'/admin/listcartitems/',
+		success: function(data){
+			$('#list-cart').empty().html(data);
+		}
+	});
+}

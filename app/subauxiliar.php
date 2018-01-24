@@ -25,7 +25,7 @@ class subauxiliar extends Model
      *
      * @var array
      */
-    protected $fillable = ['subauxiliar', 'codigo', 'detall', 'activo', 'auxiliar_id'];
+    protected $fillable = ['subauxiliar','secuencia', 'codigo', 'detall', 'activo', 'auxiliar_id'];
 
     public function auxiliars()
 	{

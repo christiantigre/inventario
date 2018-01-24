@@ -56,6 +56,8 @@ php artisan crud:generate subauxiliar --fields_from_file="C:/Users/Andres/Dropbo
 
 php artisan crud:generate Subcategory --fields_from_file="/home/pcsolution/Dropbox/inventario/public/fields/fieldssubcategories.json" --view-path=admin --controller-namespace=Admin --route-group=admin
 
+php artisan crud:generate Tempsubcta --fields_from_file="/home/pcsolution/Dropbox/inventario/public/fields/fieldCuenta.json" --view-path=admin --controller-namespace=Admin --route-group=admin
+
 php artisan crud:generate Venta --fields_from_file="/home/pcsolution/Dropbox/inventario/public/fields/fieldsVenta.json" --view-path=admin --controller-namespace=Admin --route-group=admin
 
 php artisan crud:generate Product --fields_from_file="/home/pcsolution/Dropbox/webpageveterinaria/public/fields/fieldsproducts.json" --view-path=admin --controller-namespace=Admin --route-group=admin
@@ -96,3 +98,9 @@ Grupo: Los dos primeros dígitos
 Cuenta: Los cuatro primeros dígitos
 Subcuenta: Los seis primeros dígitos.
 
+ejemplo del plan de cuentas
+1 - https://educastillo.files.wordpress.com/2011/09/plan-de-cuentas-o-catalogo-de-cuentas.pdf
+2 - http://ingadrianespinosa.over-blog.net/article-36743572.html
+3 - http://dspace.ucuenca.edu.ec/bitstream/123456789/1371/1/tcon666.pdf
+4 - https://www.youtube.com/watch?v=viXLHH9gQEI
+5 - https://www.youtube.com/watch?v=jle8CWbi6x0

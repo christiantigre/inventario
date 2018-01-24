@@ -5,7 +5,7 @@
 <section class="content">
         <div class="row">
             @include('admin.tipocuenta.sidebar')
-            <div class="col-md-10 col-lg-10 col-xs-10 col-sm-10">
+            <div class="col-md-10 col-lg-10 col-xs-12 col-sm-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">Cuenta</div>
                     <div class="panel-body">
@@ -30,22 +30,36 @@
                             <table class="table table-borderless">
                                 <thead>
                                     <tr>
-                                        <th>#</th><th>Cuenta</th><th>Codigo</th><th>Detall</th><th>Activo</th><th>Grupo Id</th><th>Actions</th>
+                                        <th>#</th>
+                                        <th>Codigo</th>
+                                        <th>Cuenta</th>
+                                        <th>Grupo</th>
+                                        <th>Activo</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($cuenta as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->cuenta }}</td><td>{{ $item->codigo }}</td><td>{{ $item->detall }}</td><td>{{ $item->activo }}</td><td>{{ $item->grupo_id }}</td>
+                                        <td>{{ $item->codigo }}.</td>
+                                        <td>{{ $item->cuenta }}</td>                                        
+                                        <td>{{ $item->Grupo->grupo }}</td>
                                         <td>
-                                            <a href="{{ url('/admin/cuenta/' . $item->id) }}" title="View Cuentum"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
-                                            <a href="{{ url('/admin/cuenta/' . $item->id . '/edit') }}" title="Edit Cuentum"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
+                                            @if(($item->activo)=='1')
+                                    <small class="label label-success">Activo</small>
+                                    @else
+                                    <small class="label label-danger">Inactivo</small>
+                                    @endif                                    
+                                        </td>
+                                        <td>
+                                            <a href="{{ url('/admin/cuenta/' . $item->id) }}" title="Ver Cuenta"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> Ver</button></a>
+                                            <a href="{{ url('/admin/cuenta/' . $item->id . '/edit') }}" title="Editar Cuenta"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>
 
                                             <form method="POST" action="{{ url('/admin/cuenta' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
                                                 {{ method_field('DELETE') }}
                                                 {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-xs" title="Delete Cuentum" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                                <button type="submit" class="btn btn-danger btn-xs" title="Eliminar Cuenta" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar</button>
                                             </form>
                                         </td>
                                     </tr>

@@ -1,7 +1,11 @@
 {
     "fields": [
         {
-            "name": "subauxiliar",
+            "name": "subcuenta",
+            "type": "text"
+        },        
+        {
+            "name": "secuencia",
             "type": "text"
         },
         {
@@ -15,30 +19,28 @@
         {
             "name": "activo",
             "type": "boolean"
+        },        
+        {
+            "name": "cuenta",
+            "type": "text"
         },
         {
-            "name": "auxiliar_id",
+            "name": "cuenta_id",
             "type": "integer#unsigned"
         }
     ],
     "foreign_keys": [
         {
-            "column": "auxiliar_id",
+            "column": "cuenta_id",
             "references": "id",
-            "on": "auxiliars"
+            "on": "cuentas"
         }
     ],
     "relationships": [
         {
-            "name": "auxiliars",
+            "name": "cuentas",
             "type": "belongsTo",
-            "class": "App\\auxiliars"
-        }
-    ],
-    "validations": [
-        {
-            "field": "subauxiliar",
-            "rules": "required|max:200"
+            "class": "App\\Cuentum"
         }
     ]
 }

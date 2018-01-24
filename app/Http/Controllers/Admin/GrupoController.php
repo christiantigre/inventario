@@ -29,14 +29,15 @@ class GrupoController extends Controller
         $perPage = 25;
 
         if (!empty($keyword)) {
-            $grupo = Grupo::where('grupo', 'LIKE', "%$keyword%")
+            $grupo = Grupo::orderBy('codigo','ASC')
+                ->where('grupo', 'LIKE', "%$keyword%")
                 ->orWhere('codigo', 'LIKE', "%$keyword%")
                 ->orWhere('detall', 'LIKE', "%$keyword%")
                 ->orWhere('activo', 'LIKE', "%$keyword%")
                 ->orWhere('clase_id', 'LIKE', "%$keyword%")
                 ->paginate($perPage);
         } else {
-            $grupo = Grupo::paginate($perPage);
+            $grupo = Grupo::orderBy('codigo','ASC')->paginate($perPage);
         }
 
         return view('admin.grupo.index', compact('grupo','dato'));
@@ -65,7 +66,8 @@ class GrupoController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-			'clase' => 'required|max:75'
+            'grupo' => 'required|max:75',
+			'codigo' => 'required|max:75',
 		]);
         $requestData = $request->all();
         
@@ -100,8 +102,9 @@ class GrupoController extends Controller
         $dato = $this->gen_section();
 
         $grupo = Grupo::findOrFail($id);
+        $clases = clase::orderBy('id', 'ASC')->where('activo', 1)->pluck('clase', 'id');
 
-        return view('admin.grupo.edit', compact('grupo','dato'));
+        return view('admin.grupo.edit', compact('grupo','dato','clases'));
     }
 
     /**
@@ -115,7 +118,8 @@ class GrupoController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-			'clase' => 'required|max:75'
+            'grupo' => 'required|max:75',
+            'codigo' => 'required|max:75',
 		]);
         $requestData = $request->all();
         

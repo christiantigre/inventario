@@ -30,5 +30,9 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductTableSeeder::class);
 
         $this->call(NivelesTableSeeder::class);
+        $this->call(ClasesTableSeeder::class);
+        $this->call(GruposTableSeeder::class);
+        $this->call(CuentaTbaleSeeder::class);
+        $this->call(SubcuentaTableSeeder::class);
     }
 }

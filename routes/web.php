@@ -107,22 +107,30 @@ Route::group(['prefix' => 'admin'], function () {
 
   Route::resource('/logs', 'Admin\\LogController');
   Route::post('/registro', [
-      'as' => 'admin.seguridad.logfecha',
-      'uses' => 'Admin\LogController@revisarLogfecha'
-      ]);
+    'as' => 'admin.seguridad.logfecha',
+    'uses' => 'Admin\LogController@revisarLogfecha'
+  ]);
   /*Modulo de contabilidad*/
   
   Route::resource('/tipocuenta', 'Admin\\tipocuentaController');
 
-Route::resource('/clase', 'Admin\\claseController');
-Route::resource('/grupo', 'Admin\\GrupoController');
-Route::resource('/cuenta', 'Admin\\CuentaController');
-Route::resource('/subcuenta', 'Admin\\subcuentaController');
-Route::resource('/auxiliar', 'Admin\\auxiliarController');
-Route::resource('/subauxiliar', 'Admin\\subauxiliarController');
+  Route::resource('/clase', 'Admin\\claseController');
+  Route::resource('/grupo', 'Admin\\GrupoController');
+  Route::resource('/cuenta', 'Admin\\CuentaController');
+  Route::resource('/subcuenta', 'Admin\\subcuentaController');
+  Route::resource('/auxiliar', 'Admin\\auxiliarController');
+  Route::resource('/subauxiliar', 'Admin\\subauxiliarController');
 
 
   Route::get('/extraercontadorclases/','ComponentController@extraercantidadclases');
+  Route::get('/extraercontadorgrupos/','ComponentController@extraercantidadgrupos');
+  Route::get('/extraercontadorcuentas/','ComponentController@extraercontadorcuentas');
+
+  Route::get('/variassubctas','Admin\\subcuentaController@variassubctas');
+
+  Route::resource('/tempsubcta', 'Admin\\TempsubctaController');
+  
+  Route::get('/listcartitems/', 'ComponentController@listallitems');
 });
 
 

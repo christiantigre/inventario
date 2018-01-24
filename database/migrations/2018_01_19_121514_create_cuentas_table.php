@@ -15,8 +15,10 @@ class CreateCuentasTable extends Migration
         Schema::create('cuentas', function (Blueprint $table) {
             $table->increments('id');
             $table->text('cuenta');
+            $table->text('secuencia')->nullable();
             $table->text('codigo')->nullable();
             $table->text('detall')->nullable();
+            $table->text('grupo')->nullable();
             $table->boolean('activo')->nullable();
             $table->integer('grupo_id')->unsigned();
             $table->foreign('grupo_id')->references('id')->on('grupos');

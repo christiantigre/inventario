@@ -14,13 +14,14 @@ class CreateSubauxiliarsTable extends Migration
     {
         Schema::create('subauxiliars', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
             $table->text('subauxiliar');
+            $table->text('secuencia')->nullable();
             $table->text('codigo')->nullable();
             $table->text('detall')->nullable();
             $table->boolean('activo')->nullable();
             $table->integer('auxiliar_id')->unsigned();
             $table->foreign('auxiliar_id')->references('id')->on('auxiliars');
+            $table->timestamps();
             });
     }
 
