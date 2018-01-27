@@ -154,6 +154,14 @@ Route::group(['prefix' => 'admin'], function () {
   Route::resource('/plan', 'Admin\\PlanController');
   Route::get('/plan/downloadExcel/{type}', 'Admin\\PlanController@downloadExcel');
 
+  Route::resource('/confcontbl', 'Admin\\ConfcontblController');
+  Route::resource('/contabilidad', 'Admin\\ContabilidadController');
+
+
+  Route::resource('admin/num_asiento', 'Admin\\num_asientoController');
+  Route::resource('admin/detall_asiento', 'Admin\\detall_asientoController');
+
+
 });
 
 

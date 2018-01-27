@@ -1,6 +1,8 @@
 @extends('adminlte::page')
 @section('content')
 @include('errors.messages')
+
+@include('admin.contabilidad.menucontable')
 @include('admin.contabilidad.infosection')
 <section class="content">
         <div class="row">

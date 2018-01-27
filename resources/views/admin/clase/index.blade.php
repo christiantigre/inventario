@@ -1,6 +1,8 @@
 @extends('adminlte::page')
 @section('content')
 @include('errors.messages')
+
+@include('admin.contabilidad.menucontable')
 <div class="row">
     @include('admin.contabilidad.infosection')
     <section class="content">
@@ -10,7 +12,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Clase</div>
                 <div class="panel-body">
-                    <a href="{{ url('/admin/clase/create') }}" class="btn btn-success btn-sm" title="Registrar Clase">
+                    <a href="{{ url('/admin/clase/create') }}" class="btn btn-success btn-xs" title="Registrar Clase">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nuevo
                     </a>
 
@@ -31,7 +33,7 @@
                         <table class="table table-borderless">
                             <thead>
                                 <tr>
-                                    <th>#</th><th>Código</th><th>Clase</th><th>Detalle</th><th>Activo</th><th>Actions</th>
+                                    <th>#</th><th>CÓDIGO</th><th>CLASE</th><th>DETALLE</th><th>ACTIVO</th><th>ACCIÓNES</th>
                                 </tr>
                             </thead>
                             <tbody>

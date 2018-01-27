@@ -86,6 +86,11 @@ php artisan crud:controller Admin/ParroquiaController --crud-name=Parroquia --mo
 
 php artisan crud:generate Cliente --fields_from_file="/home/pcsolution/Dropbox/inventario/public/fields/fieldClient.json" --view-path=admin --controller-namespace=Admin --route-group=admin
 
+
+php artisan crud:generate num_asiento --fields_from_file="/home/pcsolution/Dropbox/inventario/public/fields/fieldsClases.json" --view-path=admin --controller-namespace=Admin --route-group=admin
+
+php artisan crud:generate detall_asiento --fields_from_file="/home/pcsolution/Dropbox/inventario/public/fields/fieldsClases.json" --view-path=admin --controller-namespace=Admin --route-group=admin
+
 base de datos
 - Categorias
 - Subcategory

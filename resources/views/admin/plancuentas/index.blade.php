@@ -1,6 +1,7 @@
 @extends('adminlte::page')
 @section('content')
 @include('errors.messages')
+@include('admin.contabilidad.menucontable')
 @include('admin.contabilidad.infosection')
 <style type="text/css">
 .clase{ font-weight: 600; }
@@ -24,12 +25,10 @@
                 <div class="panel-heading">PLAN CONTABLE</div>
                 <div class="panel-body">
 
-
                     <a href="{{ URL::to('/admin/plan/downloadExcel/xls') }}">
-                        <button class="btn btn-success btn-sm">Descargar Excel</button>
+                        <button class="btn btn-success btn-xs">Descargar Excel</button>
                     </a>
 
-                    
                     <form method="GET" action="{{ url('/admin/plan') }}" accept-charset="UTF-8" class="navbar-form navbar-right" role="search">
                         <div class="input-group">
                             <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
@@ -40,8 +39,6 @@
                             </span>
                         </div>
                     </form>
-
-
 
                     <br/>
                     <br/>

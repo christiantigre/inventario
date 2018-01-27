@@ -1,6 +1,7 @@
 @extends('adminlte::page')
 @section('content')
 @include('errors.messages')
+@include('admin.contabilidad.menucontable')
         <div class="row">
 @include('admin.contabilidad.infosection')
 <section class="content">
@@ -10,7 +11,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Grupo</div>
                     <div class="panel-body">
-                        <a href="{{ url('/admin/grupo/create') }}" class="btn btn-success btn-sm" title="Registrar Nuevo Grupo">
+                        <a href="{{ url('/admin/grupo/create') }}" class="btn btn-success btn-xs" title="Registrar Nuevo Grupo">
                             <i class="fa fa-plus" aria-hidden="true"></i> Nuevo
                         </a>
 
@@ -32,11 +33,11 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Código</th>
-                                        <th>Grupo</th>
-                                        <th>Clase</th>
-                                        <th>Activo</th>
-                                        <th>Actions</th>
+                                        <th>CÓDIGO</th>
+                                        <th>GRUPO</th>
+                                        <th>CLASE</th>
+                                        <th>ACTIVO</th>
+                                        <th>ACCIÓNES</th>
                                     </tr>
                                 </thead>
                                 <tbody>

@@ -7,13 +7,13 @@
 
             <div class="col-md-9">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Tempsubcta</div>
+                    <div class="panel-heading">Num_asiento</div>
                     <div class="panel-body">
-                        <a href="{{ url('/admin/tempsubcta/create') }}" class="btn btn-success btn-sm" title="Add New Tempsubctum">
+                        <a href="{{ url('/admin/num_asiento/create') }}" class="btn btn-success btn-sm" title="Add New num_asiento">
                             <i class="fa fa-plus" aria-hidden="true"></i> Add New
                         </a>
 
-                        <form method="GET" action="{{ url('/admin/tempsubcta') }}" accept-charset="UTF-8" class="navbar-form navbar-right" role="search">
+                        <form method="GET" action="{{ url('/admin/num_asiento') }}" accept-charset="UTF-8" class="navbar-form navbar-right" role="search">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
                                 <span class="input-group-btn">
@@ -30,29 +30,29 @@
                             <table class="table table-borderless">
                                 <thead>
                                     <tr>
-                                        <th>#</th><th>Subcuenta</th><th>Secuencia</th><th>Codigo</th><th>Detall</th><th>Activo</th><th>Cuenta</th><th>Actions</th>
+                                        <th>#</th><th>Num Asiento</th><th>Concepto</th><th>Periodo</th><th>Fecha</th><th>Saldo Debe</th><th>Saldo Haber</th><th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($tempsubcta as $item)
+                                @foreach($num_asiento as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->subcuenta }}</td><td>{{ $item->secuencia }}</td><td>{{ $item->codigo }}</td><td>{{ $item->detall }}</td><td>{{ $item->activo }}</td><td>{{ $item->cuenta }}</td>
+                                        <td>{{ $item->num_asiento }}</td><td>{{ $item->concepto }}</td><td>{{ $item->periodo }}</td><td>{{ $item->fecha }}</td><td>{{ $item->saldo_debe }}</td><td>{{ $item->saldo_haber }}</td>
                                         <td>
-                                            <a href="{{ url('/admin/tempsubcta/' . $item->id) }}" title="View Tempsubctum"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
-                                            <a href="{{ url('/admin/tempsubcta/' . $item->id . '/edit') }}" title="Edit Tempsubctum"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
+                                            <a href="{{ url('/admin/num_asiento/' . $item->id) }}" title="View num_asiento"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
+                                            <a href="{{ url('/admin/num_asiento/' . $item->id . '/edit') }}" title="Edit num_asiento"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
 
-                                            <form method="POST" action="{{ url('/admin/tempsubcta' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
+                                            <form method="POST" action="{{ url('/admin/num_asiento' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
                                                 {{ method_field('DELETE') }}
                                                 {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-xs" title="Delete Tempsubctum" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                                <button type="submit" class="btn btn-danger btn-xs" title="Delete num_asiento" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
                                             </form>
                                         </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
-                            <div class="pagination-wrapper"> {!! $tempsubcta->appends(['search' => Request::get('search')])->render() !!} </div>
+                            <div class="pagination-wrapper"> {!! $num_asiento->appends(['search' => Request::get('search')])->render() !!} </div>
                         </div>
 
                     </div>

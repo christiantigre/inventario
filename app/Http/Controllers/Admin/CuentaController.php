@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\SvLogAdmin;
-use App\Grupo;
 use App\Cuentum;
+use App\Grupo;
 use Illuminate\Http\Request;
 use Session;
 

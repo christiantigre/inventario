@@ -1,9 +1,12 @@
 @extends('adminlte::page')
 @section('content')
 @include('errors.messages')
-        <div class="row">
-            
-            <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
+@include('admin.contabilidad.menucontable')
+<div class="row">
+    @include('admin.contabilidad.infosection')
+    <section class="content">
+        @include('admin.tipocuenta.sidebar')
+        <div class="col-md-10 col-lg-10 col-xs-10 col-sm-10">
                 <div class="panel panel-default">
                     <div class="panel-heading">Nivel de cuenta : {{ $tipocuentum->nombre }}</div>
                     <div class="panel-body">
@@ -25,7 +28,11 @@
                                     <tr>
                                         <th>ID</th><td>{{ $tipocuentum->id }}</td>
                                     </tr>
-                                    <tr><th> Tipocuenta </th><td> {{ $tipocuentum->tipocuenta }} </td></tr><tr><th> Codigo </th><td> {{ $tipocuentum->codigo }} </td></tr><tr><th> Nombre </th><td> {{ $tipocuentum->nombre }} </td></tr><tr><th> Detall </th><td> {{ $tipocuentum->detall }} </td></tr><tr><th> Activo </th><td> {{ $tipocuentum->activo }} </td></tr>
+                                    <tr><th> Tipo Cuenta </th><td> {{ $tipocuentum->tipocuenta }} </td></tr><tr><th> Código </th><td> {{ $tipocuentum->codigo }} </td></tr><tr><th> Nombre </th><td> {{ $tipocuentum->nombre }} </td></tr><tr><th> Detalle </th><td> {{ $tipocuentum->detall }} </td></tr><tr><th> Activo </th><td> @if(($tipocuentum->activo)=='1')
+                                        <small class="label label-success">Activo</small>
+                                        @else
+                                        <small class="label label-danger">Inactivo</small>
+                                        @endif </td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -33,5 +40,5 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 @endsection

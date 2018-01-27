@@ -1,44 +1,44 @@
 {
     "fields": [
         {
-            "name": "grupo",
+            "name": "num_asiento",
             "type": "text"
         },
         {
-            "name": "codigo",
+            "name": "cod_cuenta",
             "type": "text"
         },
         {
-            "name": "detall",
+            "name": "cuenta",
             "type": "text"
         },
         {
-            "name": "activo",
-            "type": "boolean"
+            "name": "periodo",
+            "type": "text"
         },
         {
-            "name": "clase_id",
+            "name": "fecha",
+            "type": "date"
+        },
+        {
+            "name": "saldo_debe",
+            "type": "double"
+        },
+        {
+            "name": "saldo_haber",
+            "type": "double"
+        },
+        {
+            "name": "almacen_id",
             "type": "integer#unsigned"
-        }
-    ],
-    "foreign_keys": [
+        },
         {
-            "column": "clase_id",
-            "references": "id",
-            "on": "clase"
-        }
-    ],
-    "relationships": [
+            "name": "cuenta_id",
+            "type": "integer#unsigned"
+        },
         {
-            "name": "clase",
-            "type": "belongsTo",
-            "class": "App\\clase"
-        }
-    ],
-    "validations": [
-        {
-            "field": "clase",
-            "rules": "required|max:75"
+            "name": "asiento_id",
+            "type": "integer#unsigned"
         }
     ]
 }

@@ -1,6 +1,7 @@
 @extends('adminlte::page')
 @section('content')
 @include('errors.messages')
+@include('admin.contabilidad.menucontable')
         <div class="row">
 @include('admin.contabilidad.infosection')
 <section class="content">
@@ -9,7 +10,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Editar Cuenta #{{ $cuentum->cuenta }}({{ $cuentum->codigo }})</div>
                     <div class="panel-body">
-                        <a href="{{ url('/admin/cuenta') }}" title="Back"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
+                        <a href="{{ url('/admin/cuenta') }}" title="Atras"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Atras</button></a>
                         <br />
                         <br />
 

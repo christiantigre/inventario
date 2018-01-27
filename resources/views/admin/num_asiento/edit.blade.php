@@ -7,9 +7,9 @@
 
             <div class="col-md-9">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Edit Tempsubctum #{{ $tempsubctum->id }}</div>
+                    <div class="panel-heading">Edit num_asiento #{{ $num_asiento->id }}</div>
                     <div class="panel-body">
-                        <a href="{{ url('/admin/tempsubcta') }}" title="Back"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
+                        <a href="{{ url('/admin/num_asiento') }}" title="Back"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
                         <br />
                         <br />
 
@@ -21,11 +21,11 @@
                             </ul>
                         @endif
 
-                        <form method="POST" action="{{ url('/admin/tempsubcta/' . $tempsubctum->id) }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+                        <form method="POST" action="{{ url('/admin/num_asiento/' . $num_asiento->id) }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
                             {{ method_field('PATCH') }}
                             {{ csrf_field() }}
 
-                            @include ('admin.tempsubcta.form', ['submitButtonText' => 'Update'])
+                            @include ('admin.num_asiento.form', ['submitButtonText' => 'Update'])
 
                         </form>
 

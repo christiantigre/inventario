@@ -35,5 +35,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CuentaTbaleSeeder::class);
         $this->call(SubcuentaTableSeeder::class);
         $this->call(AuxiliarTableSeeder::class);
+        $this->call(ConfcontblTableSeeder::class);
     }
 }

@@ -1,6 +1,7 @@
 @extends('adminlte::page')
 @section('content')
 @include('errors.messages')
+@include('admin.contabilidad.menucontable')
 @include('admin.contabilidad.infosection')
 <section class="content">
     <div class="row">
@@ -10,7 +11,7 @@
                 <div class="panel-heading">Cuenta</div>
                 <div class="panel-body">
                     
-                    <a href="{{ url('/admin/cuenta/create') }}" class="btn btn-success btn-sm" title="Registrar Cuenta">
+                    <a href="{{ url('/admin/cuenta/create') }}" class="btn btn-success btn-xs" title="Registrar Cuenta">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nuevo
                     </a>
 
@@ -32,11 +33,11 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Código</th>
-                                    <th>Cuenta</th>
-                                    <th>Grupo</th>
-                                    <th>Activo</th>
-                                    <th>Actions</th>
+                                    <th>CÓDIGO</th>
+                                    <th>CUENTA</th>
+                                    <th>GRUPO</th>
+                                    <th>ACTIVO</th>
+                                    <th>ACCIÓNES</th>
                                 </tr>
                             </thead>
                             <tbody>

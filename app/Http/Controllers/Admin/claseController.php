@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\SvLogAdmin;
 use App\clase;
 use Illuminate\Http\Request;
 use Session;
+use App\SvLogAdmin;
 
 class claseController extends Controller
 {

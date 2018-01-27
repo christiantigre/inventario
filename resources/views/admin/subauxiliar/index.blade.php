@@ -1,6 +1,7 @@
 @extends('adminlte::page')
 @section('content')
 @include('errors.messages')
+@include('admin.contabilidad.menucontable')
 @include('admin.contabilidad.infosection')
 <section class="content">
     <div class="row">
@@ -13,11 +14,11 @@
                     <div class="row">
                         <div class="col-md-6 col-lg-6 col-xs-12 col-sm-6">
 
-                            <a href="{{ url('/admin/subauxiliar/create') }}" class="btn btn-success btn-sm" title="Registrar Sub - Auxiliar">
+                            <a href="{{ url('/admin/subauxiliar/create') }}" class="btn btn-success btn-xs" title="Registrar Sub - Auxiliar">
                                 <i class="fa fa-plus" aria-hidden="true"></i> Nueva
                             </a>
 
-                            <a href="{{ URL::to('/admin/variasSubAux') }}" class="btn btn-success btn-sm" title="Registrar Varias Sub - Auxiliares">
+                            <a href="{{ URL::to('/admin/variasSubAux') }}" class="btn btn-success btn-xs" title="Registrar Varias Sub - Auxiliares">
                                 <i class="fa fa-plus" aria-hidden="true"></i> Varios
                             </a>
                         </div>
@@ -44,11 +45,11 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Codigo</th>
-                                    <th>Subauxiliar</th>
-                                    <th>Auxiliar</th>
-                                    <th>Activo</th>
-                                    <th>Actions</th>
+                                    <th>CÓDIGO</th>
+                                    <th>SUB-AUXILIAR</th>
+                                    <th>AUXILIAR</th>
+                                    <th>ACTIVO</th>
+                                    <th>ACCIÓNES</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -49,8 +49,9 @@ class tipocuentaController extends Controller
      */
     public function create()
     {
-        return view('admin.tipocuenta.create');
+        $dato = $this->gen_section();
         $this->genLog("Ingresó a crear nivel");            
+        return view('admin.tipocuenta.create',compact('dato'));
     }
 
     /**
@@ -79,9 +80,10 @@ class tipocuentaController extends Controller
      */
     public function show($id)
     {
+        $dato = $this->gen_section();
         $tipocuentum = tipocuentum::findOrFail($id);
 
-        return view('admin.tipocuenta.show', compact('tipocuentum'));
+        return view('admin.tipocuenta.show', compact('tipocuentum','dato'));
     }
 
     /**
@@ -93,9 +95,10 @@ class tipocuentaController extends Controller
      */
     public function edit($id)
     {
+        $dato = $this->gen_section();
         $tipocuentum = tipocuentum::findOrFail($id);
 
-        return view('admin.tipocuenta.edit', compact('tipocuentum'));
+        return view('admin.tipocuenta.edit', compact('tipocuentum','dato'));
     }
 
     /**
