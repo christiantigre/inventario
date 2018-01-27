@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Tempauxctum;
+use App\auxiliar;
 use Illuminate\Http\Request;
 
 class TempauxctaController extends Controller
@@ -43,7 +44,8 @@ class TempauxctaController extends Controller
      */
     public function create()
     {
-        return view('admin.tempauxcta.create');
+        $subcuentas = auxiliar::orderBy('codigo', 'ASC')->where('activo', 1)->pluck('auxiliar', 'id');
+        return view('admin.tempauxcta.create','subcuentas');
     }
 
     /**

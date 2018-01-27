@@ -32,7 +32,7 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Codigo</th>
+                                        <th>Código</th>
                                         <th>Grupo</th>
                                         <th>Clase</th>
                                         <th>Activo</th>

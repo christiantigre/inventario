@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\SvLogAdmin;
 use App\Grupo;
 use Illuminate\Http\Request;
 use App\clase;
+use Session;
 
 class GrupoController extends Controller
 {
@@ -36,8 +37,10 @@ class GrupoController extends Controller
                 ->orWhere('activo', 'LIKE', "%$keyword%")
                 ->orWhere('clase_id', 'LIKE', "%$keyword%")
                 ->paginate($perPage);
+                $this->genLog("Busqueda grupo :".$keyword);
         } else {
             $grupo = Grupo::orderBy('codigo','ASC')->paginate($perPage);
+            $this->genLog("Visualizó grupos");  
         }
 
         return view('admin.grupo.index', compact('grupo','dato'));
@@ -53,6 +56,7 @@ class GrupoController extends Controller
         $dato = $this->gen_section();
         $clases = clase::orderBy('id', 'ASC')->where('activo', 1)->pluck('clase', 'id');
 
+        $this->genLog("Ingresó a crear grupo"); 
         return view('admin.grupo.create',compact('dato','clases'));
     }
 
@@ -66,14 +70,23 @@ class GrupoController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'grupo' => 'required|max:75',
-			'codigo' => 'required|max:75',
+            'grupo' => 'required|max:191',
+			'codigo' => 'required|max:6|unique:grupos',
 		]);
         $requestData = $request->all();
-        
+        try {
         Grupo::create($requestData);
+            
+        Session::flash('flash_message', 'Guardado correctamente');
+        $this->genLog("Registró cuenta ".$request->grupo); 
 
-        return redirect('admin/grupo')->with('flash_message', 'Grupo added!');
+        } catch (\Exception $e) {
+            $this->genLog("Error al crear grupo ".$request->grupo); 
+            
+            Session::flash('warning', '!!!Error al Guardar');
+        }
+
+        return redirect('admin/grupo');
     }
 
     /**
@@ -86,8 +99,9 @@ class GrupoController extends Controller
     public function show($id)
     {
         $grupo = Grupo::findOrFail($id);
-
-        return view('admin.grupo.show', compact('grupo'));
+        $this->genLog("Visualizó grupo id : ".$id); 
+        $dato = $this->gen_section();
+        return view('admin.grupo.show', compact('grupo','dato'));
     }
 
     /**
@@ -99,6 +113,8 @@ class GrupoController extends Controller
      */
     public function edit($id)
     {
+        $this->genLog("Ingresó a editar grupo id : ".$id); 
+
         $dato = $this->gen_section();
 
         $grupo = Grupo::findOrFail($id);
@@ -119,14 +135,21 @@ class GrupoController extends Controller
     {
         $this->validate($request, [
             'grupo' => 'required|max:75',
-            'codigo' => 'required|max:75',
+            'codigo' => 'required|max:6|unique:grupos,codigo,'.$id,
 		]);
         $requestData = $request->all();
-        
+        try {
+
         $grupo = Grupo::findOrFail($id);
         $grupo->update($requestData);
+             $this->genLog("Actualizó a grupo id : ".$id); 
+        Session::flash('flash_message', 'Actualizado correctamente');
+        } catch (\Exception $e) {
+            $this->genLog("Error al actualizar grupo id : ".$id); 
+        Session::flash('warning', '!!!Error al Actualizar');
+        }
 
-        return redirect('admin/grupo')->with('flash_message', 'Grupo updated!');
+        return redirect('admin/grupo');
     }
 
 
@@ -143,6 +166,12 @@ class GrupoController extends Controller
         return $data;
     }
 
+    public function genLog($mensaje)
+    {
+        $area = 'Grupos';
+        $logs = Svlogadmin::log($mensaje,$area);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -152,9 +181,17 @@ class GrupoController extends Controller
      */
     public function destroy($id)
     {
+        try {
         Grupo::destroy($id);
+        $this->genLog("Eliminó a grupos id : ".$id); 
+Session::flash('flash_message', 'Eliminado correctamente');
+            
+        } catch (\Exception $e) {
+            $this->genLog("Error al eliminar grupo id : ".$id); 
+            Session::flash('warning', '!!!Error al Eliminar');
+        }
 
-        return redirect('admin/grupo')->with('flash_message', 'Grupo deleted!');
+        return redirect('admin/grupo');
     }
 
     protected function guard()

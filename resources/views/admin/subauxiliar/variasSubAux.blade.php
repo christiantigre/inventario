@@ -7,9 +7,9 @@
     @include('admin.tipocuenta.sidebar')
     <div class="col-md-10 col-lg-10 col-xs-12 col-sm-8">
       <div class="panel panel-default">
-        <div class="panel-heading">Crear Varias Ctas Auxiliares</div>
+        <div class="panel-heading">Crear Varias Ctas Sub-Auxiliares</div>
         <div class="panel-body">
-          <a href="{{ url('/admin/subcuenta') }}" title="Atras"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Atras</button></a>
+          <a href="{{ url('/admin/subauxiliar') }}" title="Atras"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Atras</button></a>
           <br />
           <br />
 
@@ -27,7 +27,7 @@
           <div class="row">
             <form method="POST" action="{{ url('/admin/venta') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
               {{ csrf_field() }}
-              @include ('admin.tempauxcta.form')
+              @include ('admin.tempsubauxcta.form')
             </form>
           </div>
           <!-- /.row -->
@@ -37,12 +37,12 @@
         <section class="content">
           <div class="row">
             <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12"> 
-              CUENTAS AUXILIARES
+              CUENTAS SUB-AUXILIARES
               <fieldset>
                 <legend>
                 </legend>
 
-                <button class="btn btn-default btn-sm" title="Eliminar Todas Subcuentas" id="trashitems" type="button" onClick="trashAuxCuentas(this.id);"><i class="fa fa-trash" aria-hidden="true"></i> Vaciar</button>
+                <button class="btn btn-default btn-sm" title="Eliminar Todas Subcuentas" id="trashitems" type="button" onClick="trashSubAuxCuentas(this.id);"><i class="fa fa-trash" aria-hidden="true"></i> Vaciar</button>
 
                 <!-- /.box-header -->
                 <div class="box-body no-padding">
@@ -67,7 +67,7 @@
 
 <script type="text/javascript">
   $(document).ready(function(){
-    list_auxcuentas();
+    list_Subauxcuentas();
   });
 </script>
 @endsection

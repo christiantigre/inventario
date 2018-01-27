@@ -41,6 +41,11 @@
                         SUBAUXILIAR
                     </a>
                 </li>
+                <li role="presentation">
+                    <a href="{{ url('admin/plan') }}">
+                        PLAN
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

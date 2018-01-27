@@ -1,7 +1,7 @@
 
 <div class="col-md-12">
 
-    CLIENTE
+    REGISTRO
 
     <fieldset>
 

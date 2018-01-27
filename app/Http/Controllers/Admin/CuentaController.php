@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\SvLogAdmin;
 use App\Grupo;
 use App\Cuentum;
 use Illuminate\Http\Request;
@@ -27,7 +27,7 @@ class CuentaController extends Controller
         $dato = $this->gen_section();
 
         $keyword = $request->get('search');
-        $perPage = 25;
+        $perPage = 30;
 
         if (!empty($keyword)) {
             $cuenta = Cuentum::orderBy('codigo','ASC')->where('cuenta', 'LIKE', "%$keyword%")
@@ -36,10 +36,11 @@ class CuentaController extends Controller
             ->orWhere('activo', 'LIKE', "%$keyword%")
             ->orWhere('grupo_id', 'LIKE', "%$keyword%")
             ->paginate($perPage);
+                $this->genLog("Busqueda cuentas :".$keyword);
         } else {
             $cuenta = Cuentum::orderBy('codigo','ASC')->paginate($perPage);
+            $this->genLog("Visualizó cuentas");  
         }
-
         return view('admin.cuenta.index', compact('cuenta','dato'));
     }
 
@@ -50,6 +51,7 @@ class CuentaController extends Controller
      */
     public function create()
     {
+        $this->genLog("Ingresó a crear cuenta"); 
         $dato = $this->gen_section();
         $grupos = Grupo::orderBy('codigo', 'ASC')->where('activo', 1)->pluck('grupo', 'id');
         return view('admin.cuenta.create',compact('dato','grupos'));
@@ -76,7 +78,9 @@ class CuentaController extends Controller
 
             Session::flash('flash_message', 'Guardado correctamente');
 
+        $this->genLog("Registró cuenta ".$request->cuenta); 
         } catch (\Exception $e) {
+            $this->genLog("Error al crear cuenta ".$request->cuenta); 
 
             Session::flash('warning', 'Error al Guardar');  
             return redirect()->back()->withInput();
@@ -96,8 +100,9 @@ class CuentaController extends Controller
     public function show($id)
     {
         $cuentum = Cuentum::findOrFail($id);
-
-        return view('admin.cuenta.show', compact('cuentum'));
+        $dato = $this->gen_section();
+        $this->genLog("Visualizó cuenta id : ".$id); 
+        return view('admin.cuenta.show', compact('cuentum','dato'));
     }
 
     /**
@@ -110,6 +115,7 @@ class CuentaController extends Controller
     public function edit($id)
     {
         $dato = $this->gen_section();
+        $this->genLog("Ingresó a editar cuenta id : ".$id); 
         $cuentum = Cuentum::findOrFail($id);
         $grupos = Grupo::orderBy('codigo', 'ASC')->where('activo', 1)->pluck('grupo', 'id');
         return view('admin.cuenta.edit', compact('cuentum','grupos','dato'));
@@ -129,6 +135,7 @@ class CuentaController extends Controller
             'cuenta' => 'required|max:200',
             'codigo' => 'required|max:10|unique:cuentas,codigo,'.$id,
         ]);
+
         $requestData = $request->all();
         
         $requestData['grupo'] = $request->grupo;
@@ -139,9 +146,10 @@ class CuentaController extends Controller
 
             $cuentum->update($requestData);
 
-            Session::flash('flash_message', 'Aztualizado correctamente');
-
+            Session::flash('flash_message', 'Actualizado correctamente');
+ $this->genLog("Actualizó a cuenta id : ".$id); 
         } catch (\Exception $e) {
+            $this->genLog("Error al actualizar cuenta id : ".$id); 
             Session::flash('warning', 'Error al Actualizar');  
             return redirect()->back()->withInput();
         }
@@ -161,6 +169,11 @@ class CuentaController extends Controller
 
         return $data;
     }
+    public function genLog($mensaje)
+    {
+        $area = 'Cuentas';
+        $logs = Svlogadmin::log($mensaje,$area);
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -171,9 +184,16 @@ class CuentaController extends Controller
      */
     public function destroy($id)
     {
+        try {
         Cuentum::destroy($id);
+            $this->genLog("Eliminó a cuenta id : ".$id); 
+Session::flash('flash_message', 'Eliminado correctamente');
+        } catch (\Exception $e) {
+            $this->genLog("Error al eliminar cuenta id : ".$id); 
+            Session::flash('warning', '!!!Error al Eliminar');
+        }
 
-        return redirect('admin/cuenta')->with('flash_message', 'Cuenta deleted!');
+        return redirect('admin/cuenta');
     }
 
     protected function guard()

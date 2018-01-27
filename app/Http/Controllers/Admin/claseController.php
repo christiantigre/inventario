@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\SvLogAdmin;
 use App\clase;
 use Illuminate\Http\Request;
+use Session;
 
 class claseController extends Controller
 {
@@ -33,8 +34,11 @@ class claseController extends Controller
                 ->orWhere('detall', 'LIKE', "%$keyword%")
                 ->orWhere('activo', 'LIKE', "%$keyword%")
                 ->paginate($perPage);
+
+                $this->genLog("Busqueda clase :".$keyword);
         } else {
             $clase = clase::paginate($perPage);
+            $this->genLog("Visualizó clases");   
         }
 
         return view('admin.clase.index', compact('clase','dato'));
@@ -48,6 +52,7 @@ class claseController extends Controller
     public function create()
     {
         $dato = $this->gen_section();
+        $this->genLog("Ingresó a crear clase");  
         return view('admin.clase.create',compact('dato'));
     }
 
@@ -60,12 +65,21 @@ class claseController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $requestData = $request->all();
-        
-        clase::create($requestData);
+        $this->validate($request, [
+            'clase' => 'required|max:15',
+            'codigo' => 'required|max:3|unique:clases',
+        ]);
 
-        return redirect('admin/clase')->with('flash_message', 'clase added!');
+        $requestData = $request->all();
+        try {
+            
+        clase::create($requestData);
+        Session::flash('flash_message', 'Guardado correctamente');
+        } catch (\Exception $e) {
+            Session::flash('warning', '!!!Error al Guardar');
+        }
+
+        return redirect('admin/clase');
     }
 
     /**
@@ -78,8 +92,10 @@ class claseController extends Controller
     public function show($id)
     {
         $clase = clase::findOrFail($id);
+        $this->genLog("Visualizó clase id : ".$id); 
+        $dato = $this->gen_section();
 
-        return view('admin.clase.show', compact('clase'));
+        return view('admin.clase.show', compact('clase','dato'));
     }
 
     /**
@@ -95,6 +111,8 @@ class claseController extends Controller
 
         $clase = clase::findOrFail($id);
 
+        $this->genLog("Ingresó a editar clase id : ".$id); 
+
         return view('admin.clase.edit', compact('clase','dato'));
     }
 
@@ -108,13 +126,27 @@ class claseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        $this->validate($request, [
+            'clase' => 'required|max:15',
+            'codigo' => 'required|max:3|unique:clases,codigo,'.$id,
+        ]);
+
         $requestData = $request->all();
+
+        try {            
         
         $clase = clase::findOrFail($id);
         $clase->update($requestData);
 
-        return redirect('admin/clase')->with('flash_message', 'clase updated!');
+        $this->genLog("Actualizó a clase id : ".$id); 
+        Session::flash('flash_message', 'Actualizado correctamente');
+        } catch (\Exception $e) {
+            
+        $this->genLog("Error al actualizar clase id : ".$id); 
+        Session::flash('warning', '!!!Error al Actualizar');
+        }
+
+        return redirect('admin/clase');
     }
 
     public function gen_section(){
@@ -130,6 +162,12 @@ class claseController extends Controller
         return $data;
     }
 
+    public function genLog($mensaje)
+    {
+        $area = 'Clases';
+        $logs = Svlogadmin::log($mensaje,$area);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -139,9 +177,19 @@ class claseController extends Controller
      */
     public function destroy($id)
     {
+        try {
+            
         clase::destroy($id);
+        $this->genLog("Eliminó a clase id : ".$id); 
+Session::flash('flash_message', 'Eliminado correctamente');
+        } catch (\Exception $e) {
 
-        return redirect('admin/clase')->with('flash_message', 'clase deleted!');
+        $this->genLog("Error al eliminar clase id : ".$id); 
+            Session::flash('warning', '!!!Error al Eliminar');
+        }
+
+
+        return redirect('admin/clase');
     }
 
     protected function guard()

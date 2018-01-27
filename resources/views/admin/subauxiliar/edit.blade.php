@@ -1,11 +1,11 @@
-@extends('layouts.app')
-
+@extends('adminlte::page')
 @section('content')
-    <div class="container">
+@include('errors.messages')
         <div class="row">
-            @include('admin.sidebar')
-
-            <div class="col-md-9">
+@include('admin.contabilidad.infosection')
+<section class="content">
+            @include('admin.tipocuenta.sidebar')
+            <div class="col-md-10 col-lg-10 col-xs-12 col-sm-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">Edit subauxiliar #{{ $subauxiliar->id }}</div>
                     <div class="panel-body">
@@ -21,11 +21,18 @@
                             </ul>
                         @endif
 
-                        <form method="POST" action="{{ url('/admin/subauxiliar/' . $subauxiliar->id) }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
-                            {{ method_field('PATCH') }}
+                            {!! Form::model($subauxiliar, [
+                            'method' => 'PATCH',
+                            'url' => ['/admin/subauxiliar', $subauxiliar->id],
+                            'class' => 'form-horizontal', 
+                            'enctype'=>'multipart/form-data',
+                            'files' => true,
+                            'accept-charset'=>'UTF-8'
+                            ]) !!}
+
                             {{ csrf_field() }}
 
-                            @include ('admin.subauxiliar.form', ['submitButtonText' => 'Update'])
+                            @include ('admin.subauxiliar.form', ['submitButtonText' => 'Actualizar'])
 
                         </form>
 
@@ -33,5 +40,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 @endsection

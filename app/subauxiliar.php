@@ -27,9 +27,9 @@ class subauxiliar extends Model
      */
     protected $fillable = ['subauxiliar','secuencia', 'codigo', 'detall', 'activo', 'auxiliar','auxiliar_id'];
 
-    public function auxiliars()
+    public function Auxiliar()
 	{
-		return $this->belongsTo('App\auxiliars');
+		return $this->belongsTo('App\auxiliar');
 	}
 	
 }

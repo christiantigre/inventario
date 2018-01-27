@@ -1,22 +1,22 @@
-@extends('layouts.app')
-
+@extends('adminlte::page')
 @section('content')
-    <div class="container">
+@include('errors.messages')
         <div class="row">
-            @include('admin.sidebar')
-
-            <div class="col-md-9">
+@include('admin.contabilidad.infosection')
+<section class="content">
+            @include('admin.tipocuenta.sidebar')
+            <div class="col-md-10 col-lg-10 col-xs-12 col-sm-8">
                 <div class="panel panel-default">
-                    <div class="panel-heading">auxiliar {{ $auxiliar->id }}</div>
+                    <div class="panel-heading">Auxiliar {{ $auxiliar->id }}</div>
                     <div class="panel-body">
 
-                        <a href="{{ url('/admin/auxiliar') }}" title="Back"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
-                        <a href="{{ url('/admin/auxiliar/' . $auxiliar->id . '/edit') }}" title="Edit auxiliar"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
+                        <a href="{{ url('/admin/auxiliar') }}" title="Atras"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Atras</button></a>
+                        <a href="{{ url('/admin/auxiliar/' . $auxiliar->id . '/edit') }}" title="Editar auxiliar"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>
 
                         <form method="POST" action="{{ url('admin/auxiliar' . '/' . $auxiliar->id) }}" accept-charset="UTF-8" style="display:inline">
                             {{ method_field('DELETE') }}
                             {{ csrf_field() }}
-                            <button type="submit" class="btn btn-danger btn-xs" title="Delete auxiliar" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                            <button type="submit" class="btn btn-danger btn-xs" title="Eliminar auxiliar" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar</button>
                         </form>
                         <br/>
                         <br/>
@@ -27,7 +27,15 @@
                                     <tr>
                                         <th>ID</th><td>{{ $auxiliar->id }}</td>
                                     </tr>
-                                    <tr><th> Auxiliar </th><td> {{ $auxiliar->auxiliar }} </td></tr><tr><th> Codigo </th><td> {{ $auxiliar->codigo }} </td></tr><tr><th> Detall </th><td> {{ $auxiliar->detall }} </td></tr><tr><th> Activo </th><td> {{ $auxiliar->activo }} </td></tr><tr><th> Subcuenta Id </th><td> {{ $auxiliar->subcuenta_id }} </td></tr>
+                                    <tr><th> Auxiliar </th><td> {{ $auxiliar->auxiliar }} </td></tr>
+                                    <tr><th> Código </th><td> {{ $auxiliar->codigo }}. </td></tr><tr><th> Detalle </th><td> {{ $auxiliar->detall }} </td></tr><tr>
+                                         <tr><th> Subcuenta </th><td> {{ $auxiliar->Subcuenta->subcuenta }} </td></tr>
+                                        <th> Activo </th><td>  @if(($auxiliar->activo)=='1')
+                                        <small class="label label-success">Activo</small>
+                                        @else
+                                        <small class="label label-danger">Inactivo</small>
+                                        @endif </td></tr>
+                                       
                                 </tbody>
                             </table>
                         </div>
@@ -36,5 +44,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 @endsection

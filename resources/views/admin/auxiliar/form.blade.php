@@ -1,11 +1,11 @@
-<div class="form-group {{ $errors->has('cuenta_id') ? 'has-error' : ''}}">
-    <label for="cuenta_id" class="col-md-4 control-label">{{ 'Cuenta' }}</label>
+<div class="form-group {{ $errors->has('subcuenta_id') ? 'has-error' : ''}}">
+    <label for="subcuenta_id" class="col-md-4 control-label">{{ 'Cuenta' }}</label>
     <div class="col-md-6">
         {!! Form::select('subcuenta_id', $subcuentas, null, ['class' => 'form-control','id'=>'subcuenta_id','autofocus'=>'autofocus','onchange'=>'cuentaSubCuentas()']) !!}
 
         {!! Form::hidden('subcuenta', null, ['id'=>'subcuenta','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('subcuenta') !!}
 
-        {!! $errors->first('cuenta_id', '<p class="help-block">:message</p>') !!}
+        {!! $errors->first('subcuenta_id', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
 <div class="form-group {{ $errors->has('secuencia') ? 'has-error' : ''}}">

@@ -1,22 +1,42 @@
-<div class="form-group {{ $errors->has('subauxiliar') ? 'has-error' : ''}}">
-    <label for="subauxiliar" class="col-md-4 control-label">{{ 'Subauxiliar' }}</label>
+<div class="form-group {{ $errors->has('auxiliar_id') ? 'has-error' : ''}}">
+    <label for="auxiliar_id" class="col-md-4 control-label">{{ 'Auxiliar' }}</label>
     <div class="col-md-6">
-        <textarea class="form-control" rows="5" name="subauxiliar" type="textarea" id="subauxiliar" required>{{ $subauxiliar->subauxiliar or ''}}</textarea>
+        {!! Form::select('auxiliar_id', $auxiliares, null, ['class' => 'form-control','id'=>'auxiliar_id','autofocus'=>'autofocus','onchange'=>'cuentaAuxCuentas()']) !!}
+
+        {!! Form::hidden('auxiliar', null, ['id'=>'auxiliar','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('auxiliar') !!}
+        {!! $errors->first('auxiliar_id', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+<div class="form-group {{ $errors->has('subauxiliar') ? 'has-error' : ''}}">
+    <label for="subauxiliar" class="col-md-4 control-label">{{ 'subauxiliar' }}</label>
+    <div class="col-md-6">
+        {!! Form::text('subauxiliar', null, ['id'=>'subauxiliar','class' => 'form-control','autofocus'=>'autofocus','required'=>'required']), old('subauxiliar') !!}  
+
         {!! $errors->first('subauxiliar', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('codigo') ? 'has-error' : ''}}">
+</div>
+<div class="form-group {{ $errors->has('secuencia') ? 'has-error' : ''}}">
+    <label for="secuencia" class="col-md-4 control-label">{{ 'secuencia' }}</label>
+    <div class="col-md-6">
+        {!! Form::text('secuencia', null, ['id'=>'secuencia','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('secuencia') !!}        
+        {!! $errors->first('secuencia', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+<div class="form-group {{ $errors->has('codigo') ? 'has-error' : ''}}">
     <label for="codigo" class="col-md-4 control-label">{{ 'Codigo' }}</label>
     <div class="col-md-6">
-        <textarea class="form-control" rows="5" name="codigo" type="textarea" id="codigo" >{{ $subauxiliar->codigo or ''}}</textarea>
+        {!! Form::text('codigo', null, ['class' => 'form-control input-sm','id'=>'codigo','autofocus'=>'autofocus','readonly'=>'readonly']), old('codigo') !!}
         {!! $errors->first('codigo', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('detall') ? 'has-error' : ''}}">
+</div>
+<div class="form-group {{ $errors->has('detall') ? 'has-error' : ''}}">
     <label for="detall" class="col-md-4 control-label">{{ 'Detall' }}</label>
     <div class="col-md-6">
-        <textarea class="form-control" rows="5" name="detall" type="textarea" id="detall" >{{ $subauxiliar->detall or ''}}</textarea>
+        {!! Form::text('detall', null, ['class' => 'form-control input-sm','id'=>'detall','autofocus'=>'autofocus']), old('detall') !!}
         {!! $errors->first('detall', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('activo') ? 'has-error' : ''}}">
+</div>
+<div class="form-group {{ $errors->has('activo') ? 'has-error' : ''}}">
     <label for="activo" class="col-md-4 control-label">{{ 'Estado' }}</label>
     <div class="col-md-6">
         <select name="activo" class="form-control" id="activo" >
@@ -26,16 +46,10 @@
 </select>
         {!! $errors->first('activo', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('auxiliar_id') ? 'has-error' : ''}}">
-    <label for="auxiliar_id" class="col-md-4 control-label">{{ 'Auxiliar Id' }}</label>
-    <div class="col-md-6">
-        <input class="form-control" name="auxiliar_id" type="number" id="auxiliar_id" value="{{ $subauxiliar->auxiliar_id or ''}}" >
-        {!! $errors->first('auxiliar_id', '<p class="help-block">:message</p>') !!}
-    </div>
 </div>
 
 <div class="form-group">
     <div class="col-md-offset-4 col-md-4">
-        <input class="btn btn-primary" type="submit" value="{{ $submitButtonText or 'Create' }}">
+        <input class="btn btn-primary" type="submit" value="{{ $submitButtonText or 'Crear' }}">
     </div>
 </div>

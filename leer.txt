@@ -106,3 +106,21 @@ ejemplo del plan de cuentas
 3 - http://dspace.ucuenca.edu.ec/bitstream/123456789/1371/1/tcon666.pdf
 4 - https://www.youtube.com/watch?v=viXLHH9gQEI
 5 - https://www.youtube.com/watch?v=jle8CWbi6x0
+
+
+
+crea view mysql sql
+
+CREATE VIEW plan_contable AS
+SELECT clases.codigo as cod, clases.clase as cuenta FROM `clases` WHERE activo='1' 
+UNION
+SELECT grupos.codigo as cod, grupos.grupo as cuenta FROM `grupos` WHERE activo='1' 
+UNION
+SELECT cuentas.codigo as cod, cuentas.cuenta as cuenta FROM `cuentas` WHERE activo='1'
+UNION
+SELECT subcuentas.codigo as cod, subcuentas.subcuenta as cuenta FROM `subcuentas` WHERE activo='1'
+UNION
+SELECT auxiliars.codigo as cod, auxiliars.auxiliar as cuenta FROM `auxiliars` WHERE activo='1'
+UNION
+SELECT subauxiliars.codigo as cod, subauxiliars.subauxiliar as cuenta FROM `subauxiliars` WHERE activo='1'
+    

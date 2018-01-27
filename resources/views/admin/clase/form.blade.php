@@ -5,13 +5,13 @@
         {!! $errors->first('clase', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('codigo') ? 'has-error' : ''}}">
-    <label for="codigo" class="col-md-4 control-label">{{ 'Codigo' }}</label>
+    <label for="codigo" class="col-md-4 control-label">{{ 'Código' }}</label>
     <div class="col-md-6">
         <input class="form-control" name="codigo" type="text" id="codigo" value="{{ $clase->codigo or ''}}" >
         {!! $errors->first('codigo', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('detall') ? 'has-error' : ''}}">
-    <label for="detall" class="col-md-4 control-label">{{ 'Detall' }}</label>
+    <label for="detall" class="col-md-4 control-label">{{ 'Detalle' }}</label>
     <div class="col-md-6">
         <input class="form-control" name="detall" type="text" id="detall" value="{{ $clase->detall or ''}}" >
         {!! $errors->first('detall', '<p class="help-block">:message</p>') !!}

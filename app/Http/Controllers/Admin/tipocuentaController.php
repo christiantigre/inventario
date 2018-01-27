@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use App\SvLogAdmin;
 use App\tipocuentum;
 use Illuminate\Http\Request;

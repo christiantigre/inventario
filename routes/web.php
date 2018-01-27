@@ -110,6 +110,7 @@ Route::group(['prefix' => 'admin'], function () {
     'as' => 'admin.seguridad.logfecha',
     'uses' => 'Admin\LogController@revisarLogfecha'
   ]);
+  
   /*Modulo de contabilidad*/
   
   Route::resource('/tipocuenta', 'Admin\\tipocuentaController');
@@ -121,15 +122,19 @@ Route::group(['prefix' => 'admin'], function () {
   Route::resource('/auxiliar', 'Admin\\auxiliarController');
   Route::resource('/subauxiliar', 'Admin\\subauxiliarController');
 
-
   Route::get('/extraercontadorclases/','ComponentController@extraercantidadclases');
   Route::get('/extraercontadorgrupos/','ComponentController@extraercantidadgrupos');
   Route::get('/extraercontadorcuentas/','ComponentController@extraercontadorcuentas');
   Route::get('/extraercontadorcuentasvarias/','ComponentController@extraercontadorcuentasvarias');
   Route::get('/extraercontadorsubcuentas/','ComponentController@extraercontadorsubcuentas');
+  Route::get('/extraercontadorsubcuentasvarias/','ComponentController@extraercontadorsubcuentasvarias');
+  Route::get('/extraercontadorauxcuentas/','ComponentController@extraercontadorauxcuentas');
+  Route::get('/extraercontadorsubauxcuentas/','ComponentController@extraercontadorsubauxcuentas');
+
 
   Route::get('/variassubctas','Admin\\subcuentaController@variassubctas');
   Route::get('/variasaux','Admin\\auxiliarController@variasaux');
+  Route::get('/variasSubAux','Admin\\subauxiliarController@variasSubaux');  
 
   Route::resource('/tempsubcta', 'Admin\\TempsubctaController');
 
@@ -137,6 +142,17 @@ Route::group(['prefix' => 'admin'], function () {
   Route::post('/savesubcuenta/', 'ComponentController@savesubcuenta');
   Route::post('/trashSubcuentas/','ComponentController@trashSubcuentas');
   Route::get('/guardarsubcuentas/','ComponentController@guardarsubcuentas');
+  Route::post('/saveauxcuenta/', 'ComponentController@saveauxcuenta');
+  Route::get('/listauxcuentas/', 'ComponentController@listaAuxcuentas'); 
+  Route::post('/trashAuxcuentas/','ComponentController@trashAuxcuentas');
+  Route::get('/guardarAuxCuentas/','ComponentController@guardarAuxCuentas');
+  Route::post('/savesubauxcuenta/', 'ComponentController@savesubauxcuenta');
+  Route::get('/listsubauxcuentas/', 'ComponentController@listsubauxcuentas'); 
+  Route::post('/trashSubAuxcuentas/','ComponentController@trashSubAuxcuentas');
+  Route::get('/guardarSubAuxCuentas/','ComponentController@guardarSubAuxCuentas');
+
+  Route::resource('/plan', 'Admin\\PlanController');
+  Route::get('/plan/downloadExcel/{type}', 'Admin\\PlanController@downloadExcel');
 
 });
 
@@ -168,13 +184,12 @@ Route::group(['prefix' => 'person'], function () {
   Route::resource('/cliente', 'Person\\ClienteController');
   Route::resource('/product', 'Person\\ProductController');
   Route::post('/product/importexcelProducts', 'Person\\ProductController@importExcelProducts');
-  Route::get('/product/downloadExcel/{type}', 'Person\\ProductController@downloadExcel');
   Route::resource('/proveedor', 'Person\\ProveedorController');
   Route::resource('/iva', 'Person\\IvaController');
   Route::resource('/marca', 'Person\\MarcaController');
   Route::resource('/category', 'Person\\CategoryController');
   Route::resource('/subcategory', 'Person\\SubcategoryController');
-  ;
+  
   Route::post('/proveedor/importexcelProveedor', 'Person\\ProveedorController@importExcelProveedor');
   Route::get('/proveedor/downloadExcel/{type}', 'Person\\ProveedorController@downloadExcel');
   Route::get('proveedor/getcanton/{id}', 'ComponentController@getCanton');

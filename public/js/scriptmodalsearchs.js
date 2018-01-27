@@ -603,6 +603,31 @@ function trashSubCuentas(id){
 	});
 }
 
+function trashAuxCuentas(id){
+	console.log(id);
+	var token = $("input[name=_token]").val();
+	var route = '/admin/trashAuxcuentas/';	
+	var parametros = {
+		"id" :'0'
+	}
+	$.ajax({
+		url:route,
+		headers:{'X-CSRF-TOKEN':token},
+		type:'post',
+		dataType: 'json',
+		data:parametros,
+		success:function(data)
+		{
+			console.log('correcto '+data.data);
+			list_auxcuentas();	
+		},
+		error:function(data)
+		{
+			console.log('Error '+data);
+		}  
+	});
+}
+
 function reset_input_subcuentas(){
 			console.log('reseting');
 			document.getElementById("subcuenta").value = "";
@@ -610,3 +635,22 @@ function reset_input_subcuentas(){
 			document.getElementById("secuencia").value = "";
 			document.getElementById("codigo").value = "";
 		}
+
+function reset_input_auxcuentas(){
+			console.log('reseting');
+			document.getElementById("subcuenta").value = "";
+			document.getElementById("auxiliar").value = "";
+			document.getElementById("secuencia").value = "";
+			document.getElementById("codigo").value = "";
+		}
+
+		function list_auxcuentas(){
+	console.log('loading items cuentas auxiliar');
+	$.ajax({
+		type:'get',
+		url:'/admin/listauxcuentas/',
+		success: function(data){
+			$('#list-cart').empty().html(data);
+		}
+	});
+}

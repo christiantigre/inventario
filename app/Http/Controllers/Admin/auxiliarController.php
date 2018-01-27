@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\SvLogAdmin;
 use App\auxiliar;
 use Illuminate\Http\Request;
 use App\subcuentum;
+use Session;
 
 class auxiliarController extends Controller
 {
@@ -26,17 +27,19 @@ class auxiliarController extends Controller
         $dato = $this->gen_section();
 
         $keyword = $request->get('search');
-        $perPage = 25;
+        $perPage = 30;
 
         if (!empty($keyword)) {
             $auxiliar = auxiliar::where('auxiliar', 'LIKE', "%$keyword%")
-                ->orWhere('codigo', 'LIKE', "%$keyword%")
-                ->orWhere('detall', 'LIKE', "%$keyword%")
-                ->orWhere('activo', 'LIKE', "%$keyword%")
-                ->orWhere('subcuenta_id', 'LIKE', "%$keyword%")
-                ->paginate($perPage);
+            ->orWhere('codigo', 'LIKE', "%$keyword%")
+            ->orWhere('detall', 'LIKE', "%$keyword%")
+            ->orWhere('activo', 'LIKE', "%$keyword%")
+            ->orWhere('subcuenta_id', 'LIKE', "%$keyword%")
+            ->paginate($perPage);
+            $this->genLog("Busqueda auxiliar :".$keyword);
         } else {
-            $auxiliar = auxiliar::paginate($perPage);
+            $auxiliar = auxiliar::OrderBy('codigo','ASC')->paginate($perPage);
+            $this->genLog("Visualizó auxiliares"); 
         }
         return view('admin.auxiliar.index', compact('auxiliar','dato'));
     }
@@ -49,7 +52,7 @@ class auxiliarController extends Controller
     public function create()
     {
         $dato = $this->gen_section();
-
+        $this->genLog("Ingresó a crear cta auxiliar"); 
         $subcuentas = subcuentum::orderBy('codigo', 'ASC')->where('activo', 1)->pluck('subcuenta', 'id');
         return view('admin.auxiliar.create',compact('dato','subcuentas'));
     }
@@ -57,10 +60,9 @@ class auxiliarController extends Controller
     public function variasaux(Request $request)
     {        
         $dato = $this->gen_section();
-
+        $this->genLog("Ingresó a crear varias ctas auxiliares"); 
         $subcuentas = subcuentum::orderBy('codigo', 'ASC')->where('activo', 1)->pluck('subcuenta', 'id');
         return view('admin.auxiliar.variasaux',compact('dato','subcuentas'));
-
     }
 
     /**
@@ -73,13 +75,21 @@ class auxiliarController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-			'auxiliar' => 'required|max:200'
-		]);
+         'auxiliar' => 'required|max:200',
+         'codigo' => 'required|max:15|unique:auxiliars',
+     ]);
         $requestData = $request->all();
-        
-        auxiliar::create($requestData);
+        try {
+            auxiliar::create($requestData);
+            Session::flash('flash_message', 'Guardado correctamente');
+            $this->genLog("Registró auxiliar ".$request->auxiliar); 
+        } catch (\Exception $e) {
+            $this->genLog("Error al crear auxiliar ".$request->auxiliar);
+            Session::flash('warning', 'Error al Guardar');  
+            return redirect()->back()->withInput();
+        }
 
-        return redirect('admin/auxiliar')->with('flash_message', 'auxiliar added!');
+        return redirect('admin/auxiliar');
     }
 
     /**
@@ -92,8 +102,10 @@ class auxiliarController extends Controller
     public function show($id)
     {
         $auxiliar = auxiliar::findOrFail($id);
+        $dato = $this->gen_section();
+        $this->genLog("Visualizó auxiliar id : ".$id);
 
-        return view('admin.auxiliar.show', compact('auxiliar'));
+        return view('admin.auxiliar.show', compact('auxiliar','dato'));
     }
 
     /**
@@ -107,6 +119,7 @@ class auxiliarController extends Controller
     {
         $auxiliar = auxiliar::findOrFail($id);
         $dato = $this->gen_section();
+        $this->genLog("Visualizó auxiliar id : ".$id); 
 
         $subcuentas = subcuentum::orderBy('codigo', 'ASC')->where('activo', 1)->pluck('subcuenta', 'id');
 
@@ -124,14 +137,22 @@ class auxiliarController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-			'auxiliar' => 'required|max:200'
-		]);
+         'auxiliar' => 'required|max:200',
+         'codigo' => 'required|max:15|unique:auxiliars,codigo,'.$id,
+     ]);
         $requestData = $request->all();
-        
-        $auxiliar = auxiliar::findOrFail($id);
-        $auxiliar->update($requestData);
+        try {            
+            $auxiliar = auxiliar::findOrFail($id);
+            $auxiliar->update($requestData);
+            Session::flash('flash_message', 'Actualizado correctamente');
+            $this->genLog("Actualizó a auxiliar id : ".$id); 
+        } catch (\Exception $e) {
+            $this->genLog("Error al actualizar auxiliar id : ".$id); 
+            Session::flash('warning', 'Error al Actualizar');  
+            return redirect()->back()->withInput();
+        }
 
-        return redirect('admin/auxiliar')->with('flash_message', 'auxiliar updated!');
+        return redirect('admin/auxiliar');
     }
 
     public function gen_section(){
@@ -147,6 +168,12 @@ class auxiliarController extends Controller
         return $data;
     }
 
+    public function genLog($mensaje)
+    {
+        $area = 'Auxiliar';
+        $logs = Svlogadmin::log($mensaje,$area);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -156,9 +183,17 @@ class auxiliarController extends Controller
      */
     public function destroy($id)
     {
-        auxiliar::destroy($id);
+        try {
 
-        return redirect('admin/auxiliar')->with('flash_message', 'auxiliar deleted!');
+            auxiliar::destroy($id);
+            $this->genLog("Eliminó a auxiliar id : ".$id); 
+            Session::flash('flash_message', 'Eliminado correctamente');
+        } catch (\Exception $e) {
+            $this->genLog("Error al eliminar auxiliar id : ".$id); 
+            Session::flash('warning', '!!!Error al Eliminar');
+        }
+
+        return redirect('admin/auxiliar');
     }
 
     protected function guard()

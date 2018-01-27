@@ -16,7 +16,7 @@
     </div>
 </div>
 <div class="form-group {{ $errors->has('codigo') ? 'has-error' : ''}}">
-    <label for="codigo" class="col-md-4 control-label">{{ 'Codigo' }}</label>
+    <label for="codigo" class="col-md-4 control-label">{{ 'Código' }}</label>
     <div class="col-md-6">
         {!! Form::text('codigo', null, ['id'=>'codigo','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('codigo') !!} 
         {!! $errors->first('codigo', '<p class="help-block">:message</p>') !!}
@@ -29,9 +29,9 @@
         {!! $errors->first('cuenta', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('detall') ? 'has-error' : ''}}">
-    <label for="detall" class="col-md-4 control-label">{{ 'Detall' }}</label>
+    <label for="detall" class="col-md-4 control-label">{{ 'Detalle' }}</label>
     <div class="col-md-6">
-        {!! Form::text('detall', null, ['id'=>'detall','class' => 'form-control','autofocus'=>'autofocus','required'=>'required']), old('detall') !!}         
+        {!! Form::text('detall', null, ['id'=>'detall','class' => 'form-control','autofocus'=>'autofocus']), old('detall') !!}         
         {!! $errors->first('detall', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('activo') ? 'has-error' : ''}}">
