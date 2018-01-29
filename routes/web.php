@@ -130,6 +130,7 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/extraercontadorsubcuentasvarias/','ComponentController@extraercontadorsubcuentasvarias');
   Route::get('/extraercontadorauxcuentas/','ComponentController@extraercontadorauxcuentas');
   Route::get('/extraercontadorsubauxcuentas/','ComponentController@extraercontadorsubauxcuentas');
+  Route::get('/vercuentas/','ComponentController@vercuentas');
 
 
   Route::get('/variassubctas','Admin\\subcuentaController@variassubctas');
@@ -160,7 +161,9 @@ Route::group(['prefix' => 'admin'], function () {
 
   Route::resource('admin/num_asiento', 'Admin\\num_asientoController');
   Route::resource('admin/detall_asiento', 'Admin\\detall_asientoController');
-
+  Route::get('/balanceinicial/', 'Admin\\ContabilidadController@balanceinicial');
+  Route::get('/balanceinicial/', 'Admin\\ContabilidadController@balanceinicial');
+  Route::get('/balanceinicial/createBalanceInicial', 'Admin\\ContabilidadController@createBalanceInicial');
 
 });
 
@@ -223,7 +226,9 @@ Route::group(['prefix' => 'person'], function () {
   Route::get('/inventario/downloadExcelEgresos/{type}/{year}/{month}/{rangostart}/{rangofinish}', 'Person\\InventarioController@downloadExcelMonthInvEgresosRangos');
 
   Route::resource('/almacen', 'Person\\AlmaceController');
+
 });
+  Route::get('getSubcategory/{id}', 'ComponentController@getSubcategory');
 
 //copiado category y subcategory (carpetas) Realizar la revicion de controladores
 Route::resource('admin/tempauxcta', 'Admin\\TempauxctaController');

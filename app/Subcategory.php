@@ -39,6 +39,10 @@ class Subcategory extends Model
 		return $this->belongsTo('App\Category');
 	}
 
+    public static function subcategory($id){
+        return Subcategory::where('category_id','=',$id)->get();
+    }
+
     public function producto(){
         return $this->hasMany(Product::class);
     }

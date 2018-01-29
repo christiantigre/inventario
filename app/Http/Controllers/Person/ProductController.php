@@ -280,11 +280,11 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'producto' => 'required|max:75',
             'pre_compra'=>'numeric',
             'pre_venta'=>'numeric',
             'cantidad'=>'numeric',
             'imagen' => 'mimes:jpg,jpeg,gif,png',
+            'producto' => 'required|max:191|unique:products,producto,'.$id,
         ];
 
         $messages = [
@@ -332,7 +332,7 @@ class ProductController extends Controller
 
         } catch (\Exception $e) {
             $this->genLog("Error al actualizar producto id: ".$id);
-            Session::flash('warning', 'Error al actualizar!!!');            
+            Session::flash('warning', 'Error al actualizar!!! '.$e);            
         }
 
         return redirect('person/product');

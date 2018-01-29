@@ -654,3 +654,5 @@ function reset_input_auxcuentas(){
 		}
 	});
 }
+
+

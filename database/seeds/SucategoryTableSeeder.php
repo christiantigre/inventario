@@ -92,13 +92,7 @@ class SucategoryTableSeeder extends Seeder
 
 
 
-        Subcategory::create( [
-            'id'=>9,
-            'subcategory'=>'Accesorios',
-            'content'=>'Accesorios',
-            'active'=>1,
-            'category_id'=>9
-        ] );
+        
 
 
     }

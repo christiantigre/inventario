@@ -355,3 +355,31 @@ function reset_input_subauxcuentas(){
 		}  
 	});
 }
+
+function consulta_cuenta(){
+	var token = $("input[name=_token]").val();
+	var cod_cuenta= $("#cod_cuenta").val();
+	var route = '/admin/vercuentas/';
+	var parametros = {
+		"id" :cod_cuenta
+	}
+	console.log(parametros);
+	$.ajax({
+		url:route,
+		headers:{'X-CSRF-TOKEN':token},
+		type:'get',
+		dataType: 'json',
+		data:parametros,
+		success:function(data)
+		{
+			console.log(data);
+			document.getElementById("cuenta").value = data.cuenta;
+			document.getElementById("cod_cuenta").value = data.cod;
+			console.log("copy data succefull");
+		},
+		error:function(data)
+		{
+			console.log('Error '+data);
+		}  
+	});
+}

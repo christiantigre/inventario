@@ -37,7 +37,7 @@ class SubcategoryController extends Controller
             $this->genLog("Busqueda datos :".$keyword);
 
         } else {
-            $subcategory = Subcategory::paginate($perPage);
+            $subcategory = Subcategory::orderBy('category_id','ASC')->paginate($perPage);
             $this->genLog("Visualizó sección.");
         }
 
@@ -70,8 +70,9 @@ class SubcategoryController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-			'subcategory' => 'required|max:75'
-		]);
+           'subcategory' => 'required|unique:subcategories|max:75',
+        ]);
+
         $requestData = $request->all();
         try {
             
@@ -131,9 +132,11 @@ class SubcategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        
         $this->validate($request, [
-			'subcategory' => 'required|max:75'
-		]);
+            'subcategory' => 'required|max:75|unique:subcategories,subcategory,'.$id,
+        ]);
+        
         $requestData = $request->all();
         try {
             

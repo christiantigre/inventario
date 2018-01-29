@@ -15,6 +15,8 @@ use App\Tempauxctum;
 use App\Tempsubauxctum;
 use App\auxiliar;
 use App\subauxiliar;
+use App\Plan;
+use App\Subcategory;
 use Session;
 
 class ComponentController extends Controller
@@ -133,6 +135,8 @@ public function extraercantidadclases(Request $request){
         return response()->json($cantidad);
     }
 }
+
+
 
 public function extraercantidadgrupos(Request $request){
     if ($request->ajax()) {
@@ -456,6 +460,23 @@ protected function saveItemSubAuxiliar($auxcuenta)
         $requestData->auxiliar_id = $auxcuenta->auxiliar_id;
         return $requestData;
     }
+
+public function vercuentas(Request $request){
+    if ($request->ajax()) {        
+        $data = Plan::where('cod', $request->id)->first();
+        return response()->json($data);
+    }
+}
+
+
+public function getSubcategory(Request $request, $id){
+        if ($request->ajax()) {
+            $category = Subcategory::subcategory($id);
+            return response()->json($category);
+        }
+    }
+
+
 
 
 }

@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-class CreateDetallAsientosTable extends Migration
+class CreateTempdetallasientosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +13,7 @@ class CreateDetallAsientosTable extends Migration
      */
     public function up()
     {
-        Schema::create('detall_asientos', function (Blueprint $table) {
+        Schema::create('tempdetallasientos', function (Blueprint $table) {
             $table->increments('id');
             $table->text('num_asiento',15)->nullable();
             $table->text('cod_cuenta',15)->nullable();
@@ -22,10 +23,6 @@ class CreateDetallAsientosTable extends Migration
             $table->double('saldo_debe',15,2)->nullable();
             $table->double('saldo_haber',15,2)->nullable();
             $table->text('concepto_detalle')->nullable();
-            $table->integer('almacen_id')->unsigned();
-            $table->foreign('almacen_id')->references('id')->on('almacens');
-            $table->integer('asiento_id')->unsigned();
-            $table->foreign('asiento_id')->references('id')->on('num_asientos');
             $table->timestamps();
         });
     }
@@ -37,6 +34,6 @@ class CreateDetallAsientosTable extends Migration
      */
     public function down()
     {
-        Schema::drop('detall_asientos');
+        Schema::dropIfExists('tempdetallasientos');
     }
 }

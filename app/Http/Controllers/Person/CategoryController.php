@@ -7,6 +7,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Session;
 use App\Category;
+use App\Subcategory;
 use Illuminate\Http\Request;
 use DB;
 //use Illuminate\Database\Eloquent\Collection::truncate();
@@ -37,7 +38,7 @@ class CategoryController extends Controller
             $this->genLog("Busqueda datos :".$keyword);
 
         } else {
-            $category = Category::paginate($perPage);
+            $category = Category::orderBy('category','ASC')->paginate($perPage);
             $this->genLog("Visualizó sección.");
 
         }
@@ -60,6 +61,10 @@ class CategoryController extends Controller
         return view('person.category.create');
     }
 
+
+
+    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -69,6 +74,10 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+           'category' => 'required|unique:categories|max:75',
+        ]);
+
 try {
     
         $requestData = $request->all();
@@ -124,6 +133,10 @@ try {
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+           'category' => 'required|unique:categories|max:75',
+        ]);
+        
 try {
     
         $requestData = $request->all();

@@ -463,7 +463,7 @@ tr.itemdetall td{
               <td style="border: none;font: 10px Georgia, "Times New Roman", Times, serif; ">Descuento:</td><td style="border: none;font: 10px Georgia, "Times New Roman", Times, serif; ">$ {{ number_format(0,2) }}</td>
             </tr>
             <tr style="border: none;">
-              <td style="border: none;font: 10px Georgia, "Times New Roman", Times, serif; ">Iva {{ number_format($or->porcentaje_iva,2) }}%:</td><td style="border: none;font: 10px Georgia, "Times New Roman", Times, serif; ">$ {{ number_format($or->porcentaje,2) }}</td>
+              <td style="border: none;font: 10px Georgia, "Times New Roman", Times, serif; ">Iva {{ number_format($or->porcentaje_iva,2) }}%:</td><td style="border: none;font: 10px Georgia, "Times New Roman", Times, serif; ">$ {{ number_format($or->iva_calculado,2) }}</td>
             </tr>
             <tr style="border: none;">
               <td style="border: none;font: 10px Georgia, "Times New Roman", Times, serif; ">TOTAL.:</td><td style="border: none;font: 10px Georgia, "Times New Roman", Times, serif; ">$ {{ number_format($or->total,2) }}</td>

@@ -10,7 +10,10 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Cuenta</div>
                 <div class="panel-body">
-                    
+                    <div class="row">
+                        <div class="col-md-10 col-lg-10 col-xs-12 col-sm-8">
+                            
+                        
                     <a href="{{ url('/admin/cuenta/create') }}" class="btn btn-success btn-xs" title="Registrar Cuenta">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nuevo
                     </a>
@@ -26,8 +29,16 @@
                         </div>
                     </form>
 
+                    </div>
+                    </div>
+
+
                     <br/>
                     <br/>
+
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
+
                     <div class="table-responsive">
                         <table class="table table-borderless">
                             <thead>
@@ -70,6 +81,9 @@
                         </table>
                         <div class="pagination-wrapper"> {!! $cuenta->appends(['search' => Request::get('search')])->render() !!} </div>
                     </div>
+
+                </div>
+                </div>
 
                 </div>
             </div>

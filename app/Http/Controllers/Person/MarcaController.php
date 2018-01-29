@@ -38,7 +38,7 @@ class MarcaController extends Controller
             $this->genLog("Busqueda datos :".$keyword);
 
         } else {
-            $marca = Marca::paginate($perPage);
+            $marca = Marca::orderBy('marca','ASC')->paginate($perPage);
             $this->genLog("Visualizó sección.");
 
         }
@@ -66,6 +66,9 @@ class MarcaController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+           'marca' => 'required|unique:marcas|max:191',
+       ]);
 
         $requestData = $request->all();
         
@@ -135,6 +138,9 @@ class MarcaController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+           'marca' => 'required|unique:marcas|max:191',
+       ]);
 
         $requestData = $request->all();
         try {

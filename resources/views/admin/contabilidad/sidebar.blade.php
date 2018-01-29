@@ -12,7 +12,7 @@
                     </a>
                 </li>
                 <li role="presentation">
-                    <a href="{{ url('admin/tipocuenta') }}">
+                    <a href="{{ url('admin/balanceinicial') }}">
                         BALANCE INICIAL
                     </a>
                 </li>
