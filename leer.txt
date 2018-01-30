@@ -129,3 +129,7 @@ SELECT auxiliars.codigo as cod, auxiliars.auxiliar as cuenta FROM `auxiliars` WH
 UNION
 SELECT subauxiliars.codigo as cod, subauxiliars.subauxiliar as cuenta FROM `subauxiliars` WHERE activo='1'
     
+
+
+    realizando tag en repositorios github
+    https://frontendlabs.io/2005--git-tag-como-quitar-eliminar-tag-git
