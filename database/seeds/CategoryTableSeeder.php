@@ -109,7 +109,7 @@ class CategoryTableSeeder extends Seeder
 
 
         Category::create( [
-            'id'=>8,
+            'id'=>9,
             'category'=>'SISTEMA ELECTRICO',
             'detall'=>'Varios articulos para el sistema eléctrico',
             'activo'=>1,
