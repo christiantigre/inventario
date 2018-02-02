@@ -8,6 +8,9 @@ use App\Cliente;
 use Illuminate\Http\Request;
 use Session;
 use App\SvLog;
+use App\Pais;
+use App\Provincias;
+use App\Canton;
 
 class ClienteController extends Controller
 {
@@ -62,8 +65,10 @@ class ClienteController extends Controller
     public function create()
     {
         $this->genLog("Ingresó a nuevo registro.");
-
-        return view('person.cliente.create');
+        $paises = Pais::orderBy('id', 'DESC')->where('status', 1)->pluck('pais', 'id');
+        $provincias = Provincias::orderBy('id', 'ASC')->pluck('provincia', 'id');
+        $cantones = Canton::orderBy('id', 'ASC')->pluck('canton', 'id');
+        return view('person.cliente.create',compact('paises','provincias','cantones'));
     }
 
     /**
@@ -116,8 +121,10 @@ class ClienteController extends Controller
     {
         $cliente = Cliente::findOrFail($id);
         $this->genLog("Ingresó actualizar : ".$cliente['cliente']);
-
-        return view('person.cliente.edit', compact('cliente'));
+        $paises = Pais::orderBy('id', 'DESC')->where('status', 1)->pluck('pais', 'id');
+        $provincias = Provincias::orderBy('id', 'ASC')->pluck('provincia', 'id');
+        $cantones = Canton::orderBy('id', 'ASC')->pluck('canton', 'id');
+        return view('person.cliente.edit', compact('cliente','paises','provincias','cantones'));
     }
 
     /**

@@ -72,7 +72,32 @@
 </select>
         {!! $errors->first('activo', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('id_pais') ? 'has-error' : ''}}">
+</div>
+
+<div class="form-group {{ $errors->has('id_pais') ? 'has-error' : ''}}">
+    <label for="id_pais" class="col-md-4 col-lg-2 control-label">{{ 'Pais' }}</label>
+    <div class="col-md-6 col-lg-8">
+        {!! Form::select('id_pais', $paises, null, ['class' => 'form-control','id'=>'id_pais']) !!}
+        {!! $errors->first('id_pais', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+<div class="form-group {{ $errors->has('id_provincia') ? 'has-error' : ''}}">
+    <label for="id_provincia" class="col-md-4 col-lg-2 control-label">{{ 'Provincia' }}</label>
+    <div class="col-md-6 col-lg-8">
+        {!! Form::select('id_provincia', $provincias, null, ['class' => 'form-control','id'=>'id_provincia']) !!}
+        {!! $errors->first('id_provincia', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+<div class="form-group {{ $errors->has('id_canton') ? 'has-error' : ''}}">
+    <label for="id_canton" class="col-md-4 col-lg-2 control-label">{{ 'Cantón' }}</label>
+    <div class="col-md-6 col-lg-8">
+        {!! Form::select('id_canton', $cantones, null, ['class' => 'form-control','id'=>'id_canton']) !!}
+        {!! $errors->first('id_canton', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+
+<!--
+<div class="form-group {{ $errors->has('id_pais') ? 'has-error' : ''}}">
     <label for="id_pais" class="col-md-4 control-label">{{ 'Id Pais' }}</label>
     <div class="col-md-6">
         <input class="form-control" name="id_pais" type="number" id="id_pais" value="{{ $cliente->id_pais or ''}}" >
@@ -91,6 +116,8 @@
         {!! $errors->first('id_canton', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
+-->
+
 </div>
 
 <div class="form-group">
