@@ -165,6 +165,10 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/balanceinicial/', 'Admin\\ContabilidadController@balanceinicial');
   Route::get('/balanceinicial/createBalanceInicial', 'Admin\\ContabilidadController@createBalanceInicial');
 
+  Route::get('/listtrs/', 'ComponentController@listaTrs');  
+
+  Route::post('/saveAsiento/', 'ComponentController@saveAsiento');
+  
 });
 
 
@@ -186,7 +190,7 @@ Route::group(['prefix' => 'person'], function () {
   Route::post('/getClienteId/', 'ComponentController@getcliente');
   Route::post('/savecli/', 'ComponentController@savecliente');
   Route::post('/saveprod/', 'ComponentController@saveproducto');
-  Route::get('/listcartitems/', 'ComponentController@listallitems');
+  Route::get('/listcartitems/', 'ComponentController@listallitemsPerson');
   Route::post('/trashItem/','ComponentController@trashItem');
   Route::post('/deleteItem/','ComponentController@deleteItem');
   Route::get('/DetalleVenta/{id}', ['as' => 'detallventa', 'uses' => 'Person\\VentaController@detallventa']);

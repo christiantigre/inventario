@@ -235,8 +235,8 @@ $('.guarda_auxiliar').click(function(){
 		{
 			console.log(data);
 			console.log("copy data succefull");
-		    list_auxcuentas();
-		    reset_input_auxcuentas();
+			list_auxcuentas();
+			reset_input_auxcuentas();
 		},
 		error:function(data)
 		{
@@ -302,8 +302,8 @@ $('.guarda_subauxiliar').click(function(){
 		{
 			console.log(data);
 			console.log("copy data succefull");
-		    list_Subauxcuentas();
-		    reset_input_subauxcuentas();
+			list_Subauxcuentas();
+			reset_input_subauxcuentas();
 		},
 		error:function(data)
 		{
@@ -324,14 +324,14 @@ function list_Subauxcuentas(){
 }
 
 function reset_input_subauxcuentas(){
-			console.log('reseting');
-			document.getElementById("auxiliar").value = "";
-			document.getElementById("subauxiliar").value = "";
-			document.getElementById("secuencia").value = "";
-			document.getElementById("codigo").value = "";
-		}
+	console.log('reseting');
+	document.getElementById("auxiliar").value = "";
+	document.getElementById("subauxiliar").value = "";
+	document.getElementById("secuencia").value = "";
+	document.getElementById("codigo").value = "";
+}
 
-		function trashSubAuxCuentas(id){
+function trashSubAuxCuentas(id){
 	console.log(id);
 	var token = $("input[name=_token]").val();
 	var route = '/admin/trashSubAuxcuentas/';	
@@ -360,6 +360,7 @@ function consulta_cuenta(){
 	var token = $("input[name=_token]").val();
 	var cod_cuenta= $("#cod_cuenta").val();
 	var route = '/admin/vercuentas/';
+	document.getElementById("cod_cuenta").value = "";
 	var parametros = {
 		"id" :cod_cuenta
 	}
@@ -382,4 +383,78 @@ function consulta_cuenta(){
 			console.log('Error '+data);
 		}  
 	});
+}
+
+function list_trs(){
+	console.log('loading items transacciónes.');
+	$.ajax({
+		type:'get',
+		url:'/admin/listtrs/',
+		success: function(data){
+			$('#list-cart').empty().html(data);
+		}
+	});
+}
+
+
+$('#guarda_trs').click(function(){
+	var num_asiento = $("#num_asiento").val();
+	var cod_cuenta = $("#cod_cuenta").val();
+	var cuenta = $("#cuenta").val();
+	var periodo = $("#periodo").val();
+	var fecha = $("#fecha").val();
+	var concepto_detall = $("#concepto_detall").val();
+
+	var tipo = $("#tipo").val();
+
+	if(tipo=="1"){
+		saldo_debe = $("#valor").val();
+		saldo_haber = "0.00";
+	}else{
+		saldo_debe = "0.00";
+		saldo_haber = $("#valor").val();
+	}
+
+	var token = $("input[name=_token]").val();
+
+	var route = '/admin/saveAsiento/';
+	
+	var parametros = {
+		"num_asiento" :num_asiento,
+		"cod_cuenta" :cod_cuenta,
+		"cuenta" :cuenta,
+		"periodo" :periodo,
+		"fecha" :fecha,
+		"concepto_detall" :concepto_detall,
+		"saldo_debe" :saldo_debe,
+		"saldo_haber" :saldo_haber
+	}
+	console.log(parametros);
+	$.ajax({
+		url:route,
+		headers:{'X-CSRF-TOKEN':token},
+		type:'post',
+		dataType: 'json',
+		data:parametros,
+		success:function(data)
+		{
+			console.log(data);
+			console.log("copy data succefull");
+			list_trs();
+			reset_input_trs();
+		},
+		error:function(data)
+		{
+			console.log('Error '+data);
+		}  
+	});
+});
+
+
+function reset_input_trs(){
+	console.log('reseting');
+	document.getElementById("cod_cuenta").value = "";
+	document.getElementById("cuenta").value = "";
+	document.getElementById("concepto_detall").value = "";
+	document.getElementById("valor").value = "";
 }

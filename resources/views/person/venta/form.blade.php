@@ -10,7 +10,7 @@
         <i class="fa fa-plus" aria-hidden="true"></i> Crear Cliente
     </a>
         
-    <a href="" data-toggle="modal" class="btn btn-default btn-sm cliente-final" title="Cliente Final">
+    <a href="" data-toggle="modal" class="btn btn-default btn-sm cliente-final-person" title="Cliente Final">
         <i class="fa fa-plus" aria-hidden="true"></i> Cliente Final
     </a>
   
@@ -173,7 +173,7 @@ PRODUCTO
               <!--boton id=buscarproducto abre modal id=modal-seleccionaproductos(archivo admin/venta/modalselect_prod) llamado por data-target=modal-seleccionaproductos -->
               <button class="btn btn-default btn-sm" id="buscarproducto" type="button" data-toggle="modal" data-target="#modal-seleccionaproductos"><i class="fa fa-search" aria-hidden="true"></i> Buscar Producto</button>
               
-              <button class="btn btn-default btn-sm" id="trashitems" type="button" onClick="trash(this.id);"><i class="fa fa-trash" aria-hidden="true"></i> Vaciar</button>
+              <button class="btn btn-default btn-sm" id="trashitems" type="button" onClick="trashPerson(this.id);"><i class="fa fa-trash" aria-hidden="true"></i> Vaciar</button>
               
             <!-- /.box-header -->
             <div class="box-body no-padding">
