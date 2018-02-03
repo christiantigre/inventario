@@ -231,9 +231,17 @@ Route::group(['prefix' => 'person'], function () {
 
   Route::resource('/almacen', 'Person\\AlmaceController');
 
+
+  Route::get('/listclientes/', 'ComponentController@listallClientes');
+
 });
   Route::get('getSubcategory/{id}', 'ComponentController@getSubcategory');
 
 //copiado category y subcategory (carpetas) Realizar la revicion de controladores
 Route::resource('admin/tempauxcta', 'Admin\\TempauxctaController');
 Route::resource('admin/tempsubauxcta', 'Admin\\TempsubauxctaController');
+
+
+
+  Route::get('getcanton/{id}', 'ComponentController@getCanton');
+  Route::get('{var}/getcanton/{id}', 'ComponentController@getCanton');

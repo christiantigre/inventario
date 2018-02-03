@@ -235,9 +235,13 @@ class VentaController extends Controller
     public function edit($id)
     {
         $ventum = Ventum::findOrFail($id);
+        $cant_incr = $ventum->id;
+        $numero_venta = $ventum->num_venta;
+        $fecha_venta = $ventum->fecha_venta;
+//numero_venta','fecha_venta','clientes','products','cant_incr','username','userid','useremail','tipospagos'
 
         $this->genLog("Ingresó actualizar venta id: ".$id);
-        return view('person.venta.edit', compact('ventum'));
+        return view('person.venta.edit', compact('ventum','cant_incr','numero_venta','fecha_venta'));
     }
 
     /**

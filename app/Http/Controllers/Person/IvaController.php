@@ -60,11 +60,12 @@ class IvaController extends Controller
     public function store(Request $request)
     {
         $rules = [
-        'iva'=>'numeric',
+        'iva'=>'numeric|unique:ivas',
     ];
 
     $messages = [
         'iva.numeric'=>'Cantidad fuera de rango permitido',
+        'iva.unique' => 'El valor ingresado ya esta en uso'
     ];
 
     $this->validate($request, $rules, $messages);
@@ -126,12 +127,14 @@ class IvaController extends Controller
     {
          $rules = [
         'iva'=>'numeric|required|max:15,2',
+            'iva' => 'required|unique:ivas,iva,'.$id,
     ];
 
     $messages = [
         'iva.numeric'=>'Cantidad fuera de rango permitido',
         'iva.max'=>'Fuera de limite permitido',
         'iva.required'=>'Campo requerido',
+        'iva.unique'=>'El valor ingresado ya esta en uso',
     ];
 
     $this->validate($request, $rules, $messages);

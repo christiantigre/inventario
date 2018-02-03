@@ -5,7 +5,9 @@
     <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
         <div class="panel panel-default">
             <div class="panel-heading">Proveedor</div>
-            <div class="panel-body">                      
+            <div class="panel-body">  
+            <div class="row">
+
                 <a href="{{ url('/person/proveedor/create') }}" class="btn btn-success btn-sm" title="Nuevo Proveedor">
                     <i class="fa fa-plus" aria-hidden="true"></i> Nuevo
                 </a>                          
@@ -18,6 +20,11 @@
                 <a href="{{ URL::to('/person/proveedor/downloadExcel/csv') }}">
                     <button class="btn btn-success btn-sm">Descargar CSV</button>
                 </a>
+
+                </div>
+                <div class="row">
+
+
                 <div class="container">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <form action="{{ URL::to('/person/proveedor/importexcelProveedor') }}" class="form-horizontal" method="post" enctype="multipart/form-data">
@@ -37,6 +44,7 @@
                         </span>
                     </div>
                 </form>
+                </div>
 
                 <br/>
                 <br/>

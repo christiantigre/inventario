@@ -20,8 +20,16 @@
                             </ul>
                         @endif
 
-                        <form method="POST" action="{{ url('/person/iva/' . $iva->id) }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
-                            {{ method_field('PATCH') }}
+                             {!! Form::model($iva, [
+                            'method' => 'PATCH',
+                            'url' => ['/person/iva', $iva->id],
+                            'class' => 'form-horizontal', 
+                            'enctype'=>'multipart/form-data',
+                            'files' => true,
+                            'accept-charset'=>'UTF-8'
+                        ]) !!}
+
+                        
                             {{ csrf_field() }}
 
                             @include ('person.iva.form', ['submitButtonText' => 'Actualizar'])

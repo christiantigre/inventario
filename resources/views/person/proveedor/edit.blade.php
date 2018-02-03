@@ -23,7 +23,7 @@
 
                              {!! Form::model($proveedor, [
                             'method' => 'PATCH',
-                            'url' => ['/admin/proveedor', $proveedor->id],
+                            'url' => ['/person/proveedor', $proveedor->id],
                             'class' => 'form-horizontal', 
                             'enctype'=>'multipart/form-data',
                             'files' => true,
@@ -41,4 +41,16 @@
                 </div>
             </div>
         </div>
+        <script type="text/javascript">
+            $("#id_provincia").change(function(event){
+    var url = '{{ url("/getcanton") }}';
+    console.log(url);
+    $.get(url+"/"+event.target.value+"",function(response, state){
+        $("#id_canton").empty();
+        for(i=0; i<response.length; i++){
+            $("#id_canton").append("<option value='"+response[i].id+"'> "+response[i].canton+"</option>");
+        }
+    });
+});
+        </script>
 @endsection

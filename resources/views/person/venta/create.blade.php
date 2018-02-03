@@ -254,4 +254,18 @@ function reset_input_modal(){
             document.getElementById("tlf_cli_modal").value = "";
         }
 </script>
+
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#example1').DataTable();
+  });
+
+  
+
+    //llena de datos tabla productos en la modal listcartitems
+
+
+</script>
+
 @endsection

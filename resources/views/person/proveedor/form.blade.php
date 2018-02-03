@@ -8,43 +8,30 @@
 </div><div class="form-group {{ $errors->has('dir') ? 'has-error' : ''}}">
     <label for="dir" class="col-md-4 col-lg-2 control-label">{{ 'Dirección' }}</label>
     <div class="col-md-6 col-lg-8">
-        <!-- <input class="form-control" name="dir" type="text" id="dir" value="{{ $proveedor->dir or ''}}" >-->
         {!! Form::text('dir', null, ['class' => 'form-control','id'=>'dir','autofocus'=>'autofocus']) !!}
         {!! $errors->first('dir', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('tlfn') ? 'has-error' : ''}}">
     <label for="tlfn" class="col-md-4 col-lg-2 control-label">{{ 'Teléfono' }}</label>
     <div class="col-md-6 col-lg-8">
-        <!--
-        <input class="form-control" name="tlfn" type="text" id="tlfn" value="{{ $proveedor->tlfn or ''}}" >
-        -->
         {!! Form::text('tlfn', null, ['class' => 'form-control','id'=>'tlfn','autofocus'=>'autofocus']) !!}
         {!! $errors->first('tlfn', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('cel_movi') ? 'has-error' : ''}}">
     <label for="cel_movi" class="col-md-4 col-lg-2 control-label">{{ 'Celular Movistar' }}</label>
     <div class="col-md-6 col-lg-8">
-        <!--
-        <input class="form-control" name="cel_movi" type="text" id="cel_movi" value="{{ $proveedor->cel_movi or ''}}" >
-        -->
         {!! Form::text('cel_movi', null, ['class' => 'form-control','id'=>'cel_movi','autofocus'=>'autofocus']) !!}
         {!! $errors->first('cel_movi', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('cel_claro') ? 'has-error' : ''}}">
     <label for="cel_claro" class="col-md-4 col-lg-2 control-label">{{ 'Celular Claro' }}</label>
     <div class="col-md-6 col-lg-8">
-        <!--
-        <input class="form-control" name="cel_claro" type="text" id="cel_claro" value="{{ $proveedor->cel_claro or ''}}" >
-        -->
         {!! Form::text('cel_claro', null, ['class' => 'form-control','id'=>'cel_claro','autofocus'=>'autofocus']) !!}
         {!! $errors->first('cel_claro', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('watsapp') ? 'has-error' : ''}}">
     <label for="watsapp" class="col-md-4 col-lg-2 control-label">{{ 'Watsapp' }}</label>
     <div class="col-md-6 col-lg-8">
-        <!--
-        <input class="form-control" name="watsapp" type="text" id="watsapp" value="{{ $proveedor->watsapp or ''}}" >
-        -->
         {!! Form::text('watsapp', null, ['class' => 'form-control','id'=>'watsapp','autofocus'=>'autofocus']) !!}
         {!! $errors->first('watsapp', '<p class="help-block">:message</p>') !!}
     </div>
@@ -52,45 +39,30 @@
 <div class="form-group {{ $errors->has('fax') ? 'has-error' : ''}}">
     <label for="fax" class="col-md-4 col-lg-2 control-label">{{ 'Fax' }}</label>
     <div class="col-md-6 col-lg-8">
-        <!--
-        <input class="form-control" name="fax" type="text" id="fax" value="{{ $proveedor->fax or ''}}" >
-        -->
         {!! Form::text('fax', null, ['class' => 'form-control','id'=>'fax','autofocus'=>'autofocus']) !!}
         {!! $errors->first('fax', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('mail') ? 'has-error' : ''}}">
     <label for="mail" class="col-md-4 col-lg-2 control-label">{{ 'Mail' }}</label>
     <div class="col-md-6 col-lg-8">
-        <!--
-        <input class="form-control" name="mail" type="text" id="mail" value="{{ $proveedor->mail or ''}}" >
-        -->
         {!! Form::text('mail', null, ['class' => 'form-control','id'=>'mail','autofocus'=>'autofocus']) !!}
         {!! $errors->first('mail', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('web') ? 'has-error' : ''}}">
     <label for="web" class="col-md-4 col-lg-2 control-label">{{ 'Web' }}</label>
     <div class="col-md-6 col-lg-8">
-        <!--
-        <input class="form-control" name="web" type="text" id="web" value="{{ $proveedor->web or ''}}" >
-        -->
         {!! Form::text('web', null, ['class' => 'form-control','id'=>'web','autofocus'=>'autofocus']) !!}
         {!! $errors->first('web', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('ruc') ? 'has-error' : ''}}">
     <label for="ruc" class="col-md-4 col-lg-2 control-label">{{ 'Ruc' }}</label>
     <div class="col-md-6 col-lg-8">
-        <!--
-        <input class="form-control" name="ruc" type="text" id="ruc" value="{{ $proveedor->ruc or ''}}" >
-        -->
         {!! Form::text('ruc', null, ['class' => 'form-control','id'=>'ruc','autofocus'=>'autofocus']) !!}
         {!! $errors->first('ruc', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('representante') ? 'has-error' : ''}}">
     <label for="representante" class="col-md-4 col-lg-2 control-label">{{ 'Representante' }}</label>
     <div class="col-md-6 col-lg-8">
-        <!--
-        <input class="form-control" name="representante" type="text" id="representante" value="{{ $proveedor->representante or ''}}" >
-        -->
         {!! Form::text('representante', null, ['class' => 'form-control','id'=>'representante','autofocus'=>'autofocus']) !!}
         {!! $errors->first('representante', '<p class="help-block">:message</p>') !!}
     </div>
@@ -132,36 +104,24 @@
 </div><div class="form-group {{ $errors->has('empresa') ? 'has-error' : ''}}">
     <label for="empresa" class="col-md-4 col-lg-2 control-label">{{ 'Empresa' }}</label>
     <div class="col-md-6 col-lg-8">
-        <!--
-        <input class="form-control" name="empresa" type="text" id="empresa" value="{{ $proveedor->empresa or ''}}" >
-        -->
         {!! Form::text('empresa', null, ['class' => 'form-control','id'=>'empresa','autofocus'=>'autofocus']) !!}
         {!! $errors->first('empresa', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('ubicacion') ? 'has-error' : ''}}">
     <label for="ubicacion" class="col-md-4 col-lg-2 control-label">{{ 'Ubicación' }}</label>
     <div class="col-md-6 col-lg-8">
-        <!--
-        <input class="form-control" name="ubicacion" type="text" id="ubicacion" value="{{ $proveedor->ubicacion or ''}}" >
-        -->
         {!! Form::text('ubicacion', null, ['class' => 'form-control','id'=>'ubicacion','autofocus'=>'autofocus']) !!}
         {!! $errors->first('ubicacion', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('latitud') ? 'has-error' : ''}}">
     <label for="latitud" class="col-md-4 col-lg-2 control-label">{{ 'Latitud' }}</label>
     <div class="col-md-6 col-lg-8">
-        <!--
-        <input class="form-control" name="latitud" type="text" id="latitud" value="{{ $proveedor->latitud or ''}}" >
-        -->
         {!! Form::text('latitud', null, ['class' => 'form-control','id'=>'latitud','autofocus'=>'autofocus']) !!}
         {!! $errors->first('latitud', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('longitud') ? 'has-error' : ''}}">
     <label for="longitud" class="col-md-4 col-lg-2 control-label">{{ 'Longitud' }}</label>
     <div class="col-md-6 col-lg-8">
-        <!--
-        <input class="form-control" name="longitud" type="text" id="longitud" value="{{ $proveedor->longitud or ''}}" >
-        -->
         {!! Form::text('longitud', null, ['class' => 'form-control','id'=>'longitud','autofocus'=>'autofocus']) !!}
         {!! $errors->first('longitud', '<p class="help-block">:message</p>') !!}
     </div>

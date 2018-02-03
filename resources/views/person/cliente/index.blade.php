@@ -9,6 +9,8 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Cliente</div>
                     <div class="panel-body">
+                        <div class="row">
+
                         <a href="{{ url('/person/cliente/create') }}" class="btn btn-success btn-sm" title="Nuevo Cliente">
                             <i class="fa fa-plus" aria-hidden="true"></i> Nuevo
                         </a>
@@ -23,6 +25,7 @@
                                 </span>
                             </div>
                         </form>
+                        </div>
 
                         <br/>
                         <br/>

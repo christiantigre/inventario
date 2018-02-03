@@ -47,6 +47,9 @@ class ComponentController extends Controller
             $requestData['dir_cli']=$request->dir_cli;
             $requestData['mail_cli']=$request->mail_cli;
             $requestData['tlf_cli']=$request->tlf_cli;
+            $requestData['id_pais']="1";
+            $requestData['id_provincia']="1";
+            $requestData['id_canton']="1";
             $cliente = Cliente::create($requestData);
             $requestData['id'] = $cliente->id;
             $cliData = $requestData;
@@ -531,6 +534,15 @@ public function saveAsiento(Request $request){
 } 
 
 
+
+public function listallClientes()
+    {
+        $clientes = Cliente::orderBy('id','ASC')->where('activo','1')->get();
+
+        return view('person/venta/list-clientes', compact('carrito'),array(
+            'clientes' =>  $clientes
+        ));
+    }
 
 
 }

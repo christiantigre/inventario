@@ -6,6 +6,8 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Venta</div>
                     <div class="panel-body">
+                        <div class="row">
+                            
                         <a href="{{ url('/person/venta/create') }}" class="btn btn-success btn-sm" title="Nueva Venta">
                             <i class="fa fa-plus" aria-hidden="true"></i> Nueva Venta
                         </a>
@@ -20,6 +22,9 @@
                                 </span>
                             </div>
                         </form>
+                        
+                        </div>
+
 
                         <br/>
                         <br/>
@@ -37,13 +42,16 @@
                                         <td>{{ $item->fecha }}</td><td>{{ $item->cliente }}</td><td>{{ $item->cel_cli }}</td><td>{{ $item->ruc_cli }}</td><td>{{ $item->mail_cli }}</td>
                                         <td>{{ number_format($item->total,2) }}</td><td>
                                             <a href="{{ url('/person/venta/' . $item->id) }}" title="Ver Venta"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> Ver</button></a>
+                                            <!--
                                             <a href="{{ url('/person/venta/' . $item->id . '/edit') }}" title="Editar Venta"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>
-
+                                        -->
+                                        <!--
                                             <form method="POST" action="{{ url('/person/venta' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
                                                 {{ method_field('DELETE') }}
                                                 {{ csrf_field() }}
                                                 <button type="submit" class="btn btn-danger btn-xs" title="Eliminar venta" onclick="return confirm(&quot;Desea eliminar?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar</button>
                                             </form>
+                                        -->
                                         </td>
                                     </tr>
                                 @endforeach

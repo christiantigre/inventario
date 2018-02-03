@@ -7,14 +7,17 @@ $("#provincia_id").change(function(event){
 	});
 });
 
+/*
 $("#id_provincia").change(function(event){
-	$.get("getcanton/"+event.target.value+"",function(response, state){
+	var url = '{{ url("getcanton") }}';
+	$.get(url+"/"+event.target.value+"",function(response, state){
 		$("#id_canton").empty();
 		for(i=0; i<response.length; i++){
 			$("#id_canton").append("<option value='"+response[i].id+"'> "+response[i].canton+"</option>");
 		}
 	});
 });
+*/
 
 /*$("#provincia_id").change(event=>{
 	$.get('getcanton/${event.target.value}', function(res, sta){

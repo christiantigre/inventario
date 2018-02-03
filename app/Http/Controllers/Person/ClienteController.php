@@ -64,6 +64,7 @@ class ClienteController extends Controller
      */
     public function create()
     {
+
         $this->genLog("Ingresó a nuevo registro.");
         $paises = Pais::orderBy('id', 'DESC')->where('status', 1)->pluck('pais', 'id');
         $provincias = Provincias::orderBy('id', 'ASC')->pluck('provincia', 'id');
@@ -80,6 +81,21 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
+        $rules = [
+        'nom_cli'=>'required|max:75',
+        'app_cli'=>'required|max:75',
+        'ced_cli'=>'required|unique:clientes',
+    ];
+
+    $messages = [
+        'nom_cli.required'=>'Campo obligatorio',
+        'app_cli.required' => 'Campo obligatorio',
+        'ced_cli.required' => 'Campo obligatorio',
+        'ced_cli.unique' => 'Campo ingresado ya esta en uso'
+    ];
+
+    $this->validate($request, $rules, $messages);
+
         try {
             $requestData = $request->all();
             Cliente::create($requestData);
@@ -137,6 +153,21 @@ class ClienteController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $rules = [
+        'nom_cli'=>'required|max:75',
+        'app_cli'=>'required|max:75',
+        'ced_cli' => 'required|unique:clientes,ced_cli,'.$id,
+    ];
+
+    $messages = [
+        'nom_cli.required'=>'Campo obligatorio',
+        'app_cli.required' => 'Campo obligatorio',
+        'ced_cli.required' => 'Campo obligatorio',
+        'ced_cli.unique' => 'Campo ingresado ya esta en uso'
+    ];
+    
+    $this->validate($request, $rules, $messages);
+
         try {
             $requestData = $request->all();
             $cliente = Cliente::findOrFail($id);
