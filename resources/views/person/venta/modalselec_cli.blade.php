@@ -30,8 +30,19 @@
 
 				</div>
 				<div class="modal-body">
-          <table id="example1" class="table table-striped table-bordered" cellspacing="0" width="100%">
-          <!--<table id="example1" class="table table-bordered table-striped">-->
+
+
+          <!-- /.box-header -->
+            <div class="box-body no-padding">
+              <div id="list-clientes">
+
+              </div>  
+            </div>
+            <!-- /.box-body -->
+          <!-- /.box -->
+
+         
+            <table id="example1" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
               <tr>
                 <th>ID</th>
@@ -67,6 +78,8 @@
               @endforeach
             </tbody>
           </table>
+          
+          
         </div>
         <div class="modal-footer">
          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">CERRAR</button>
@@ -82,7 +95,21 @@
 <script type="text/javascript" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 
 <script type="text/javascript">
-  $(document).ready(function(){
-    $('#example1').DataTable();
-  });
+/*  $(document).ready(function(){
+        items_clientes_person();
+    });
+
+  function items_clientes_person(){
+    console.log('loading clientes');
+    var route = "{{ url('person/listclientes') }}";
+    $.ajax({
+        type:'get',
+        url:route,
+        success: function(data){
+            $('#list-clientes').empty().html(data);
+        }
+    });
+}
+*/
+
 </script>

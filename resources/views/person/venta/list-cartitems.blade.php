@@ -21,7 +21,7 @@
       <td>{{ $item->precio }}</td>
       <td>{{ $item->total }}</td>
       <td>
-        <button class="btn btn-default delete_item" id="{{ $item->id }}" value="{{ $item->id }}" type="button" title="QUITAR" onClick="delete_item(this.id);"><i class="fa fa-trash" aria-hidden="true"></i> </button>
+        <button class="btn btn-default delete_item" id="{{ $item->id }}" value="{{ $item->id }}" type="button" title="QUITAR" onClick="delete_item_person(this.id);"><i class="fa fa-trash" aria-hidden="true"></i> </button>
       </td>
     </tr>
     <?Php $i++; ?>

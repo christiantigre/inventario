@@ -205,41 +205,7 @@ $('.select_cli').click(function(){
 	});
 });
 
-//Selecciona cliente en el modal y envia datos a los campos midleware:person
-$('.select_cli_person').click(function(){
-			reset_input();
-	var dataId = this.id;
-	var token = $("input[name=_token]").val();
-	var route = '/person/extraerdatoscli/';
-	var parametros = {
-		"id" :dataId
-	}
-	$.ajax({
-		url:route,
-		headers:{'X-CSRF-TOKEN':token},
-		type:'get',
-		dataType: 'json',
-		data:parametros,
-		success:function(data)
-		{
-			//data.cel_movi
-			console.log(data.id);
-			console.log("copy data selected");
-			document.getElementById("cliente").value = data.nom_cli+' '+data.app_cli;
-			document.getElementById("ruc_cli").value = data.ruc_cli;
-			document.getElementById("ced_cli").value = data.ced_cli;
-			document.getElementById("cel_cli").value = data.tlf_cli+' '+data.wts_cli;
-			document.getElementById("dir_cli").value = data.dir_cli;
-			document.getElementById("mail_cli").value = data.mail_cli;
-			document.getElementById("id_cliente").value = data.id;
-			console.log("copy data succefull");
-		},
-		error:function(data)
-		{
-			console.log('Error '+data);
-		}  
-	});
-});
+
 
 $('.reset_cli').click(function(){
 	
@@ -355,99 +321,8 @@ $(".save_cli").click(function(event){
 			});
 		});
 //Registra un nuevo cliente desde el modal person
-$(".save_cli_person").click(function(event){
-	console.log("operacion guardar cliente");
-			event.preventDefault();
-			reset_input();
-			var nom_cli= $("#nom_cli").val();
-			var app_cli= $("#app_cli").val();
-			var ced_cli= $("#ced_cli").val();
-			var ruc_cli= $("#ruc_cli").val();
-			var dir_cli= $("#dir_cli").val();
-			var mail_cli= $("#mail_cli").val();
-			var tlf_cli= $("#tlf_cli").val();
-			var token = $("input[name=_token]").val();
-			var route = '/person/savecli/';
-			var parametros = {
-				"nom_cli" :nom_cli,
-				"app_cli" :app_cli,
-				"ced_cli" :ced_cli,
-				"ruc_cli" :ruc_cli,
-				"dir_cli" :dir_cli,
-				"mail_cli" :mail_cli,
-				"tlf_cli" :tlf_cli
-			}
-			$.ajax({
-				url:route,
-				headers:{'X-CSRF-TOKEN':token},
-				type:'post',
-				dataType: 'json',
-				data:parametros,
-				success:function(data)
-				{
-					console.log('loading ... cliente final');
-					document.getElementById("cliente").value = data.nom_cli;
-					document.getElementById("ruc_cli").value = data.ruc_cli;
-					document.getElementById("ced_cli").value = data.ced_cli;
-					document.getElementById("cel_cli").value = data.tlf_cli;
-					document.getElementById("dir_cli").value = data.dir_cli;
-					document.getElementById("mail_cli").value = data.mail_cli;
-					document.getElementById("id_cliente").value = data.id;
-				},
-				error:function(data)
-				{
-					console.log('Error '+data);
-				}  
-			});
-		});
-//Boton id=select_prod de la modalselect_prod obtiene los datos de la fila seleccionada envia por ajax al controlador ComponetController funcion addItem y guarda en la tabla item_ventas
-$('.select_prod').click(function(){
-	var dataId = this.id;
-	var idventa= $("#idventa").val();
-	var token = $("input[name=_token]").val();
-	var route = '/admin/saveprod/';	
-	var id = $(this).parents("tr").find("td")[0].innerHTML;
-	var prod = $(this).parents("tr").find("td")[2].innerHTML;
-	var codbarra = $(this).parents("tr").find("td")[4].innerHTML;
-	var precio = $(this).parents("tr").find("td")[5].innerHTML;
-	var stock = $(this).parents("tr").find("td")[6].innerHTML;
-	var cantidad = $(this).parents("tr").find('#cant_prod').val();
-	var total = cantidad*precio;
-	/*if(cantidad>stock){
-		alert("Error!!!...La cantidad seleccionada supera al stock actual. No se puede agregar esta cantidad");
-		return false;
-	}*/
-	//console.log(nombre);
-	var parametros = {
-		"id" :dataId,
-		"idproducto" :id,
-		"nombre" :prod,
-		"codbarra" :codbarra,
-		"precio" :precio,
-		"cantidad" :cantidad,
-		"total" :total,
-		"idventa": idventa
-	}
-	console.log(parametros);
-	$.ajax({
-		url:route,
-		headers:{'X-CSRF-TOKEN':token},
-		type:'post',
-		dataType: 'json',
-		data:parametros,
-		success:function(data)
-		{
-			console.log(data);
-			console.log("copy data selected");
-			console.log("copy data succefull");
-		    items_cart();
-		},
-		error:function(data)
-		{
-			console.log('Error '+data);
-		}  
-	});
-});
+
+
 
 //llena de datos tabla productos en la modal
 function items_cart(){
@@ -461,17 +336,7 @@ function items_cart(){
 	});
 }
 
-//llena de datos tabla productos en la modal
-function items_cart_person(){
-	console.log('loading items cart');
-	$.ajax({
-		type:'get',
-		url:'/person/listcartitems/',
-		success: function(data){
-			$('#list-cart').empty().html(data);
-		}
-	});
-}
+
 
 function delete_item(id){
 	var token = $("input[name=_token]").val();

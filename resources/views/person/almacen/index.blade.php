@@ -18,14 +18,18 @@
                             <table class="table table-borderless">
                                 <thead>
                                     <tr>
-                                        <th>#</th><th>Almacen</th><th>Propietario</th><th>Gerente</th><th>Actions</th>
+                                        <th>#</th><th>Almacen</th>
+                                        <th>Propietario</th>
+                                        <th>Gerente</th><th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($almacen as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->almacen }}</td><td>{{ $item->propietario }}</td><td>{{ $item->gerente }}</td>
+                                        <td>{{ $item->almacen }}</td>
+                                        <td>{{ $item->propietario }}</td>
+                                        <td>{{ $item->gerente }}</td>
                                         <td>
                                             <a href="{{ url('/person/almacen/' . $item->id) }}" title="Ver Almacen"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> Ver</button></a>
                                             <a href="{{ url('/person/almacen/' . $item->id . '/edit') }}" title="Editar Almacen"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>

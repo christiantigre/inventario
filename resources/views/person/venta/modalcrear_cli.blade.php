@@ -53,49 +53,49 @@
 											<div class="form-group {{ $errors->has('nom_cli') ? 'has-error' : ''}}">
 												<label for="nom_cli" class="col-md-4 col-lg-4 control-label">{{ 'Nombre' }}</label>
 												<div class="col-md-6 col-lg-8">
-													<input class="form-control" name="nom_cli" type="text" id="nom_cli" value="{{ $cliente->nom_cli or ''}}" autofocus="">
+													<input class="form-control" name="nom_cli" type="text" id="nom_cli_modal" value="{{ $cliente->nom_cli or ''}}" autofocus="">
 													{!! $errors->first('nom_cli', '<p class="help-block">:message</p>') !!}
 												</div>
 											</div>
 											<div class="form-group {{ $errors->has('app_cli') ? 'has-error' : ''}}">
 												<label for="app_cli" class="col-md-4 col-lg-4 control-label">{{ 'Apellido' }}</label>
 												<div class="col-md-6 col-lg-8">
-													<input class="form-control" name="app_cli" type="text" id="app_cli" value="{{ $cliente->app_cli or ''}}" >
+													<input class="form-control" name="app_cli" type="text" id="app_cli_modal" value="{{ $cliente->app_cli or ''}}" >
 													{!! $errors->first('app_cli', '<p class="help-block">:message</p>') !!}
 												</div>
 											</div>
 											<div class="form-group {{ $errors->has('ced_cli') ? 'has-error' : ''}}">
 												<label for="ced_cli" class="col-md-4 col-lg-4 control-label">{{ 'Cedula' }}</label>
 												<div class="col-md-6 col-lg-8">
-													<input class="form-control" name="ced_cli" type="number" id="ced_cli" value="{{ $cliente->ced_cli or ''}}" >
+													<input class="form-control" name="ced_cli" type="number" id="ced_cli_modal" value="{{ $cliente->ced_cli or ''}}" >
 													{!! $errors->first('ced_cli', '<p class="help-block">:message</p>') !!}
 												</div>
 											</div>
 											<div class="form-group {{ $errors->has('ruc_cli') ? 'has-error' : ''}}">
 												<label for="ruc_cli" class="col-md-4 col-lg-4 control-label">{{ 'Ruc' }}</label>
 												<div class="col-md-6 col-lg-8">
-													<input class="form-control" name="ruc_cli" type="number" id="ruc_cli" value="{{ $cliente->ruc_cli or ''}}" >
+													<input class="form-control" name="ruc_cli" type="number" id="ruc_cli_modal" value="{{ $cliente->ruc_cli or ''}}" >
 													{!! $errors->first('ruc_cli', '<p class="help-block">:message</p>') !!}
 												</div>
 											</div>
 											<div class="form-group {{ $errors->has('dir_cli') ? 'has-error' : ''}}">
 												<label for="dir_cli" class="col-md-4 col-lg-4 control-label">{{ 'Dirección' }}</label>
 												<div class="col-md-6 col-lg-8">
-													<input class="form-control" name="dir_cli" type="text" id="dir_cli" value="{{ $cliente->dir_cli or ''}}" >
+													<input class="form-control" name="dir_cli" type="text" id="dir_cli_modal" value="{{ $cliente->dir_cli or ''}}" >
 													{!! $errors->first('dir_cli', '<p class="help-block">:message</p>') !!}
 												</div>
 											</div>
 											<div class="form-group {{ $errors->has('mail_cli') ? 'has-error' : ''}}">
 												<label for="mail_cli" class="col-md-4 col-lg-4 control-label">{{ 'Correo' }}</label>
 												<div class="col-md-6 col-lg-8">
-													<input class="form-control" name="mail_cli" type="text" id="mail_cli" value="{{ $cliente->mail_cli or ''}}" >
+													<input class="form-control" name="mail_cli" type="text" id="mail_cli_modal" value="{{ $cliente->mail_cli or ''}}" >
 													{!! $errors->first('mail_cli', '<p class="help-block">:message</p>') !!}
 												</div>
 											</div>
 											<div class="form-group {{ $errors->has('tlf_cli') ? 'has-error' : ''}}">
 												<label for="tlf_cli" class="col-md-4 col-lg-4 control-label">{{ 'Teléfono' }}</label>
 												<div class="col-md-6 col-lg-8">
-													<input class="form-control" name="tlf_cli" type="text" id="tlf_cli" value="{{ $cliente->tlf_cli or ''}}" >
+													<input class="form-control" name="tlf_cli" type="text" id="tlf_cli_modal" value="{{ $cliente->tlf_cli or ''}}" >
 													{!! $errors->first('tlf_cli', '<p class="help-block">:message</p>') !!}
 												</div>
 											</div>
@@ -117,7 +117,6 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-						<!--{!! Form::submit(isset($submitButtonText) ? $submitButtonText : 'Create', ['class' => 'btn btn-primary']) !!}-->
 					</div>
 					{!! Form::close() !!}
 				</div>

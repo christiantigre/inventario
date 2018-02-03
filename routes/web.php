@@ -165,6 +165,10 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/balanceinicial/', 'Admin\\ContabilidadController@balanceinicial');
   Route::get('/balanceinicial/createBalanceInicial', 'Admin\\ContabilidadController@createBalanceInicial');
 
+  Route::get('/listtrs/', 'ComponentController@listaTrs');  
+
+  Route::post('/saveAsiento/', 'ComponentController@saveAsiento');
+  
 });
 
 
@@ -186,7 +190,7 @@ Route::group(['prefix' => 'person'], function () {
   Route::post('/getClienteId/', 'ComponentController@getcliente');
   Route::post('/savecli/', 'ComponentController@savecliente');
   Route::post('/saveprod/', 'ComponentController@saveproducto');
-  Route::get('/listcartitems/', 'ComponentController@listallitems');
+  Route::get('/listcartitems/', 'ComponentController@listallitemsPerson');
   Route::post('/trashItem/','ComponentController@trashItem');
   Route::post('/deleteItem/','ComponentController@deleteItem');
   Route::get('/DetalleVenta/{id}', ['as' => 'detallventa', 'uses' => 'Person\\VentaController@detallventa']);
@@ -227,9 +231,17 @@ Route::group(['prefix' => 'person'], function () {
 
   Route::resource('/almacen', 'Person\\AlmaceController');
 
+
+  Route::get('/listclientes/', 'ComponentController@listallClientes');
+
 });
   Route::get('getSubcategory/{id}', 'ComponentController@getSubcategory');
 
 //copiado category y subcategory (carpetas) Realizar la revicion de controladores
 Route::resource('admin/tempauxcta', 'Admin\\TempauxctaController');
 Route::resource('admin/tempsubauxcta', 'Admin\\TempsubauxctaController');
+
+
+
+  Route::get('getcanton/{id}', 'ComponentController@getCanton');
+  Route::get('{var}/getcanton/{id}', 'ComponentController@getCanton');

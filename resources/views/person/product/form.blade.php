@@ -281,7 +281,8 @@
     <script>
 
      $(".id_category").change(function(event){
-      $.get("/../getSubcategory/"+event.target.value+"",function(response, state){
+      var route = '{{ url("getSubcategory") }}';
+      $.get(route+"/"+event.target.value+"",function(response, state){
         $(".id_subcategory").empty();
         for(i=0; i<response.length; i++){
           $(".id_subcategory").append("<option value='"+response[i].id+"'> "+response[i].subcategory+"</option>");

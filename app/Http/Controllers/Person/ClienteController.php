@@ -8,6 +8,9 @@ use App\Cliente;
 use Illuminate\Http\Request;
 use Session;
 use App\SvLog;
+use App\Pais;
+use App\Provincias;
+use App\Canton;
 
 class ClienteController extends Controller
 {
@@ -61,9 +64,12 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        $this->genLog("Ingresó a nuevo registro.");
 
-        return view('person.cliente.create');
+        $this->genLog("Ingresó a nuevo registro.");
+        $paises = Pais::orderBy('id', 'DESC')->where('status', 1)->pluck('pais', 'id');
+        $provincias = Provincias::orderBy('id', 'ASC')->pluck('provincia', 'id');
+        $cantones = Canton::orderBy('id', 'ASC')->pluck('canton', 'id');
+        return view('person.cliente.create',compact('paises','provincias','cantones'));
     }
 
     /**
@@ -75,6 +81,21 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
+        $rules = [
+        'nom_cli'=>'required|max:75',
+        'app_cli'=>'required|max:75',
+        'ced_cli'=>'required|unique:clientes',
+    ];
+
+    $messages = [
+        'nom_cli.required'=>'Campo obligatorio',
+        'app_cli.required' => 'Campo obligatorio',
+        'ced_cli.required' => 'Campo obligatorio',
+        'ced_cli.unique' => 'Campo ingresado ya esta en uso'
+    ];
+
+    $this->validate($request, $rules, $messages);
+
         try {
             $requestData = $request->all();
             Cliente::create($requestData);
@@ -116,8 +137,10 @@ class ClienteController extends Controller
     {
         $cliente = Cliente::findOrFail($id);
         $this->genLog("Ingresó actualizar : ".$cliente['cliente']);
-
-        return view('person.cliente.edit', compact('cliente'));
+        $paises = Pais::orderBy('id', 'DESC')->where('status', 1)->pluck('pais', 'id');
+        $provincias = Provincias::orderBy('id', 'ASC')->pluck('provincia', 'id');
+        $cantones = Canton::orderBy('id', 'ASC')->pluck('canton', 'id');
+        return view('person.cliente.edit', compact('cliente','paises','provincias','cantones'));
     }
 
     /**
@@ -130,6 +153,21 @@ class ClienteController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $rules = [
+        'nom_cli'=>'required|max:75',
+        'app_cli'=>'required|max:75',
+        'ced_cli' => 'required|unique:clientes,ced_cli,'.$id,
+    ];
+
+    $messages = [
+        'nom_cli.required'=>'Campo obligatorio',
+        'app_cli.required' => 'Campo obligatorio',
+        'ced_cli.required' => 'Campo obligatorio',
+        'ced_cli.unique' => 'Campo ingresado ya esta en uso'
+    ];
+    
+    $this->validate($request, $rules, $messages);
+
         try {
             $requestData = $request->all();
             $cliente = Cliente::findOrFail($id);

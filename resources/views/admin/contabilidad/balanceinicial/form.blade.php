@@ -1,3 +1,4 @@
+
 <div class="col-md-12">
 
     BALANCE INICIAL
@@ -61,7 +62,7 @@
                 <label for="periodo" class="col-md-4 control-label">{{ 'Transacción' }}</label>
                 <div class="col-md-6">
 
-                    {{ Form::select ('tipo', ['1' => 'DEBE', '2' => 'HABER'], 1 , ['id' =>'tipo','class' => 'form-control']) }}
+                    {{ Form::select('tipo', ['1' => 'DEBE', '2' => 'HABER'], 1 , ['id' =>'tipo','class' => 'form-control tipo']) }}
 
                     {!! $errors->first('periodo', '<p class="help-block">:message</p>') !!}
                 </div>
@@ -92,7 +93,7 @@
                 <label for="concepto_detall" class="col-md-2 control-label">{{ 'Descripción' }}</label>
                 <div class="col-md-8">
 
-                    {!! Form::textarea('concepto_detall',null,['class'=>'form-control', 'rows' => 2, 'cols' => 40]),old('auxiliar') !!}
+                    {!! Form::textarea('concepto_detall',null,['class'=>'form-control', 'rows' => 2, 'cols' => 40,'id'=>'concepto_detall']),old('auxiliar') !!}
 
                     {!! $errors->first('concepto_detall', '<p class="help-block">:message</p>') !!}
                 </div>
@@ -113,9 +114,9 @@
 
         <div class="row">
             <div class="form-group">
-                <div class="col-md-offset-9 col-md-4">
+                <div class="col-md-offset-9 col-xs-offset-8 col-md-4">
 
-                    <button type='button' id="guarda_trs" title="Agregar transacción" class="btn btn-primary btn-sm guarda_trs" data-dismiss='modal'> Guardar</button>
+                    <button type='button' id="guarda_trs" title="Agregar transacción" class="btn btn-success btn-sm guarda_trs" data-dismiss='modal'> Agregar</button>
 
                 </div>
             </div>

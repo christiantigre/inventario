@@ -30,4 +30,15 @@
                 </div>
             </div>
         </div>
+        <script type="text/javascript">
+    $("#id_provincia").change(function(event){
+    var url = '{{ url("getcanton") }}';
+    $.get(url+"/"+event.target.value+"",function(response, state){
+        $("#id_canton").empty();
+        for(i=0; i<response.length; i++){
+            $("#id_canton").append("<option value='"+response[i].id+"'> "+response[i].canton+"</option>");
+        }
+    });
+});
+</script>
 @endsection

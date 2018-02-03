@@ -18,6 +18,7 @@ use App\subauxiliar;
 use App\Plan;
 use App\Subcategory;
 use Session;
+use App\tempdetallasiento;
 
 class ComponentController extends Controller
 {
@@ -45,10 +46,12 @@ class ComponentController extends Controller
             $requestData['ruc_cli']=$request->ruc_cli;
             $requestData['dir_cli']=$request->dir_cli;
             $requestData['mail_cli']=$request->mail_cli;
-            $requestData['mail_cli']=$request->mail_cli;
             $requestData['tlf_cli']=$request->tlf_cli;
+            $requestData['id_pais']="1";
+            $requestData['id_provincia']="1";
+            $requestData['id_canton']="1";
             $cliente = Cliente::create($requestData);
-            $$requestData['id'] = $cliente->id;
+            $requestData['id'] = $cliente->id;
             $cliData = $requestData;
             return response()->json($cliData);
         }
@@ -97,8 +100,32 @@ class ComponentController extends Controller
         ));
     }
 
+    public function listallitemsPerson()
+    {
+        $carrito = ItemVenta::orderBy('id','ASC')->get();
+        $total = ItemVenta::sum('total');
+
+        $iva = Iva::where('activo', 1)->first();
+        $iva_valor=$iva->iva;
+        $iva_id=$iva->id;
+        $iva_mostrar = ($iva_valor*1);
+        $mult = $iva_valor+100;
+        $iva_final = $mult/100;
+
+        $subtotal = ($total/$iva_final);
+        $valor_con_iva = ($total-$subtotal);
+
+        return view('person/venta/list-cartitems', compact('carrito'),array(
+            'total' =>  $total,
+            'iva' =>  $valor_con_iva,
+            'subtotal' =>  $subtotal,
+            'ivavalor' =>  $iva_mostrar,
+            'idiva' =>  $iva_id
+        ));
+    }
+
     public function deleteItem(Request $request){
-     if ($request->ajax()) {        
+       if ($request->ajax()) {        
         $item = ItemVenta::find($request->id);
         if($item->delete()){
             return response()->json(["mensaje"=>"Eliminado con exito","data"=>"Eliminado"]);
@@ -106,8 +133,8 @@ class ComponentController extends Controller
             return response()->json(["mensaje"=>"Error !!! al guardar","data"=>$request->all()]);
         }
     }else{
-       return response()->json(["mensaje"=>$request->all()]);   
-   }
+     return response()->json(["mensaje"=>$request->all()]);   
+ }
 }
 
 public function trashItem(Request $request){
@@ -118,8 +145,8 @@ public function trashItem(Request $request){
             return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
         }
     }else{
-       return response()->json(["mensaje"=>$request->all()]);   
-   }
+     return response()->json(["mensaje"=>$request->all()]);   
+ }
 }
 
 
@@ -225,11 +252,11 @@ public function savesubcuenta(Request $request){
                 return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
             }
         }else{
-           return response()->json(["mensaje"=>$request->all()]);   
-       }
-   }
+         return response()->json(["mensaje"=>$request->all()]);   
+     }
+ }
 
-   public function guardarsubcuentas(Request $request){
+ public function guardarsubcuentas(Request $request){
     try {
 
         $subcuentas = Tempsubctum::get();
@@ -250,52 +277,52 @@ public function savesubcuenta(Request $request){
     return redirect('admin/subcuenta');
 }
 
- 
 
-    protected function saveItem($subcuenta)
-    {
-        $requestData = new subcuentum;
-        $requestData->subcuenta = $subcuenta->subcuenta;
-        $requestData->secuencia = $subcuenta->secuencia;
-        $requestData->codigo = $subcuenta->codigo;
-        $requestData->detall = $subcuenta->detall;
-        $requestData->activo = $subcuenta->activo;
-        $requestData->cuenta = $subcuenta->cuenta;
-        $requestData->cuenta_id = $subcuenta->cuenta_id;
-        return $requestData;
+
+protected function saveItem($subcuenta)
+{
+    $requestData = new subcuentum;
+    $requestData->subcuenta = $subcuenta->subcuenta;
+    $requestData->secuencia = $subcuenta->secuencia;
+    $requestData->codigo = $subcuenta->codigo;
+    $requestData->detall = $subcuenta->detall;
+    $requestData->activo = $subcuenta->activo;
+    $requestData->cuenta = $subcuenta->cuenta;
+    $requestData->cuenta_id = $subcuenta->cuenta_id;
+    return $requestData;
+}
+
+
+public function extraercontadorsubcuentas(Request $request){
+    if ($request->ajax()) {
+        $subcuenta = subcuentum::where('id', $request->id)->first();
+        $cantidad = auxiliar::where('subcuenta', $subcuenta->codigo)->count();
+        $cantidad = $cantidad+1;
+        $subcuenta_id = $subcuenta->id;
+        $dato['subcuenta_id'] = $subcuenta_id;
+        $dato['cuenta_codigo'] = $subcuenta->codigo;
+        $dato['cantidad'] = $cantidad;
+        return response()->json($dato);
     }
+}
 
-
-    public function extraercontadorsubcuentas(Request $request){
-        if ($request->ajax()) {
-            $subcuenta = subcuentum::where('id', $request->id)->first();
-            $cantidad = auxiliar::where('subcuenta', $subcuenta->codigo)->count();
-            $cantidad = $cantidad+1;
-            $subcuenta_id = $subcuenta->id;
-            $dato['subcuenta_id'] = $subcuenta_id;
-            $dato['cuenta_codigo'] = $subcuenta->codigo;
-            $dato['cantidad'] = $cantidad;
-            return response()->json($dato);
-            }
-        }
-    
 
 public function extraercontadorsubcuentasvarias(Request $request){
-        if ($request->ajax()) {
-            $subcuenta = subcuentum::where('id', $request->id)->first();
-            $cantidad = auxiliar::where('subcuenta', $subcuenta->codigo)->count();
-            $cantidad_temp = Tempauxctum::where('subcuenta', $subcuenta->codigo)->count();
-            $cantidad = $cantidad+1+$cantidad_temp;
-            $cuenta_id = $subcuenta->id;
-            $dato['subcuenta_id'] = $cuenta_id;
-            $dato['cuenta_codigo'] = $subcuenta->codigo;
-            $dato['cantidad'] = $cantidad;
-            return response()->json($dato);            
-        }
+    if ($request->ajax()) {
+        $subcuenta = subcuentum::where('id', $request->id)->first();
+        $cantidad = auxiliar::where('subcuenta', $subcuenta->codigo)->count();
+        $cantidad_temp = Tempauxctum::where('subcuenta', $subcuenta->codigo)->count();
+        $cantidad = $cantidad+1+$cantidad_temp;
+        $cuenta_id = $subcuenta->id;
+        $dato['subcuenta_id'] = $cuenta_id;
+        $dato['cuenta_codigo'] = $subcuenta->codigo;
+        $dato['cantidad'] = $cantidad;
+        return response()->json($dato);            
     }
+}
 
 
-    public function saveauxcuenta(Request $request){    
+public function saveauxcuenta(Request $request){    
     if($request->ajax()){
         $item = new Tempauxctum;        
         $item->subcuenta_id = $request->subcuenta_id;
@@ -314,8 +341,8 @@ public function extraercontadorsubcuentasvarias(Request $request){
         }
     } 
 
-   
-   public function trashAuxcuentas(Request $request){
+    
+    public function trashAuxcuentas(Request $request){
         if ($request->ajax()) {        
             if(Tempauxctum::truncate()){
                 return response()->json(["mensaje"=>"Vaciado con exito","data"=>"Vaciado"]);
@@ -323,14 +350,14 @@ public function extraercontadorsubcuentasvarias(Request $request){
                 return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
             }
         }else{
-           return response()->json(["mensaje"=>$request->all()]);   
-       }
-   }
+         return response()->json(["mensaje"=>$request->all()]);   
+     }
+ }
 
 
 
 
-public function guardarAuxCuentas(Request $request){
+ public function guardarAuxCuentas(Request $request){
     try {
 
         $auxcuentas = Tempauxctum::get();
@@ -352,81 +379,81 @@ public function guardarAuxCuentas(Request $request){
 }
 
 protected function saveItemAuxiliar($auxcuenta)
-    {
-        $requestData = new auxiliar;
-        $requestData->auxiliar = $auxcuenta->auxiliar;
-        $requestData->secuencia = $auxcuenta->secuencia;
-        $requestData->codigo = $auxcuenta->codigo;
-        $requestData->detall = $auxcuenta->detall;
-        $requestData->activo = $auxcuenta->activo;
-        $requestData->subcuenta = $auxcuenta->subcuenta;
-        $requestData->subcuenta_id = $auxcuenta->subcuenta_id;
-        return $requestData;
-    }
+{
+    $requestData = new auxiliar;
+    $requestData->auxiliar = $auxcuenta->auxiliar;
+    $requestData->secuencia = $auxcuenta->secuencia;
+    $requestData->codigo = $auxcuenta->codigo;
+    $requestData->detall = $auxcuenta->detall;
+    $requestData->activo = $auxcuenta->activo;
+    $requestData->subcuenta = $auxcuenta->subcuenta;
+    $requestData->subcuenta_id = $auxcuenta->subcuenta_id;
+    return $requestData;
+}
 
 
 //Admin Sub Axiliares
-    public function extraercontadorauxcuentas(Request $request){
-        if ($request->ajax()) {
-            $auxiliar = auxiliar::where('id', $request->id)->first();
-            $cantidad = subauxiliar::where('auxiliar', $auxiliar->codigo)->count();
-            $cantidad = $cantidad+1;
-            $auxiliar_id = $auxiliar->id;
-            $dato['auxiliar_id'] = $auxiliar_id;
-            $dato['cuenta_codigo'] = $auxiliar->codigo;
-            $dato['cantidad'] = $cantidad;
-            return response()->json($dato);
-            }
-        }
+public function extraercontadorauxcuentas(Request $request){
+    if ($request->ajax()) {
+        $auxiliar = auxiliar::where('id', $request->id)->first();
+        $cantidad = subauxiliar::where('auxiliar', $auxiliar->codigo)->count();
+        $cantidad = $cantidad+1;
+        $auxiliar_id = $auxiliar->id;
+        $dato['auxiliar_id'] = $auxiliar_id;
+        $dato['cuenta_codigo'] = $auxiliar->codigo;
+        $dato['cantidad'] = $cantidad;
+        return response()->json($dato);
+    }
+}
 
 
-        public function extraercontadorsubauxcuentas(Request $request){
-        if ($request->ajax()) {
-            $auxiliar = auxiliar::where('id', $request->id)->first();
-            $cantidad = subauxiliar::where('auxiliar', $auxiliar->codigo)->count();
-            $cantidad_temp = Tempsubauxctum::where('auxiliar', $auxiliar->codigo)->count();
-            $total = ($cantidad_temp+$cantidad+1);
-            $auxiliar_id = $auxiliar->id;
-            $dato['auxiliar_id'] = $auxiliar_id;
-            $dato['cuenta_codigo'] = $auxiliar->codigo;
-            $dato['cantidad'] = $total;
-            return response()->json($dato);
-            }
-        }
+public function extraercontadorsubauxcuentas(Request $request){
+    if ($request->ajax()) {
+        $auxiliar = auxiliar::where('id', $request->id)->first();
+        $cantidad = subauxiliar::where('auxiliar', $auxiliar->codigo)->count();
+        $cantidad_temp = Tempsubauxctum::where('auxiliar', $auxiliar->codigo)->count();
+        $total = ($cantidad_temp+$cantidad+1);
+        $auxiliar_id = $auxiliar->id;
+        $dato['auxiliar_id'] = $auxiliar_id;
+        $dato['cuenta_codigo'] = $auxiliar->codigo;
+        $dato['cantidad'] = $total;
+        return response()->json($dato);
+    }
+}
 
 
 public function savesubauxcuenta(Request $request){    
-        if($request->ajax()){
-            $item = new Tempsubauxctum;        
-            $item->auxiliar_id = $request->auxiliar_id;
-            $item->auxiliar = $request->auxiliar;
-            $item->subauxiliar = $request->subauxiliar;
-            $item->secuencia = $request->secuencia;
-            $item->codigo = $request->codigo;
-            $item->detall = $request->subauxiliar;
+    if($request->ajax()){
+        $item = new Tempsubauxctum;        
+        $item->auxiliar_id = $request->auxiliar_id;
+        $item->auxiliar = $request->auxiliar;
+        $item->subauxiliar = $request->subauxiliar;
+        $item->secuencia = $request->secuencia;
+        $item->codigo = $request->codigo;
+        $item->detall = $request->subauxiliar;
 
-                if($item->save()){
-                    return response()->json(["mensaje"=>"Registrado con exito","data"=>$request->all()]);
-                }else{
-                    return response()->json(["mensaje"=>"Error !!! al guardar","data"=>$request->all()]);
-                }
-        }
-    } 
-
-     public function trashSubAuxcuentas(Request $request){
-        if ($request->ajax()) {        
-            if(Tempsubauxctum::truncate()){
-                return response()->json(["mensaje"=>"Vaciado con exito","data"=>"Vaciado"]);
-            }else{
-                return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
-            }
+        if($item->save()){
+            return response()->json(["mensaje"=>"Registrado con exito","data"=>$request->all()]);
         }else{
-           return response()->json(["mensaje"=>$request->all()]);   
-       }
-   }
+            return response()->json(["mensaje"=>"Error !!! al guardar","data"=>$request->all()]);
+        }
+    }
+} 
+
+public function trashSubAuxcuentas(Request $request){
+    if ($request->ajax()) {        
+        if(Tempsubauxctum::truncate()){
+            return response()->json(["mensaje"=>"Vaciado con exito","data"=>"Vaciado"]);
+        }else{
+            return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
+        }
+    }else{
+     return response()->json(["mensaje"=>$request->all()]);   
+ }
+}
 
 
-   public function guardarSubAuxCuentas(Request $request){
+public function guardarSubAuxCuentas(Request $request){
     try {
 
         $subauxcuentas = Tempsubauxctum::get();
@@ -449,17 +476,17 @@ public function savesubauxcuenta(Request $request){
 
 
 protected function saveItemSubAuxiliar($auxcuenta)
-    {
-        $requestData = new subauxiliar;
-        $requestData->subauxiliar = $auxcuenta->subauxiliar;
-        $requestData->secuencia = $auxcuenta->secuencia;
-        $requestData->codigo = $auxcuenta->codigo;
-        $requestData->detall = $auxcuenta->detall;
-        $requestData->activo = $auxcuenta->activo;
-        $requestData->auxiliar = $auxcuenta->auxiliar;
-        $requestData->auxiliar_id = $auxcuenta->auxiliar_id;
-        return $requestData;
-    }
+{
+    $requestData = new subauxiliar;
+    $requestData->subauxiliar = $auxcuenta->subauxiliar;
+    $requestData->secuencia = $auxcuenta->secuencia;
+    $requestData->codigo = $auxcuenta->codigo;
+    $requestData->detall = $auxcuenta->detall;
+    $requestData->activo = $auxcuenta->activo;
+    $requestData->auxiliar = $auxcuenta->auxiliar;
+    $requestData->auxiliar_id = $auxcuenta->auxiliar_id;
+    return $requestData;
+}
 
 public function vercuentas(Request $request){
     if ($request->ajax()) {        
@@ -470,13 +497,52 @@ public function vercuentas(Request $request){
 
 
 public function getSubcategory(Request $request, $id){
-        if ($request->ajax()) {
-            $category = Subcategory::subcategory($id);
-            return response()->json($category);
+    if ($request->ajax()) {
+        $category = Subcategory::subcategory($id);
+        return response()->json($category);
+    }
+}
+
+
+public function listaTrs()
+{
+    $transacciones = tempdetallasiento::orderBy('id','ASC')->get();
+    return view('admin/contabilidad/balanceinicial/listtrs_asiento', compact('transacciones'));
+}
+
+
+public function saveAsiento(Request $request){    
+    if($request->ajax()){
+        $item = new tempdetallasiento;        
+        $item->num_asiento = $request->num_asiento;
+        $item->cod_cuenta = $request->cod_cuenta;
+        $item->cuenta = $request->cuenta;
+        $item->periodo = $request->periodo;
+        $item->fecha = $request->fecha;
+        $item->concepto_detalle = $request->concepto_detalle;
+        $item->saldo_debe = $request->saldo_debe;
+        $item->saldo_haber = $request->saldo_haber;
+        
+        $item->saldo_haber = "0.00";
+
+        if($item->save()){
+            return response()->json(["mensaje"=>"Registrado con exito","data"=>$request->all()]);
+        }else{
+            return response()->json(["mensaje"=>"Error !!! al guardar","data"=>$request->all()]);
         }
     }
+} 
 
 
+
+public function listallClientes()
+    {
+        $clientes = Cliente::orderBy('id','ASC')->where('activo','1')->get();
+
+        return view('person/venta/list-clientes', compact('carrito'),array(
+            'clientes' =>  $clientes
+        ));
+    }
 
 
 }
