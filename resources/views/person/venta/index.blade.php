@@ -7,7 +7,7 @@
                     <div class="panel-heading">Venta</div>
                     <div class="panel-body">
                         <div class="row">
-                            
+                            <div class="col-md-10 col-lg-12 col-xs-12 col-sm-8">
                         <a href="{{ url('/person/venta/create') }}" class="btn btn-success btn-sm" title="Nueva Venta">
                             <i class="fa fa-plus" aria-hidden="true"></i> Nueva Venta
                         </a>
@@ -23,6 +23,7 @@
                             </div>
                         </form>
                         
+                        </div>
                         </div>
 
 

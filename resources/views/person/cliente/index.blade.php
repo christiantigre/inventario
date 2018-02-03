@@ -10,21 +10,23 @@
                     <div class="panel-heading">Cliente</div>
                     <div class="panel-body">
                         <div class="row">
+                            <div class="col-md-12 col-lg-12 col-xs-12 col-sm-8">
 
-                        <a href="{{ url('/person/cliente/create') }}" class="btn btn-success btn-sm" title="Nuevo Cliente">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Nuevo
-                        </a>
+                                <a href="{{ url('/person/cliente/create') }}" class="btn btn-success btn-sm" title="Nuevo Cliente">
+                                    <i class="fa fa-plus" aria-hidden="true"></i> Nuevo
+                                </a>
 
-                        <form method="GET" action="{{ url('/person/cliente') }}" accept-charset="UTF-8" class="navbar-form navbar-right" role="search">
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="submit">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
+                                <form method="GET" action="{{ url('/person/cliente') }}" accept-charset="UTF-8" class="navbar-form navbar-right" role="search">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="submit">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
                         </div>
 
                         <br/>
