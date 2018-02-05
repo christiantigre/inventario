@@ -19,6 +19,7 @@ use App\Plan;
 use App\Subcategory;
 use Session;
 use App\tempdetallasiento;
+use DB;
 
 class ComponentController extends Controller
 {
@@ -130,7 +131,7 @@ class ComponentController extends Controller
         if($item->delete()){
             return response()->json(["mensaje"=>"Eliminado con exito","data"=>"Eliminado"]);
         }else{
-            return response()->json(["mensaje"=>"Error !!! al guardar","data"=>$request->all()]);
+            return response()->json(["mensaje"=>"Error !!! al eliminar","data"=>$request->all()]);
         }
     }else{
      return response()->json(["mensaje"=>$request->all()]);   
@@ -523,8 +524,6 @@ public function saveAsiento(Request $request){
         $item->saldo_debe = $request->saldo_debe;
         $item->saldo_haber = $request->saldo_haber;
         
-        $item->saldo_haber = "0.00";
-
         if($item->save()){
             return response()->json(["mensaje"=>"Registrado con exito","data"=>$request->all()]);
         }else{
@@ -544,5 +543,49 @@ public function listallClientes()
         ));
     }
 
+
+public function trashBalanceInicial(Request $request){
+    if ($request->ajax()) {        
+        if(tempdetallasiento::truncate()){
+            return response()->json(["mensaje"=>"Vaciado con exito","data"=>"Vaciado"]);
+        }else{
+            return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
+        }
+    }else{
+     return response()->json(["mensaje"=>$request->all()]);   
+ }
+}
+
+
+public function delete_trs_blini(Request $request){
+    if ($request->ajax()) {        
+        $item = tempdetallasiento::find($request->id);
+        if($item->delete()){
+            return response()->json(["mensaje"=>"Eliminado con exito","data"=>"Eliminado"]);
+        }else{
+            return response()->json(["mensaje"=>"Error !!! al eliminar","data"=>$request->all()]);
+        }
+    }else{
+     return response()->json(["mensaje"=>$request->all()]);   
+ }
+}
+
+public function sumBIni(Request $request){
+    if ($request->ajax()) {        
+        $data['saldo_debe'] = DB::table('tempdetallasientos')->sum('saldo_debe');
+        $data['saldo_haber'] = DB::table('tempdetallasientos')->sum('saldo_haber');
+
+        return response()->json($data);   
+ }
+}
+
+
+
+public function saveBInicial(Request $request){
+    if ($request->ajax()) {        
+        
+        return response()->json($data);   
+ }
+}
 
 }

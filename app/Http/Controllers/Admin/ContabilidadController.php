@@ -12,7 +12,9 @@ use App\Admin;
 use App\Almacen;
 use Carbon\Carbon;
 use App\SvLogAdmin;
+use App\tempdetallasiento;
 use Session;
+use DB;
 
 class ContabilidadController extends Controller
 {
@@ -57,15 +59,14 @@ class ContabilidadController extends Controller
 
     public function balanceinicial(){
         $dato = $this->gen_section_balance_inicial();
-            $this->genLog("Ingresó a balance inicial");
+        $this->genLog("Ingresó a balance inicial");
 
-            $asiento = num_asiento::where('num_asiento','1')->get();
-
-            if(empty($asiento)){
-                $detalles = detall_asiento::where('asiento_id',$asiento->num_asiento)->get();
-            }else{
-                $detalles = "";
-            }
+        $asiento = num_asiento::where('num_asiento','1')->first();
+        if(!empty($asiento)){
+            $detalles = detall_asiento::where('asiento_id',$asiento['id'])->get();
+        }else{
+            $detalles = "";
+        }
 
         return view('admin.contabilidad.balanceinicial.index', compact('dato','asiento','detalles'));
     }
@@ -126,6 +127,66 @@ class ContabilidadController extends Controller
         //
     }
 
+    public function storeBalanceInicial(Request $request)
+    {
+        $trs = tempdetallasiento::get();
+        $carbon = new Carbon();
+        $date = $carbon->now();
+
+        $data['saldo_debe'] = DB::table('tempdetallasientos')->sum('saldo_debe');
+        $data['saldo_haber'] = DB::table('tempdetallasientos')->sum('saldo_haber');
+
+
+        $dataAsiento['num_asiento'] = $request['num_asiento'];
+        $dataAsiento['concepto'] = $request['concepto'];
+        $dataAsiento['periodo'] = $request['periodo'];
+        $dataAsiento['fecha'] = $request['fecha'];
+        $dataAsiento['saldo_debe'] = $data['saldo_debe'];
+        $dataAsiento['saldo_haber'] = $data['saldo_haber'];
+        $dataAsiento['responsable'] = $request['responsable'];
+        $dataAsiento['activo'] = "1";
+        $dataAsiento['almacen_id'] = $request['almacen_id'];
+
+        try {
+            //Guarda cabecera del asiento
+            $asiento = num_asiento::create($dataAsiento);
+            //envia los valore del detalle del asiento para guardar el detalle desde la funcion saveItemBalanceInicial
+            foreach ($trs as $item) {
+                $requestData_returned = $this->saveItemBalanciInicial($item,$asiento->id, $dataAsiento['fecha'],$dataAsiento['almacen_id']);
+                $requestData_returned->save();
+            }
+
+            tempdetallasiento::truncate();
+
+            Session::flash('flash_message', 'Balance Inicial Guardado correctamente');
+            return response()->json(array('message' => 'Balance Inicial Registrado con exito'));
+
+        } catch (\Exception $e) {
+
+            Session::flash('warning', 'Error al Guardar el Balance Inicial');     
+            return response()->json(array('message' => 'Error al Guardar el Balance Inicial !!!')); 
+
+        }
+
+
+    }
+
+    protected function saveItemBalanciInicial($detall_asiento, $ass_id, $fecha,$almacen_id)
+    {
+        $requestData = new detall_asiento;
+        $requestData->num_asiento = $detall_asiento->num_asiento;
+        $requestData->cod_cuenta = $detall_asiento->cod_cuenta;
+        $requestData->cuenta = $detall_asiento->cuenta;
+        $requestData->periodo = $detall_asiento->periodo;
+        $requestData->fecha = $detall_asiento->fecha;
+        $requestData->saldo_debe = $detall_asiento->saldo_debe;
+        $requestData->saldo_haber = $detall_asiento->saldo_haber;
+        $requestData->concepto_detalle= $detall_asiento->concepto_detalle;
+        $requestData->almacen_id= $almacen_id;
+        $requestData->asiento_id= $ass_id;
+        return $requestData;
+    }
+
     /**
      * Display the specified resource.
      *
@@ -137,6 +198,14 @@ class ContabilidadController extends Controller
         //
     }
 
+    public function detallAsiento($id)
+    {
+        $asiento = num_asiento::findOrFail($id);
+        $detall_asiento= detall_asiento::where('asiento_id',$id)->get();
+        $almacen = Almacen::first();
+        dd($asiento);
+        //return view('admin.venta.show', compact('ventum','detallventa','almacen'));
+    }
     /**
      * Show the form for editing the specified resource.
      *

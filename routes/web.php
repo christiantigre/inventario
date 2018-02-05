@@ -169,6 +169,15 @@ Route::group(['prefix' => 'admin'], function () {
 
   Route::post('/saveAsiento/', 'ComponentController@saveAsiento');
   
+  Route::post('/trashBalanceInicial/','ComponentController@trashBalanceInicial');
+
+  Route::post('/delete_trs_blini/','ComponentController@delete_trs_blini');
+  Route::get('/sumBIni/', 'ComponentController@sumBIni');  
+  //Route::post('/saveBInicial/', 'Admin\\ContabilidadController@storeBalanceInicial');  
+  Route::get('/saveBInicial/', 'Admin\\ContabilidadController@storeBalanceInicial');  
+
+  
+  Route::get('/DetalleAsiento/{id}', ['as' => 'detallAsiento', 'uses' => 'Admin\\ContabilidadController@detallAsiento']);
 });
 
 
