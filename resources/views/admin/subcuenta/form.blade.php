@@ -1,7 +1,7 @@
 <div class="form-group {{ $errors->has('cuenta_id') ? 'has-error' : ''}}">
     <label for="cuenta_id" class="col-md-4 control-label">{{ 'Cuenta' }}</label>
     <div class="col-md-6">
-        {!! Form::select('cuenta_id', $cuentas, null, ['class' => 'form-control','id'=>'cuenta_id','autofocus'=>'autofocus','onchange'=>'cuentaCuentas()']) !!}
+        {!! Form::select('cuenta_id', $cuentas, null, ['class' => 'form-control','id'=>'cuenta_id','autofocus'=>'autofocus','onchange'=>'cuentaCuentasAdmin()']) !!}
 
         {!! Form::hidden('cuenta', null, ['id'=>'cuenta','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('cuenta') !!}
 
@@ -52,3 +52,36 @@
         <input class="btn btn-primary" type="submit" value="{{ $submitButtonText or 'Crear' }}">
     </div>
 </div>
+
+
+<script type="text/javascript">
+    function cuentaCuentasAdmin(){
+    var token = $("input[name=_token]").val();
+    var cuenta_id= $("#cuenta_id").val();
+    //var route = '/admin/extraercontadorcuentas/';
+    var route = '{{ url("admin/extraercontadorcuentas") }}';
+    var parametros = {
+        "id" :cuenta_id
+    }
+    $.ajax({
+        url:route,
+        headers:{'X-CSRF-TOKEN':token},
+        type:'get',
+        dataType: 'json',
+        data:parametros,
+        success:function(data)
+        {
+            console.log(data);
+            document.getElementById("secuencia").value = data.cantidad;
+            document.getElementById("codigo").value = data.cuenta_codigo+'.'+data.cantidad;
+            document.getElementById("cuenta").value = data.cuenta_codigo;
+            console.log("copy data succefull");
+        },
+        error:function(data)
+        {
+            console.log('Error '+data);
+        }  
+    });
+}
+
+</script>

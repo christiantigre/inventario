@@ -106,22 +106,16 @@ Route::group(['prefix' => 'admin'], function () {
   /*Audotoria desde Admin*/
 
   Route::resource('/logs', 'Admin\\LogController');
-  Route::post('/registro', [
-    'as' => 'admin.seguridad.logfecha',
-    'uses' => 'Admin\LogController@revisarLogfecha'
-  ]);
+  Route::post('/registro', ['as' => 'admin.seguridad.logfecha', 'uses' => 'Admin\LogController@revisarLogfecha']);
   
   /*Modulo de contabilidad*/
-  
   Route::resource('/tipocuenta', 'Admin\\tipocuentaController');
-
   Route::resource('/clase', 'Admin\\claseController');
   Route::resource('/grupo', 'Admin\\GrupoController');
   Route::resource('/cuenta', 'Admin\\CuentaController');
   Route::resource('/subcuenta', 'Admin\\subcuentaController');
   Route::resource('/auxiliar', 'Admin\\auxiliarController');
   Route::resource('/subauxiliar', 'Admin\\subauxiliarController');
-
   Route::get('/extraercontadorclases/','ComponentController@extraercantidadclases');
   Route::get('/extraercontadorgrupos/','ComponentController@extraercantidadgrupos');
   Route::get('/extraercontadorcuentas/','ComponentController@extraercontadorcuentas');
@@ -131,14 +125,10 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/extraercontadorauxcuentas/','ComponentController@extraercontadorauxcuentas');
   Route::get('/extraercontadorsubauxcuentas/','ComponentController@extraercontadorsubauxcuentas');
   Route::get('/vercuentas/','ComponentController@vercuentas');
-
-
   Route::get('/variassubctas','Admin\\subcuentaController@variassubctas');
   Route::get('/variasaux','Admin\\auxiliarController@variasaux');
   Route::get('/variasSubAux','Admin\\subauxiliarController@variasSubaux');  
-
   Route::resource('/tempsubcta', 'Admin\\TempsubctaController');
-
   Route::get('/listsubcuentas/', 'ComponentController@listaSubcuentas');  
   Route::post('/savesubcuenta/', 'ComponentController@savesubcuenta');
   Route::post('/trashSubcuentas/','ComponentController@trashSubcuentas');
@@ -151,32 +141,21 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/listsubauxcuentas/', 'ComponentController@listsubauxcuentas'); 
   Route::post('/trashSubAuxcuentas/','ComponentController@trashSubAuxcuentas');
   Route::get('/guardarSubAuxCuentas/','ComponentController@guardarSubAuxCuentas');
-
   Route::resource('/plan', 'Admin\\PlanController');
   Route::get('/plan/downloadExcel/{type}', 'Admin\\PlanController@downloadExcel');
-
   Route::resource('/confcontbl', 'Admin\\ConfcontblController');
   Route::resource('/contabilidad', 'Admin\\ContabilidadController');
-
-
   Route::resource('admin/num_asiento', 'Admin\\num_asientoController');
   Route::resource('admin/detall_asiento', 'Admin\\detall_asientoController');
   Route::get('/balanceinicial/', 'Admin\\ContabilidadController@balanceinicial');
   Route::get('/balanceinicial/', 'Admin\\ContabilidadController@balanceinicial');
   Route::get('/balanceinicial/createBalanceInicial', 'Admin\\ContabilidadController@createBalanceInicial');
-
   Route::get('/listtrs/', 'ComponentController@listaTrs');  
-
   Route::post('/saveAsiento/', 'ComponentController@saveAsiento');
-  
   Route::post('/trashBalanceInicial/','ComponentController@trashBalanceInicial');
-
   Route::post('/delete_trs_blini/','ComponentController@delete_trs_blini');
   Route::get('/sumBIni/', 'ComponentController@sumBIni');  
-  //Route::post('/saveBInicial/', 'Admin\\ContabilidadController@storeBalanceInicial');  
-  Route::get('/saveBInicial/', 'Admin\\ContabilidadController@storeBalanceInicial');  
-
-  
+  Route::get('/saveBInicial/', 'Admin\\ContabilidadController@storeBalanceInicial');    
   Route::get('/DetalleAsiento/{id}', ['as' => 'detallAsiento', 'uses' => 'Admin\\ContabilidadController@detallAsiento']);
 });
 
