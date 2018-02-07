@@ -148,7 +148,6 @@ Route::group(['prefix' => 'admin'], function () {
   Route::resource('admin/num_asiento', 'Admin\\num_asientoController');
   Route::resource('admin/detall_asiento', 'Admin\\detall_asientoController');
   Route::get('/balanceinicial/', 'Admin\\ContabilidadController@balanceinicial');
-  Route::get('/balanceinicial/', 'Admin\\ContabilidadController@balanceinicial');
   Route::get('/balanceinicial/createBalanceInicial', 'Admin\\ContabilidadController@createBalanceInicial');
   Route::get('/listtrs/', 'ComponentController@listaTrs');  
   Route::post('/saveAsiento/', 'ComponentController@saveAsiento');
@@ -162,6 +161,7 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/DetsumBIni/', 'ComponentController@DetsumBIni');  
   Route::post('/trashBalanceInicialDetall/','ComponentController@trashBalanceInicialDetall');
   Route::post('/delete_trs_blinidetall/','ComponentController@delete_trs_blinidetall');
+  Route::get('/vertrs/','ComponentController@vertrs');
 });
 
 

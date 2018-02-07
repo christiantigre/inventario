@@ -104,7 +104,7 @@
                 <label for="concepto_detall" class="col-md-2 control-label">{{ 'Descripción' }}</label>
                 <div class="col-md-8">
 
-                    {!! Form::textarea('concepto_detalle',null,['class'=>'form-control', 'rows' => 2, 'cols' => 40,'id'=>'concepto_detall']),old('auxiliar') !!}
+                    {!! Form::textarea('concepto_detalle',null,['class'=>'form-control', 'rows' => 2, 'cols' => 40,'id'=>'concepto_detall']),old('concepto_detalle') !!}
 
                     {!! $errors->first('concepto_detalle', '<p class="help-block">:message</p>') !!}
                 </div>

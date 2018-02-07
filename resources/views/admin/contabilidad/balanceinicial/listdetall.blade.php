@@ -18,8 +18,10 @@
             <td>{{ $item->saldo_debe }}</td>
             <td>{{ $item->saldo_haber }}</td>
             <td>
+
                 <a href="{{ url('/admin/balanceinicial/' . $item->id) }}" title="Ver transacción"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> Ver</button></a>
-                <a href="{{ url('/admin/balanceinicial/' . $item->id . '/edit') }}" title="Editar Transacción"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>
+
+                <a data-toggle="modal" data-target="#edit-item" class="edit-item" title="Editar Transacción"><button class="btn btn-primary btn-xs"  id="editar_trs" onclick="ver_trs({{ $item->id }});"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>
 
                <button type="button" class="btn btn-danger btn-xs" title="Eliminar Transacción" onclick="eliminarTrs({{ $item->id }});">
                 <i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar

@@ -28,6 +28,7 @@
         <link rel="stylesheet" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">-->
     @endif
 
+    <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
 
     @yield('adminlte_css')
 
@@ -74,6 +75,34 @@ $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
     <!-- DataTables -->
     <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 @endif
+
+<!--toastr-->
+   <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+        <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+  
+    
+    <script>
+@if(isset($notification['message']))
+    var type = $notification['type'];
+    switch(type){
+        case 'info':
+            toastr.info("{{ $notification['message'] }}");
+            break;
+        
+        case 'warning':
+            toastr.warning("{{ $notification['message'] }}");
+            break;
+ 
+        case 'success':
+            toastr.success("{{ $notification['message'] }}");
+            break;
+ 
+        case 'error':
+            toastr.error("{{ $notification['message'] }}");
+            break;
+    }
+@endif
+</script>
 
     {!! Html::script('js/dropdown.js') !!}
     {!! Html::script('js/scriptmodalsearchs.js') !!}

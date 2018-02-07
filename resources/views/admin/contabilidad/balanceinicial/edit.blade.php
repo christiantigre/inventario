@@ -5,7 +5,7 @@
 <div class="row">
   @include('admin.contabilidad.infosection')
   <section class="content">
-    @include('admin.tipocuenta.sidebar')
+    @include('admin.contabilidad.sidebar')
     <div class="col-md-10 col-lg-10 col-xs-12 col-sm-8">
       <div class="panel panel-default">
         <div class="panel-heading">Crear Balance Inicial</div>
@@ -110,6 +110,12 @@
     </div>
   </div>
 </section>
+
+
+<!-- Edit Item Modal -->
+
+    @include('admin.contabilidad.balanceinicial.modalEditTransac')
+
 
 <script type="text/javascript">
 
@@ -369,41 +375,10 @@ function trashBalanceInicial(id){
   });
 }
 
-function eliminar_trs_blini(id){
-  var confirma = confirm("Esta seguro que desea eliminar esta transacción?...");
-
-  if(confirma){
-
-    console.log(id);
-
-    var token = $("input[name=_token]").val();
-    var route = '{{ url("admin/delete_trs_blini") }}'; 
-    var parametros = {
-      "id" :id
-    }
-    $.ajax({
-      url:route,
-      headers:{'X-CSRF-TOKEN':token},
-      type:'post',
-      dataType: 'json',
-      data:parametros,
-      success:function(data)
-      {
-        list_trs_admin();
-        console.log('correcto '+data.data);
-      },
-      error:function(data)
-      {
-        console.log('Error '+data);
-      }  
-    });
-  }
-}
 
 function eliminarTrs(id){
-    if (confirm("Desea eliminar esta transacción")) {
+    if (confirm("Desea eliminar esta transacción?")) {
         console.log(id);
-
     var token = $("input[name=_token]").val();
     var route = '{{ url("admin/delete_trs_blinidetall") }}'; 
     var parametros = {
@@ -417,44 +392,82 @@ function eliminarTrs(id){
       data:parametros,
       success:function(data)
       {
+        toastr.success(data.mensaje);
         list_trs_admin_edit();
         console.log('correcto '+data.data);
       },
       error:function(data)
       {
+        toastr.error(data.mensaje);
         console.log('Error '+data);
       }  
     });
     } 
 }
 
-$('.deleteTransaccion').on('click', function(e) {
-    console.log("alerta eliminar");
-    var inputData = $('#formDeleteTransac').serialize();
 
-    var dataId = $('#btnDeleteTransaccion').attr('data-id');
-
-    $.ajax({
-        url: '{{ url('/admin/products') }}' + '/' + dataId,
-        type: 'POST',
-        data: inputData,
-        success: function( msg ) {
-            if ( msg.status === 'success' ) {
-                toastr.success( msg.msg );
-                setInterval(function() {
-                    window.location.reload();
-                }, 5900);
-            }
-        },
-        error: function( data ) {
-            if ( data.status === 422 ) {
-                toastr.error('Cannot delete the category');
-            }
-        }
-    });
-
-    return false;
+$('.busca_cuenta_modal').click(function(){
+  console.log("busqueda por boton desde modal");
+  var token = $("input[name=_token]").val();
+  var cod_cuenta_modal= $("#cod_cuenta_modal").val();
+  //var route = '/admin/vercuentas/';
+  var route = '{{ url("admin/vercuentas") }}';
+  document.getElementById("cod_cuenta_modal").value = "";
+  var parametros = {
+    "id" :cod_cuenta_modal
+  }
+  console.log(parametros);
+  $.ajax({
+    url:route,
+    headers:{'X-CSRF-TOKEN':token},
+    type:'get',
+    dataType: 'json',
+    data:parametros,
+    success:function(data)
+    {
+      console.log(data);
+      document.getElementById("cuenta_modal").value = data.cuenta;
+      document.getElementById("cod_cuenta_modal").value = data.cod;
+      console.log("copy data succefull");
+    },
+    error:function(data)
+    {
+      console.log('Error '+data);
+    }  
+  });
 });
+
+function ver_trs(id){  
+  console.log("buscar datos para modal por "+id);
+  var token = $("input[name=_token]").val();
+  var route = '{{ url("admin/vertrs") }}';
+  var parametros = {
+    "id" :id
+  }
+  console.log(parametros);
+  $.ajax({
+    url:route,
+    headers:{'X-CSRF-TOKEN':token},
+    type:'get',
+    dataType: 'json',
+    data:parametros,
+    success:function(data)
+    {
+      console.log(data);
+      document.getElementById("cuenta_modal").value = data.cuenta;
+      document.getElementById("cod_cuenta_modal").value = data.cod_cuenta;
+      document.getElementById("saldo_debe_modal").value = data.saldo_debe;
+      document.getElementById("saldo_haber_modal").value = data.saldo_haber;
+      document.getElementById("concepto_detalle_modal").value = data.concepto_detalle;
+      console.log("copy data succefull");
+    },
+    error:function(data)
+    {
+      console.log('Error '+data);
+    }  
+  });
+}
+
 
 
 </script>

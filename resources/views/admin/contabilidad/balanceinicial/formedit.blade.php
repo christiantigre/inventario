@@ -11,7 +11,7 @@
                 </div>
                 <div class="col-md-6">
                     <label class="control-label">Asiento # : </label>
-                    <label class="control-label">{{ $num_asiento }}</label>                
+                    <label class="control-label">{{ $asiento->num_asiento }}</label>                
                 </div>
                 <div class="col-md-6">
                     <label class="control-label">Fecha : </label>

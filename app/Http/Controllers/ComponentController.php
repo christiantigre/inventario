@@ -643,7 +643,12 @@ public function delete_trs_blinidetall(Request $request){
 
 
 
-
+public function vertrs(Request $request){
+    if ($request->ajax()) {        
+        $data = detall_asiento::where('id', $request->id)->first();
+        return response()->json($data);
+    }
+}
 
 
 }

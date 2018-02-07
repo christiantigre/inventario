@@ -58,6 +58,8 @@ class ContabilidadController extends Controller
     }
 
     public function balanceinicial(){
+        \Toastr::success('Messages in here', 'Title', ["positionClass" => "toast-top-center"]);
+
         $dato = $this->gen_section_balance_inicial();
         $this->genLog("Ingresó a balance inicial");
 
@@ -240,6 +242,7 @@ class ContabilidadController extends Controller
             $administrador = Admin::findOrFail(1);
 
         }
+        
         $username = $administrador['name'];
         $userid = $administrador['id'];
         $useremail = $administrador['email'];

@@ -14,12 +14,12 @@
                     <div class="row">
                       <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12"> 
                     @if(empty($asiento))
-                        <a href="{{ url('/admin/balanceinicial/createBalanceInicial') }}" class="btn btn-success btn-xs" title="Registrar Cuenta">
+                        <a href="{{ url('/admin/balanceinicial/createBalanceInicial') }}" class="btn btn-success btn-md" title="Registrar Cuenta">
                             <i class="fa fa-plus" aria-hidden="true"></i> Nuevo
                         </a>
                         @else
 
-                        <a href="{{ url('/admin/balanceinicial/editBalanceInicial/' . $asiento->id . '/edit') }}" title="Editar Balance Inicial"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>
+                        <a href="{{ url('/admin/balanceinicial/editBalanceInicial/' . $asiento->id . '/edit') }}" title="Editar Balance Inicial"><button class="btn btn-primary btn-md"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>
                         @endif
                     </div>
                 </div>
@@ -68,7 +68,6 @@
                                 <th>CUENTA</th>
                                 <th>DEBE</th>
                                 <th>HABER</th>
-                                <th>ACCIÓNES</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -79,9 +78,7 @@
                                 <td>{{ $item->cuenta }}</td>                                        
                                 <td>{{ number_format($item->saldo_debe,2) }}</td>
                                 <td>{{ number_format($item->saldo_haber,2) }}</td>
-                                <td>
-                                    <button type="button" id="delete_trasacc_blini" class="btn btn-danger btn-xs" title="Eliminar transacción" onclick="eliminar_trs_blini({{ $item->id }});"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar</button>
-                                </td>
+                                
                             </tr>
                             @endforeach
                             <tr>

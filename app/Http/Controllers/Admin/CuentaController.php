@@ -41,7 +41,13 @@ class CuentaController extends Controller
             $cuenta = Cuentum::orderBy('codigo','ASC')->paginate($perPage);
             $this->genLog("Visualizó cuentas");  
         }
-        return view('admin.cuenta.index', compact('cuenta','dato'));
+
+        $notification = array(
+    'message' => 'I am a successful message!', 
+    'alert-type' => 'success'
+);
+        
+        return view('admin.cuenta.index', compact('cuenta','dato'))->with($notification);
     }
 
     /**
