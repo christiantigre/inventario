@@ -78,13 +78,17 @@ class ContabilidadController extends Controller
     public function createBalanceInicial()
     {
         try {
+
             $mailAdmin = auth('admin')->user()->email;
             $adminid = auth('admin')->user()->id;
             $administrador = Admin::findOrFail($adminid);
             $dataArray['mail'] = $mailAdmin;          
             $dataArray['iduser'] = $adminid;          
-        } catch (\Exception $e) {            
+
+        } catch (\Exception $e) {         
+
             $administrador = Admin::findOrFail(1);
+
         }
         $username = $administrador['name'];
         $userid = $administrador['id'];
@@ -216,6 +220,45 @@ class ContabilidadController extends Controller
     {
         //
     }
+    
+    public function editBalanceInicial($id)
+    {
+        try {
+
+            $mailAdmin = auth('admin')->user()->email;
+            $adminid = auth('admin')->user()->id;
+            $administrador = Admin::findOrFail($adminid);
+            $dataArray['mail'] = $mailAdmin;          
+            $dataArray['iduser'] = $adminid;     
+
+            $asiento = num_asiento::findOrFail($id);     
+
+            $detall_asiento= detall_asiento::where('asiento_id',$id)->get();
+
+        } catch (\Exception $e) {         
+
+            $administrador = Admin::findOrFail(1);
+
+        }
+        $username = $administrador['name'];
+        $userid = $administrador['id'];
+        $useremail = $administrador['email'];
+        $responsable = $username."(".$useremail.")";
+
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $year = $carbon->now()->format('Y');
+        $fecha = $carbon->now()->format('Y-m-d');
+        //$year = "2018";
+        $this->genLog("Ingresó a crear Balance Inicial");
+        $dato = $this->gen_section_balance_inicial();
+        $cuentas = Plan::orderBy('cod', 'ASC')->get();
+        $num_asiento = num_asiento::where('periodo',$year)->count();
+        $num_asiento = ($num_asiento+1);
+        $almacen = Almacen::where('activo',1)->first();
+        $nombre_almacen = $almacen->almacen;
+        $almacen_id = $almacen->id;
+        return view('admin.contabilidad.balanceinicial.edit',compact('asiento','detall_asiento','dato','cuentas','num_asiento','year','fecha','responsable','nombre_almacen','almacen_id'));
+    }
 
     /**
      * Update the specified resource in storage.
@@ -240,6 +283,7 @@ class ContabilidadController extends Controller
         //
     }
 
+    
 
     public function gen_section(){
         $data = array(

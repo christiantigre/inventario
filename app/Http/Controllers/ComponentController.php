@@ -19,6 +19,7 @@ use App\Plan;
 use App\Subcategory;
 use Session;
 use App\tempdetallasiento;
+use App\detall_asiento;
 use DB;
 
 class ComponentController extends Controller
@@ -126,7 +127,7 @@ class ComponentController extends Controller
     }
 
     public function deleteItem(Request $request){
-       if ($request->ajax()) {        
+     if ($request->ajax()) {        
         $item = ItemVenta::find($request->id);
         if($item->delete()){
             return response()->json(["mensaje"=>"Eliminado con exito","data"=>"Eliminado"]);
@@ -134,8 +135,8 @@ class ComponentController extends Controller
             return response()->json(["mensaje"=>"Error !!! al eliminar","data"=>$request->all()]);
         }
     }else{
-     return response()->json(["mensaje"=>$request->all()]);   
- }
+       return response()->json(["mensaje"=>$request->all()]);   
+   }
 }
 
 public function trashItem(Request $request){
@@ -146,8 +147,8 @@ public function trashItem(Request $request){
             return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
         }
     }else{
-     return response()->json(["mensaje"=>$request->all()]);   
- }
+       return response()->json(["mensaje"=>$request->all()]);   
+   }
 }
 
 
@@ -253,11 +254,11 @@ public function savesubcuenta(Request $request){
                 return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
             }
         }else{
-         return response()->json(["mensaje"=>$request->all()]);   
-     }
- }
+           return response()->json(["mensaje"=>$request->all()]);   
+       }
+   }
 
- public function guardarsubcuentas(Request $request){
+   public function guardarsubcuentas(Request $request){
     try {
 
         $subcuentas = Tempsubctum::get();
@@ -351,14 +352,14 @@ public function saveauxcuenta(Request $request){
                 return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
             }
         }else{
-         return response()->json(["mensaje"=>$request->all()]);   
-     }
- }
+           return response()->json(["mensaje"=>$request->all()]);   
+       }
+   }
 
 
 
 
- public function guardarAuxCuentas(Request $request){
+   public function guardarAuxCuentas(Request $request){
     try {
 
         $auxcuentas = Tempauxctum::get();
@@ -449,8 +450,8 @@ public function trashSubAuxcuentas(Request $request){
             return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
         }
     }else{
-     return response()->json(["mensaje"=>$request->all()]);   
- }
+       return response()->json(["mensaje"=>$request->all()]);   
+   }
 }
 
 
@@ -535,13 +536,13 @@ public function saveAsiento(Request $request){
 
 
 public function listallClientes()
-    {
-        $clientes = Cliente::orderBy('id','ASC')->where('activo','1')->get();
+{
+    $clientes = Cliente::orderBy('id','ASC')->where('activo','1')->get();
 
-        return view('person/venta/list-clientes', compact('carrito'),array(
-            'clientes' =>  $clientes
-        ));
-    }
+    return view('person/venta/list-clientes', compact('carrito'),array(
+        'clientes' =>  $clientes
+    ));
+}
 
 
 public function trashBalanceInicial(Request $request){
@@ -552,8 +553,8 @@ public function trashBalanceInicial(Request $request){
             return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
         }
     }else{
-     return response()->json(["mensaje"=>$request->all()]);   
- }
+       return response()->json(["mensaje"=>$request->all()]);   
+   }
 }
 
 
@@ -566,8 +567,8 @@ public function delete_trs_blini(Request $request){
             return response()->json(["mensaje"=>"Error !!! al eliminar","data"=>$request->all()]);
         }
     }else{
-     return response()->json(["mensaje"=>$request->all()]);   
- }
+       return response()->json(["mensaje"=>$request->all()]);   
+   }
 }
 
 public function sumBIni(Request $request){
@@ -576,16 +577,73 @@ public function sumBIni(Request $request){
         $data['saldo_haber'] = DB::table('tempdetallasientos')->sum('saldo_haber');
 
         return response()->json($data);   
- }
+    }
 }
 
 
 
 public function saveBInicial(Request $request){
     if ($request->ajax()) {        
-        
+
         return response()->json($data);   
- }
+    }
 }
+
+
+public function listaTrsEdit()
+{
+    $transacciones = detall_asiento::orderBy('id','ASC')->where('num_asiento',"1")->get();
+
+    return view('admin/contabilidad/balanceinicial/listdetall', compact('transacciones'));
+}
+
+public function DetsumBIni(Request $request){
+    if ($request->ajax()) {        
+        $asiento_num = 1;
+
+        $res = DB::select( DB::raw("SELECT sum(saldo_debe) as saldo_debe,sum(saldo_haber) as saldo_haber FROM detall_asientos WHERE num_asiento = $asiento_num") );
+
+        return response()->json($res);   
+    }
+}
+
+public function trashBalanceInicialDetall(Request $request){
+    if ($request->ajax()) {   
+        try {
+                //DB::table('detall_asientos')->where('asiento_id', $request->id)->delete();
+            $detall_ass = detall_asiento::where('asiento_id',$request->id)->get();
+            foreach($detall_ass as $item) {
+                $item->delete();
+            } 
+            return response()->json(["mensaje"=>"Vaciado con exito","data"=>"Vaciado".$request->id]);
+        } catch (\Exception $e) {
+            return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
+        }       
+
+        return response()->json($detall_ass);
+    }else{
+       return response()->json(["mensaje"=>$request->all()]);   
+   }
+}
+
+
+
+public function delete_trs_blinidetall(Request $request){
+    if ($request->ajax()) {        
+        $item = detall_asiento::find($request->id);
+        if($item->delete()){
+            return response()->json(["mensaje"=>"Eliminado con exito","data"=>"Eliminado"]);
+        }else{
+            return response()->json(["mensaje"=>"Error !!! al eliminar","data"=>$request->all()]);
+        }
+    }else{
+       return response()->json(["mensaje"=>$request->all()]);   
+   }
+}
+
+
+
+
+
 
 }
