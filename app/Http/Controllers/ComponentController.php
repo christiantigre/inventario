@@ -333,13 +333,11 @@ public function saveauxcuenta(Request $request){
         $item->auxiliar = $request->auxiliar;
         $item->codigo = $request->codigo;
 
-        if($item->save()){
-            return response()->json(["mensaje"=>"Registrado con exito","data"=>$request->all()]);
-        }else{
-            return response()->json(["mensaje"=>"Error !!! al guardar","data"=>$request->all()]);
-        }
-            /*$cliente = ItemVenta::create($requestData);
-            return response()->json($cliente);*/
+            if($item->save()){
+                return response()->json(["mensaje"=>"Registrado con exito","data"=>$request->all()]);
+            }else{
+                return response()->json(["mensaje"=>"Error !!! al guardar","data"=>$request->all()]);
+            }
         }
     } 
 
@@ -363,10 +361,10 @@ public function saveauxcuenta(Request $request){
     try {
 
         $auxcuentas = Tempauxctum::get();
-        foreach ($auxcuentas as $cuenta) {
-            $requestData_returned = $this->saveItemAuxiliar($cuenta);
-            $requestData_returned->save();
-        }
+            foreach ($auxcuentas as $cuenta) {
+                $requestData_returned = $this->saveItemAuxiliar($cuenta);
+                $requestData_returned->save();
+            }
 
         Tempauxctum::truncate();
 
@@ -573,8 +571,11 @@ public function delete_trs_blini(Request $request){
 
 public function sumBIni(Request $request){
     if ($request->ajax()) {        
-        $data['saldo_debe'] = DB::table('tempdetallasientos')->sum('saldo_debe');
-        $data['saldo_haber'] = DB::table('tempdetallasientos')->sum('saldo_haber');
+        /*$data['saldo_debe'] = DB::table('tempdetallasientos')->sum('saldo_debe');
+        $data['saldo_haber'] = DB::table('tempdetallasientos')->sum('saldo_haber');*/
+        $asiento_num = 1;
+
+        $data = DB::select( DB::raw("SELECT sum(saldo_debe) as saldo_debe,sum(saldo_haber) as saldo_haber FROM tempdetallasientos WHERE num_asiento = $asiento_num") );
 
         return response()->json($data);   
     }
@@ -600,7 +601,6 @@ public function listaTrsEdit()
 public function DetsumBIni(Request $request){
     if ($request->ajax()) {        
         $asiento_num = 1;
-
         $res = DB::select( DB::raw("SELECT sum(saldo_debe) as saldo_debe,sum(saldo_haber) as saldo_haber FROM detall_asientos WHERE num_asiento = $asiento_num") );
 
         return response()->json($res);   

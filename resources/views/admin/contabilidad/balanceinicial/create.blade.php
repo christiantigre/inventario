@@ -116,13 +116,19 @@
     $.ajax({
       type:'get',
       url:'{{ url("admin/sumBIni") }}',
-      success: function(data){
-        console.log(data.saldo_debe);
-        console.log(data.saldo_haber);
-        document.getElementById("debe").value = data.saldo_debe;
-        document.getElementById("haber").value = data.saldo_haber;
+      success: function(data){        
+        console.log(data[0]['saldo_debe']);
+        console.log(data[0]['saldo_haber']);
+        debe_float = data[0]['saldo_debe'];
+        haber_float = data[0]['saldo_haber'];
+        debe = number_format(debe_float,2);
+        haber = number_format(haber_float,2);
+        /*console.log(data.saldo_debe);
+        console.log(data.saldo_haber);*/
+        document.getElementById("debe").value = debe;
+        document.getElementById("haber").value = haber;
 
-        if(data.saldo_debe == data.saldo_haber){
+        if(debe == haber){
           console.log("cuadrado");
           $('#guardarBalanceInicial').attr("disabled", false);
           $('#alertaBalance').attr("class", "callout callout-danger hidden");

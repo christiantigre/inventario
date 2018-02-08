@@ -8,7 +8,7 @@
     @include('admin.contabilidad.sidebar')
     <div class="col-md-10 col-lg-10 col-xs-12 col-sm-8">
       <div class="panel panel-default">
-        <div class="panel-heading">Crear Balance Inicial</div>
+        <div class="panel-heading">Editar Balance Inicial</div>
         <div class="panel-body">
           <a href="{{ url('/admin/balanceinicial') }}" title="Atras"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Atras</button></a>
           <br />
@@ -140,8 +140,8 @@
         console.log(data[0]['saldo_haber']);
         debe_float = data[0]['saldo_debe'];
         haber_float = data[0]['saldo_haber'];
-        debe = debe_float.toFixed(2);
-        haber = haber_float.toFixed(2);
+        debe = number_format(debe_float,2);
+        haber = number_format(debe_float,2);
         document.getElementById("debe").value = debe;
         document.getElementById("haber").value = haber;
 
