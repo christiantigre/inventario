@@ -162,6 +162,9 @@ Route::group(['prefix' => 'admin'], function () {
   Route::post('/trashBalanceInicialDetall/','ComponentController@trashBalanceInicialDetall');
   Route::post('/delete_trs_blinidetall/','ComponentController@delete_trs_blinidetall');
   Route::get('/vertrs/','ComponentController@vertrs');
+
+  Route::post('/saveAsientoEdit/', 'ComponentController@saveAsientoEdit');
+  Route::post('/saveAsientoAdd/', 'ComponentController@saveAsientoAdd');
 });
 
 

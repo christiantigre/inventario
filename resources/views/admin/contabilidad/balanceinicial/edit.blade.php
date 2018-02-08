@@ -15,15 +15,6 @@
           <br />
 
 
-          <div class="alert alert-info text-center animated fadeIn" id="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <strong>
-            
-        </strong>
-    </div>
-
           @if ($errors->any())
           <ul class="alert alert-danger">
             @foreach ($errors->all() as $error)
@@ -115,14 +106,10 @@
 <!-- Edit Item Modal -->
 
     @include('admin.contabilidad.balanceinicial.modalEditTransac')
+    @include('admin.contabilidad.balanceinicial.modalVerTransac')
 
 
 <script type="text/javascript">
-
-
-$(document).ready(function(){
-    $('#alert').hide();     
-  });
 
 
   $(document).ready(function(){
@@ -231,6 +218,7 @@ $(document).ready(function(){
 
 </script>
 <script type="text/javascript">
+
   function consulta_cuenta_admin(){
     var token = $("input[name=_token]").val();
     var cod_cuenta= $("#cod_cuenta").val();
@@ -266,13 +254,15 @@ $('.busca_cuenta').click(function(){
   console.log("busqueda por boton");
   var token = $("input[name=_token]").val();
   var cod_cuenta= $("#cod_cuenta").val();
-  //var route = '/admin/vercuentas/';
   var route = '{{ url("admin/vercuentas") }}';
   document.getElementById("cod_cuenta").value = "";
+
   var parametros = {
     "id" :cod_cuenta
   }
+
   console.log(parametros);
+
   $.ajax({
     url:route,
     headers:{'X-CSRF-TOKEN':token},
@@ -293,13 +283,15 @@ $('.busca_cuenta').click(function(){
   });
 });
 
-$('#guarda_trs_admin').click(function(){
+$('#guarda_trs_admin_edit').click(function(){
   var num_asiento = $("#num_asiento").val();
   var cod_cuenta = $("#cod_cuenta").val();
   var cuenta = $("#cuenta").val();
   var periodo = $("#periodo").val();
   var fecha = $("#fecha").val();
   var concepto_detalle = $("#concepto_detalle").val();
+  var almacen_id = $("#almacen_id").val();
+  var asiento_id = $("#id").val();
 
   var tipo = $("#tipo").val();
 
@@ -315,7 +307,7 @@ $('#guarda_trs_admin').click(function(){
   var token = $("input[name=_token]").val();
 
   //var route = '/admin/saveAsiento/';
-  var route = '{{ url("admin/saveAsiento") }}';
+  var route = '{{ url("admin/saveAsientoAdd") }}';
   
   var parametros = {
     "num_asiento" :num_asiento,
@@ -326,6 +318,8 @@ $('#guarda_trs_admin').click(function(){
     "concepto_detalle" :concepto_detalle,
     "saldo_debe" :saldo_debe,
     "saldo_haber" :saldo_haber,
+    "almacen_id" :almacen_id,
+    "asiento_id" :asiento_id,
   }
   console.log(parametros);
   $.ajax({
@@ -338,11 +332,13 @@ $('#guarda_trs_admin').click(function(){
     {
       console.log(data);
       console.log("copy data succefull");
-      list_trs_admin();
+      toastr.success("Transacciòn exitosa");
+      list_trs_admin_edit();
       reset_input_trs();
     },
     error:function(data)
     {
+      toastr.error("!!! Error al realizar transacción");
       console.log('Error '+data);
     }  
   });
@@ -454,7 +450,50 @@ function ver_trs(id){
     success:function(data)
     {
       console.log(data);
+      document.getElementById("view_id_modal").value = data.id;
+      document.getElementById("view_cuenta_modal").value = data.cuenta;
+      document.getElementById("view_almacen_id_modal").value = data.almacen_id;
+      document.getElementById("view_periodo_modal").value = data.periodo;
+      document.getElementById("view_responsable_modal").value = data.responsable;
+      document.getElementById("view_fecha_modal").value = data.fecha;
+      document.getElementById("view_num_asiento_modal").value = data.num_asiento;
+      document.getElementById("view_cod_cuenta_modal").value = data.cod_cuenta;
+      document.getElementById("view_saldo_debe_modal").value = data.saldo_debe;
+      document.getElementById("view_saldo_haber_modal").value = data.saldo_haber;
+      document.getElementById("view_concepto_detalle_modal").value = data.concepto_detalle;
+      console.log("copy data succefull");
+    },
+    error:function(data)
+    {
+      console.log('Error '+data);
+    }  
+  });
+}
+
+function ver_trs_edit(id){  
+  console.log("buscar datos para modal por "+id);
+  var token = $("input[name=_token]").val();
+  var route = '{{ url("admin/vertrs") }}';
+  var parametros = {
+    "id" :id
+  }
+  console.log(parametros);
+  $.ajax({
+    url:route,
+    headers:{'X-CSRF-TOKEN':token},
+    type:'get',
+    dataType: 'json',
+    data:parametros,
+    success:function(data)
+    {
+      console.log(data);
+      document.getElementById("id_modal").value = data.id;
       document.getElementById("cuenta_modal").value = data.cuenta;
+      document.getElementById("almacen_id_modal").value = data.almacen_id;
+      document.getElementById("periodo_modal").value = data.periodo;
+      document.getElementById("responsable_modal").value = data.responsable;
+      document.getElementById("fecha_modal").value = data.fecha;
+      document.getElementById("num_asiento_modal").value = data.num_asiento;
       document.getElementById("cod_cuenta_modal").value = data.cod_cuenta;
       document.getElementById("saldo_debe_modal").value = data.saldo_debe;
       document.getElementById("saldo_haber_modal").value = data.saldo_haber;
@@ -469,6 +508,55 @@ function ver_trs(id){
 }
 
 
+$('.submit-edit-trs').click(function(){
+  console.log("Actualizar datos desde modal");
+  var token = $("input[name=_token]").val();
+  var cod_cuenta_modal= $("#cod_cuenta_modal").val();
+  var periodo_modal= $("#periodo_modal").val();
+  var responsable_modal= $("#responsable_modal").val();
+  var fecha_modal= $("#fecha_modal").val();
+  var num_asiento_modal= $("#num_asiento_modal").val();
+  var cuenta_modal= $("#cuenta_modal").val();
+  var saldo_debe_modal= $("#saldo_debe_modal").val();
+  var saldo_haber_modal= $("#saldo_haber_modal").val();
+  var concepto_detalle_modal= $("#concepto_detalle_modal").val();
+  var id_modal= $("#id_modal").val();
+  //var route = '/admin/vercuentas/';
+  var route = '{{ url("admin/saveAsientoEdit") }}';
+  
+  var parametros = {
+    "num_asiento" :num_asiento_modal,
+    "cod_cuenta" :cod_cuenta_modal,
+    "cuenta" :cuenta_modal,
+    "periodo" :periodo_modal,
+    "fecha" :fecha_modal,
+    "concepto_detalle" :concepto_detalle_modal,
+    "saldo_debe" :saldo_debe_modal,
+    "saldo_haber" :saldo_haber_modal,
+    "id" :id_modal,
+  }
+  console.log(parametros);
+  $.ajax({
+    url:route,
+    headers:{'X-CSRF-TOKEN':token},
+    type:'post',
+    dataType: 'json',
+    data:parametros,
+    success:function(data)
+    {
+      console.log(data);
+      console.log("copy data succefull");
+      list_trs_admin_edit();
+      reset_input_trs();
+      toastr.success("Transacciòn exitosa");
+    },
+    error:function(data)
+    {
+      console.log('Error '+data);
+      toastr.error("!!! Error al realizar transacción...");
+    }  
+  });
+});
 
 </script>
 @endsection

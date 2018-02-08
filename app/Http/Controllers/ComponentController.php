@@ -651,4 +651,48 @@ public function vertrs(Request $request){
 }
 
 
+public function saveAsientoEdit(Request $request){    
+    if($request->ajax()){
+        $item = detall_asiento::findorfail($request->id);        
+        $item->num_asiento = $request->num_asiento;
+        $item->cod_cuenta = $request->cod_cuenta;
+        $item->cuenta = $request->cuenta;
+        $item->periodo = $request->periodo;
+        $item->fecha = $request->fecha;
+        $item->concepto_detalle = $request->concepto_detalle;
+        $item->saldo_debe = $request->saldo_debe;
+        $item->saldo_haber = $request->saldo_haber;
+        
+        if($item->update()){
+            return response()->json(["mensaje"=>"Actualizado con exito","data"=>$request->all()]);
+        }else{
+            return response()->json(["mensaje"=>"Error !!! al actualizar","data"=>$request->all()]);
+        }
+    }
+} 
+
+public function saveAsientoAdd(Request $request){    
+    if($request->ajax()){
+        $item = new detall_asiento;        
+        $item->num_asiento = $request->num_asiento;
+        $item->cod_cuenta = $request->cod_cuenta;
+        $item->cuenta = $request->cuenta;
+        $item->periodo = $request->periodo;
+        $item->fecha = $request->fecha;
+        $item->concepto_detalle = $request->concepto_detalle;
+        $item->saldo_debe = $request->saldo_debe;
+        $item->saldo_haber = $request->saldo_haber;
+        $item->almacen_id = $request->almacen_id;
+        $item->asiento_id = $request->asiento_id;
+        
+        if($item->save()){
+            return response()->json(["mensaje"=>"Registrado con exito","data"=>$request->all()]);
+        }else{
+            return response()->json(["mensaje"=>"Error !!! al registrar","data"=>$request->all()]);
+        }
+    }
+} 
+
+
 }
+

@@ -21,7 +21,7 @@
 
 
 
-        <form data-toggle="validator" action="/item-ajax/14" method="put">
+        <form data-toggle="validator" action="" method="put">
 
           <div class="form-group">
 
@@ -39,6 +39,19 @@
               <option class="form-control" onSelect="consulta_cuenta_admin_admin()" id="{{ $cuenta->cod }}" value="{{ $cuenta->cod }}">{{ $cuenta->cuenta }}</option>
               @endforeach
             </datalist>
+
+            {!! Form::hidden('id_modal', null, ['id'=>'id_modal','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('id_modal') !!}
+
+             {!! Form::hidden('almacen_id_modal', null, ['id'=>'almacen_id_modal','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('almacen_id_modal') !!}
+
+
+                    {!! Form::hidden('periodo_modal', null, ['class' => 'form-control input-sm','id'=>'periodo_modal','readonly'=>'readonly','autofocus'=>'autofocus']), old('periodo_modal') !!}
+
+                     {!! Form::hidden('responsable_modal', null, ['class' => 'form-control input-sm','id'=>'responsable_modal','readonly'=>'readonly','autofocus'=>'autofocus']), old('responsable_modal') !!}
+
+                    {!! Form::hidden('fecha_modal', null, ['class' => 'form-control input-sm','id'=>'fecha_modal','readonly'=>'readonly','autofocus'=>'autofocus']), old('fecha_modal') !!}
+
+                    {!! Form::hidden('num_asiento_modal', null, ['id'=>'num_asiento_modal','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('num_asiento_modal') !!}
 
             <div class="help-block with-errors"></div>
 
@@ -86,7 +99,7 @@
 
           <div class="form-group">
 
-            <button type="submit" class="btn btn-success crud-submit-edit">Actualizar</button>
+            <button type="button" class="btn btn-success submit-edit-trs">Actualizar</button>
 
           </div>
 

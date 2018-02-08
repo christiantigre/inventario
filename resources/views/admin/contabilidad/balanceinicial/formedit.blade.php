@@ -55,7 +55,7 @@
                         @endforeach
                     </datalist>
 
-                    {!! Form::hidden('almacen_id', $almacen_id, ['id'=>'almacen_id','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('auxiliar') !!}
+                    {!! Form::hidden('almacen_id', $almacen_id, ['id'=>'almacen_id','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('almacen_id') !!}
 
 
                     {!! Form::hidden('periodo', $year, ['class' => 'form-control input-sm','id'=>'periodo','readonly'=>'readonly','autofocus'=>'autofocus']), old('periodo') !!}
@@ -64,7 +64,9 @@
 
                     {!! Form::hidden('fecha', $fecha, ['class' => 'form-control input-sm','id'=>'fecha','readonly'=>'readonly','autofocus'=>'autofocus']), old('periodo') !!}
 
-                    {!! Form::hidden('num_asiento', $num_asiento, ['id'=>'num_asiento','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('num_asiento') !!}  
+                    {!! Form::hidden('num_asiento', null, ['id'=>'num_asiento','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('num_asiento') !!} 
+
+                    {!! Form::hidden('id', null, ['id'=>'id','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('asiento_id') !!}  
 
                     {!! $errors->first('cod_cuenta', '<p class="help-block">:message</p>') !!}
                 </div>
@@ -104,7 +106,7 @@
                 <label for="concepto_detall" class="col-md-2 control-label">{{ 'Descripción' }}</label>
                 <div class="col-md-8">
 
-                    {!! Form::textarea('concepto_detalle',null,['class'=>'form-control', 'rows' => 2, 'cols' => 40,'id'=>'concepto_detall']),old('auxiliar') !!}
+                    {!! Form::textarea('concepto_detalle',null,['class'=>'form-control', 'rows' => 2, 'cols' => 40,'id'=>'concepto_detalle']),old('concepto_detalle') !!}
 
                     {!! $errors->first('concepto_detalle', '<p class="help-block">:message</p>') !!}
                 </div>
@@ -116,7 +118,7 @@
                 <label for="concepto" class="col-md-2 control-label">{{ 'Glosa Asiento' }}</label>
                 <div class="col-md-8">
 
-                    {!! Form::textarea('concepto',null,['class'=>'form-control','id'=>'concepto', 'rows' => 2, 'cols' => 40]),old('auxiliar') !!}
+                    {!! Form::textarea('concepto',null,['class'=>'form-control','id'=>'concepto', 'rows' => 2, 'cols' => 40]),old('concepto') !!}
 
                     {!! $errors->first('concepto', '<p class="help-block">:message</p>') !!}
                 </div>
@@ -127,7 +129,7 @@
             <div class="form-group">
                 <div class="col-md-offset-9 col-xs-offset-8 col-md-4">
 
-                    <button type='button' id="guarda_trs_admin" title="Agregar transacción" class="btn btn-success btn-md guarda_trs_admin" data-dismiss='modal'> Agregar</button>
+                    <button type='button' id="guarda_trs_admin_edit" title="Agregar transacción" class="btn btn-success btn-md guarda_trs_admin_edit" data-dismiss='modal'> Agregar</button>
 
                 </div>
             </div>
