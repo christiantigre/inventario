@@ -24,14 +24,14 @@
           @endif
 
 
-            {!! Form::model($asiento, [
-                            'method' => 'PATCH',
-                            'url' => ['/admin/contabilidad', $asiento->id],
-                            'class' => 'form-horizontal', 
-                            'enctype'=>'multipart/form-data',
-                            'files' => true,
-                            'accept-charset'=>'UTF-8'
-                            ]) !!}
+          {!! Form::model($asiento, [
+            'method' => 'PATCH',
+            'url' => ['/admin/contabilidad', $asiento->id],
+            'class' => 'form-horizontal', 
+            'enctype'=>'multipart/form-data',
+            'files' => true,
+            'accept-charset'=>'UTF-8'
+            ]) !!}
 
             @include ('admin.contabilidad.balanceinicial.formedit')
 
@@ -53,7 +53,7 @@
                   <div class="box-body no-padding">
                     <div id="list-cart">
 
-                     
+
 
 
                     </div> 
@@ -63,7 +63,7 @@
                     <div class="row">
                       <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12"> 
 
-                        <button class="btn btn-success btn-md" title="Guardar balance inicial registrado" id="guardarBalanceInicial" type="button" onClick="guardaBalanceInicial();"><i class="fa fa-save" aria-hidden="true"></i> GUARDAR BALANCE INICIAL</button>  
+                        <button class="btn btn-success btn-md" title="Actualizar balance inicial registrado" id="guardarBalanceInicialEdit" type="button" onClick="guardaBalanceInicialEdit();"><i class="fa fa-save" aria-hidden="true"></i> ACTUALIZAR BALANCE INICIAL</button>  
 
                         <div class="box-body">
                           <div class="" id="alertaBalance">
@@ -105,8 +105,8 @@
 
 <!-- Edit Item Modal -->
 
-    @include('admin.contabilidad.balanceinicial.modalEditTransac')
-    @include('admin.contabilidad.balanceinicial.modalVerTransac')
+@include('admin.contabilidad.balanceinicial.modalEditTransac')
+@include('admin.contabilidad.balanceinicial.modalVerTransac')
 
 
 <script type="text/javascript">
@@ -138,18 +138,21 @@
       success: function(data){
         console.log(data[0]['saldo_debe']);
         console.log(data[0]['saldo_haber']);
-        debe = data[0]['saldo_debe'];
-        haber = data[0]['saldo_haber'];
+        debe_float = data[0]['saldo_debe'];
+        haber_float = data[0]['saldo_haber'];
+        debe = debe_float.toFixed(2);
+        haber = haber_float.toFixed(2);
         document.getElementById("debe").value = debe;
         document.getElementById("haber").value = haber;
 
         if(debe == haber){
           console.log("cuadrado");
-          $('#guardarBalanceInicial').attr("disabled", false);
+          $('#guardarBalanceInicialEdit').attr("disabled", false);
           $('#alertaBalance').attr("class", "callout callout-danger hidden");
         }else{
           console.log("descuadrado");
-          $('#guardarBalanceInicial').attr("disabled", true);
+          toastr.warning("!!! Alerta, Asiento descuadrado");
+          $('#guardarBalanceInicialEdit').attr("disabled", true);
           $('#alertaBalance').attr("class", "callout callout-danger");
         }
       //$('#list-cart').empty().html(data);
@@ -158,8 +161,8 @@
   }
 
   
-  function guardaBalanceInicial(){
-    console.log('Guardando Balance Inicial.');
+  function guardaBalanceInicialEdit(){
+    console.log('Actualizando Balance Inicial.');
     var debe= $("#debe").val();
     var haber= $("#haber").val();
     var num_asiento= $("#num_asiento").val();
@@ -170,51 +173,55 @@
     var saldo_haber= $("#haber").val();
     var responsable= $("#responsable").val();
     var almacen_id= $("#almacen_id").val();
+    var id= $("#id").val();
 
     if(debe==haber){
       var token = $("input[name=_token]").val();
 
-  //var route = '/admin/saveAsiento/';
-  var route = '{{ url("admin/saveBInicial") }}';
-  
-  var parametros = {
-    "num_asiento" :num_asiento,
-    "concepto" :concepto,
-    "periodo" :periodo,
-    "fecha" :fecha,
-    "saldo_debe" :debe,
-    "saldo_haber" :haber,
-    "responsable" :responsable,
-    "almacen_id" :almacen_id,
-  }
+      var route = '{{ url("admin/saveBInicialEdit") }}';
 
-  $.ajax({
-    url:route,
-    headers:{'X-CSRF-TOKEN':token},
-    type:'get',
-    dataType: 'json',
-    data:parametros,
-    success:function(data)
-    {
-      console.log(data);
-      console.log("copy data succefull");
-      list_trs_admin();
-      $('#alert').show();
-      $('#alert').html(data.message);
+      var parametros = {
+        "num_asiento" :num_asiento,
+        "concepto" :concepto,
+        "periodo" :periodo,
+        "fecha" :fecha,
+        "saldo_debe" :debe,
+        "saldo_haber" :haber,
+        "responsable" :responsable,
+        "almacen_id" :almacen_id,
+        "id" :id,
+      }
+
+      $.ajax({
+        url:route,
+        headers:{'X-CSRF-TOKEN':token},
+        type:'get',
+        dataType: 'json',
+        data:parametros,
+        success:function(data)
+        {
+          console.log(data);
+          console.log("Update succefull");
+          list_trs_admin_edit();
+
+          toastr.success("Transacciòn exitosa");
+      /*$('#alert').show();
+      $('#alert').html(data.message);*/
     },
     error:function(data)
     {
       console.log('Error '+data);
-      $('#alert').show();
-      $('#alert').html(data.message);
+      /*$('#alert').show();
+      $('#alert').html(data.message);*/      
+      toastr.error("!!! Error al realizar transacción...");
     }  
   });
 
-}else{
-  alert("El asiento que desea guardar no se encuentra cuadrado");
-}
+    }else{
+      alert("El asiento que desea guardar no se encuentra cuadrado");
+    }
 
-}
+  }
 
 </script>
 <script type="text/javascript">
@@ -293,15 +300,38 @@ $('#guarda_trs_admin_edit').click(function(){
   var almacen_id = $("#almacen_id").val();
   var asiento_id = $("#id").val();
 
+  var valorconvertir =$("#valor").val();
+
+  if(valorconvertir=="") {
+    toastr.warning("!!! Ingresar un valor 0.00.");
+    return true;
+  }
+
+  var valor =number_format(valorconvertir,2);
   var tipo = $("#tipo").val();
 
+  if(cod_cuenta=="") {
+    toastr.warning("!!! Ingrese un código de cuenta.");
+    return true;
+  }
+
+  if(cuenta=="") {
+    toastr.warning("!!! Buscar cuenta.");
+    return true;
+  }
+
+  if(valor=="") {
+    toastr.warning("!!! Ingresar un valor 0.00.");
+    return true;
+  }
+
   if(tipo=="1"){
-    saldo_debe = $("#valor").val();
+    saldo_debe = valor;
     saldo_haber = "0.00";
   }
   if(tipo=="2"){
     saldo_debe = "0.00";
-    saldo_haber = $("#valor").val();
+    saldo_haber = valor;
   }
 
   var token = $("input[name=_token]").val();
@@ -334,7 +364,7 @@ $('#guarda_trs_admin_edit').click(function(){
       console.log("copy data succefull");
       toastr.success("Transacciòn exitosa");
       list_trs_admin_edit();
-      reset_input_trs();
+      reset_input_trs_admin();
     },
     error:function(data)
     {
@@ -345,8 +375,9 @@ $('#guarda_trs_admin_edit').click(function(){
 });
 
 function trashBalanceInicial(id){
-  console.log(id);
-  var token = $("input[name=_token]").val();
+  if (confirm("Desea eliminar el detalle del balance inicial?")) {
+    console.log(id);
+    var token = $("input[name=_token]").val();
   //var route = '/admin/trashSubAuxcuentas/'; 
   var route = '{{ url("admin/trashBalanceInicialDetall") }}'; 
   var parametros = {
@@ -362,19 +393,22 @@ function trashBalanceInicial(id){
     {
       console.log(data);
       console.log('correcto '+data.data);
+      toastr.success("Transacciòn exitosa");
       list_trs_admin_edit();
     },
     error:function(data)
     {
+      toastr.error("!!! Error al realizar transacción");
       console.log('Error '+data);
     }  
   });
 }
+}
 
 
 function eliminarTrs(id){
-    if (confirm("Desea eliminar esta transacción?")) {
-        console.log(id);
+  if (confirm("Desea eliminar esta transacción?")) {
+    console.log(id);
     var token = $("input[name=_token]").val();
     var route = '{{ url("admin/delete_trs_blinidetall") }}'; 
     var parametros = {
@@ -398,7 +432,7 @@ function eliminarTrs(id){
         console.log('Error '+data);
       }  
     });
-    } 
+  } 
 }
 
 
@@ -547,7 +581,7 @@ $('.submit-edit-trs').click(function(){
       console.log(data);
       console.log("copy data succefull");
       list_trs_admin_edit();
-      reset_input_trs();
+      reset_input_trs_admin();
       toastr.success("Transacciòn exitosa");
     },
     error:function(data)
@@ -557,6 +591,40 @@ $('.submit-edit-trs').click(function(){
     }  
   });
 });
+
+function reset_input_trs_admin(){
+  console.log('reseting');
+  document.getElementById("cod_cuenta").value = "";
+  document.getElementById("cuenta").value = "";
+  document.getElementById("concepto_detalle").value = "";
+  document.getElementById("valor").value = "";
+}
+
+
+function number_format(amount, decimals) {
+
+    amount += ''; // por si pasan un numero en vez de un string
+    amount = parseFloat(amount.replace(/[^0-9\.]/g, '')); // elimino cualquier cosa que no sea numero o punto
+
+    decimals = decimals || 0; // por si la variable no fue fue pasada
+
+    // si no es un numero o es igual a cero retorno el mismo cero
+    if (isNaN(amount) || amount === 0) 
+        return parseFloat(0).toFixed(decimals);
+
+    // si es mayor o menor que cero retorno el valor formateado como numero
+    amount = '' + amount.toFixed(decimals);
+
+    var amount_parts = amount.split('.'),
+        regexp = /(\d+)(\d{3})/;
+
+    while (regexp.test(amount_parts[0]))
+        amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
+
+    return amount_parts.join('.');
+}
+
+
 
 </script>
 @endsection

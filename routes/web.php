@@ -165,6 +165,7 @@ Route::group(['prefix' => 'admin'], function () {
 
   Route::post('/saveAsientoEdit/', 'ComponentController@saveAsientoEdit');
   Route::post('/saveAsientoAdd/', 'ComponentController@saveAsientoAdd');
+  Route::get('/saveBInicialEdit/', 'Admin\\ContabilidadController@updateBalanceInicial');
 });
 
 

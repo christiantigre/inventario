@@ -99,6 +99,7 @@ function reset_input_trs(){
 	console.log('reseting');
 	document.getElementById("cod_cuenta").value = "";
 	document.getElementById("cuenta").value = "";
-	document.getElementById("concepto_detall").value = "";
+	document.getElementById("concepto_detalle").value = "";
 	document.getElementById("valor").value = "";
 }
+

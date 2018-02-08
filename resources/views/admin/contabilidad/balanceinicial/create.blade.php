@@ -15,15 +15,6 @@
           <br />
 
 
-          <div class="alert alert-info text-center animated fadeIn" id="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <strong>
-            
-        </strong>
-    </div>
-
           @if ($errors->any())
           <ul class="alert alert-danger">
             @foreach ($errors->all() as $error)
@@ -102,10 +93,6 @@
 <script type="text/javascript">
 
 
-$(document).ready(function(){
-    $('#alert').hide();     
-  });
-
 
   $(document).ready(function(){
     list_trs_admin();
@@ -141,6 +128,7 @@ $(document).ready(function(){
           $('#alertaBalance').attr("class", "callout callout-danger hidden");
         }else{
           console.log("descuadrado");
+          toastr.warning("!!! Alerta, Asiento descuadrado");
           $('#guardarBalanceInicial').attr("disabled", true);
           $('#alertaBalance').attr("class", "callout callout-danger");
         }
@@ -284,18 +272,37 @@ $('#guarda_trs_admin').click(function(){
 
   var tipo = $("#tipo").val();
 
+  var valorconvertir =$("#valor").val();
+
+  if(valorconvertir=="") {
+    toastr.warning("!!! Ingresar un valor 0.00.");
+    return true;
+  }
+
+  var valor =number_format(valorconvertir,2);
+  var tipo = $("#tipo").val();
+
+  if(cod_cuenta=="") {
+    toastr.warning("!!! Ingrese un código de cuenta.");
+    return true;
+  }
+
+  if(cuenta=="") {
+    toastr.warning("!!! Buscar cuenta.");
+    return true;
+  }
+
   if(tipo=="1"){
-    saldo_debe = $("#valor").val();
+    saldo_debe = valor;
     saldo_haber = "0.00";
   }
   if(tipo=="2"){
     saldo_debe = "0.00";
-    saldo_haber = $("#valor").val();
+    saldo_haber = valor;
   }
 
   var token = $("input[name=_token]").val();
 
-  //var route = '/admin/saveAsiento/';
   var route = '{{ url("admin/saveAsiento") }}';
   
   var parametros = {
@@ -321,7 +328,7 @@ $('#guarda_trs_admin').click(function(){
       console.log("copy data succefull");
       toastr.success("Agregado correctamente.");
       list_trs_admin();
-      reset_input_trs();
+      reset_input_trs_admin();
     },
     error:function(data)
     {
@@ -333,30 +340,32 @@ $('#guarda_trs_admin').click(function(){
 
 function trashBalanceInicial(id){
   console.log(id);
-  var token = $("input[name=_token]").val();
-  //var route = '/admin/trashSubAuxcuentas/'; 
-  var route = '{{ url("admin/trashBalanceInicial") }}'; 
-  var parametros = {
-    "id" :'0'
+  if (confirm("Esta seguro que desea eliminar el detalle registrado ?...")) {
+    var token = $("input[name=_token]").val();
+    //var route = '/admin/trashSubAuxcuentas/'; 
+    var route = '{{ url("admin/trashBalanceInicial") }}'; 
+    var parametros = {
+      "id" :'0'
+    }
+    $.ajax({
+      url:route,
+      headers:{'X-CSRF-TOKEN':token},
+      type:'post',
+      dataType: 'json',
+      data:parametros,
+      success:function(data)
+      {
+        toastr.success("Transaccion exitosa.");
+        console.log('correcto '+data.data);
+        list_trs_admin();
+      },
+      error:function(data)
+      {
+        toastr.error("!!! Error al realizar esta acción.");
+        console.log('Error '+data);
+      }  
+    });
   }
-  $.ajax({
-    url:route,
-    headers:{'X-CSRF-TOKEN':token},
-    type:'post',
-    dataType: 'json',
-    data:parametros,
-    success:function(data)
-    {
-      toastr.success("Transaccion exitosa.");
-      console.log('correcto '+data.data);
-      list_trs_admin();
-    },
-    error:function(data)
-    {
-      toastr.error("!!! Error al realizar esta acción.");
-      console.log('Error '+data);
-    }  
-  });
 }
 
 function eliminar_trs_blini(id){
@@ -390,6 +399,38 @@ function eliminar_trs_blini(id){
       }  
     });
   }
+}
+
+function reset_input_trs_admin(){
+  console.log('reseting');
+  document.getElementById("cod_cuenta").value = "";
+  document.getElementById("cuenta").value = "";
+  document.getElementById("concepto_detalle").value = "";
+  document.getElementById("valor").value = "";
+}
+
+
+function number_format(amount, decimals) {
+
+    amount += ''; // por si pasan un numero en vez de un string
+    amount = parseFloat(amount.replace(/[^0-9\.]/g, '')); // elimino cualquier cosa que no sea numero o punto
+
+    decimals = decimals || 0; // por si la variable no fue fue pasada
+
+    // si no es un numero o es igual a cero retorno el mismo cero
+    if (isNaN(amount) || amount === 0) 
+        return parseFloat(0).toFixed(decimals);
+
+    // si es mayor o menor que cero retorno el valor formateado como numero
+    amount = '' + amount.toFixed(decimals);
+
+    var amount_parts = amount.split('.'),
+        regexp = /(\d+)(\d{3})/;
+
+    while (regexp.test(amount_parts[0]))
+        amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
+
+    return amount_parts.join('.');
 }
 
 

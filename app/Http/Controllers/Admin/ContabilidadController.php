@@ -58,7 +58,7 @@ class ContabilidadController extends Controller
     }
 
     public function balanceinicial(){
-        \Toastr::success('Messages in here', 'Title', ["positionClass" => "toast-top-center"]);
+        //\Toastr::success('Messages in here', 'Title', ["positionClass" => "toast-top-center"]);
 
         $dato = $this->gen_section_balance_inicial();
         $this->genLog("Ingresó a balance inicial");
@@ -273,6 +273,39 @@ class ContabilidadController extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+
+    public function updateBalanceInicial(Request $request)
+    {
+        $trs = num_asiento::findorfail($request->id);
+
+
+        $trs['num_asiento'] = $request['num_asiento'];
+        $trs['concepto'] = $request['concepto'];
+        $trs['periodo'] = $request['periodo'];
+        $trs['fecha'] = $request['fecha'];
+        $trs['saldo_debe'] = $request['saldo_debe'];
+        $trs['saldo_haber'] = $request['saldo_haber'];
+        $trs['responsable'] = $request['responsable'];
+        $trs['activo'] = "1";
+        $trs['almacen_id'] = $request['almacen_id'];
+
+        try {
+            //Actualiza cabecera del asiento
+            if($asiento = $trs->update()){
+                Session::flash('flash_message', 'Balance Inicial Actualizado correctamente');
+            return response()->json(array('message' => 'Balance Inicial Registrado con exito'));
+            }
+            
+
+        } catch (\Exception $e) {
+
+            Session::flash('warning', 'Error al Guardar el Balance Inicial');     
+            return response()->json(array('message' => 'Error al Actualizar el Balance Inicial !!!','data'=>$request->all())); 
+
+        }
+
+
     }
 
     /**
