@@ -21,6 +21,7 @@ use Session;
 use App\tempdetallasiento;
 use App\detall_asiento;
 use DB;
+use Carbon\Carbon;
 
 class ComponentController extends Controller
 {
@@ -338,17 +339,20 @@ public function saveauxcuenta(Request $request){
             }else{
                 return response()->json(["mensaje"=>"Error !!! al guardar","data"=>$request->all()]);
             }
+
         }
     } 
 
     
     public function trashAuxcuentas(Request $request){
         if ($request->ajax()) {        
+
             if(Tempauxctum::truncate()){
                 return response()->json(["mensaje"=>"Vaciado con exito","data"=>"Vaciado"]);
             }else{
                 return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
             }
+
         }else{
            return response()->json(["mensaje"=>$request->all()]);   
        }
@@ -369,12 +373,14 @@ public function saveauxcuenta(Request $request){
         Tempauxctum::truncate();
 
         Session::flash('flash_message', 'Guardado correctamente');
+
     } catch (\Exception $e) {
         Session::flash('warning', 'Error al Guardar');  
 
         return redirect()->back();
 
     }
+
     return redirect('admin/auxiliar');
 }
 
@@ -437,6 +443,7 @@ public function savesubauxcuenta(Request $request){
         }else{
             return response()->json(["mensaje"=>"Error !!! al guardar","data"=>$request->all()]);
         }
+
     }
 } 
 
@@ -465,6 +472,7 @@ public function guardarSubAuxCuentas(Request $request){
         Tempsubauxctum::truncate();
 
         Session::flash('flash_message', 'Guardado correctamente');
+
     } catch (\Exception $e) {
         Session::flash('warning', 'Error al Guardar');  
 
@@ -506,13 +514,19 @@ public function getSubcategory(Request $request, $id){
 
 public function listaTrs()
 {
-    $transacciones = tempdetallasiento::orderBy('id','ASC')->get();
+
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $year = $carbon->now()->format('Y');
+
+    $transacciones = tempdetallasiento::orderBy('id','ASC') ->where('periodo',$year)->get();
     return view('admin/contabilidad/balanceinicial/listtrs_asiento', compact('transacciones'));
 }
 
 
 public function saveAsiento(Request $request){    
     if($request->ajax()){
+        $decimal_debe = str_replace (",", "", $request->saldo_debe);
+        $decimal_haber = str_replace (",", "", $request->saldo_haber);
         $item = new tempdetallasiento;        
         $item->num_asiento = $request->num_asiento;
         $item->cod_cuenta = $request->cod_cuenta;
@@ -520,14 +534,15 @@ public function saveAsiento(Request $request){
         $item->periodo = $request->periodo;
         $item->fecha = $request->fecha;
         $item->concepto_detalle = $request->concepto_detalle;
-        $item->saldo_debe = $request->saldo_debe;
-        $item->saldo_haber = $request->saldo_haber;
+        $item->saldo_debe = $decimal_debe;
+        $item->saldo_haber = $decimal_haber;
         
         if($item->save()){
             return response()->json(["mensaje"=>"Registrado con exito","data"=>$request->all()]);
         }else{
             return response()->json(["mensaje"=>"Error !!! al guardar","data"=>$request->all()]);
         }
+        
     }
 } 
 
@@ -593,7 +608,10 @@ public function saveBInicial(Request $request){
 
 public function listaTrsEdit()
 {
-    $transacciones = detall_asiento::orderBy('id','ASC')->where('num_asiento',"1")->get();
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $year = $carbon->now()->format('Y');
+
+    $transacciones = detall_asiento::orderBy('id','ASC')->where('num_asiento',"1")->where('periodo',$year)->get();
 
     return view('admin/contabilidad/balanceinicial/listdetall', compact('transacciones'));
 }
@@ -653,6 +671,10 @@ public function vertrs(Request $request){
 
 public function saveAsientoEdit(Request $request){    
     if($request->ajax()){
+
+        $decimal_debe = str_replace (",", "", $request->saldo_debe);
+        $decimal_haber = str_replace (",", "", $request->saldo_haber);
+
         $item = detall_asiento::findorfail($request->id);        
         $item->num_asiento = $request->num_asiento;
         $item->cod_cuenta = $request->cod_cuenta;
@@ -660,8 +682,8 @@ public function saveAsientoEdit(Request $request){
         $item->periodo = $request->periodo;
         $item->fecha = $request->fecha;
         $item->concepto_detalle = $request->concepto_detalle;
-        $item->saldo_debe = $request->saldo_debe;
-        $item->saldo_haber = $request->saldo_haber;
+        $item->saldo_debe = $decimal_debe;
+        $item->saldo_haber = $decimal_haber;
         
         if($item->update()){
             return response()->json(["mensaje"=>"Actualizado con exito","data"=>$request->all()]);
@@ -673,6 +695,10 @@ public function saveAsientoEdit(Request $request){
 
 public function saveAsientoAdd(Request $request){    
     if($request->ajax()){
+
+        $decimal_debe = str_replace (",", "", $request->saldo_debe);
+        $decimal_haber = str_replace (",", "", $request->saldo_haber);
+
         $item = new detall_asiento;        
         $item->num_asiento = $request->num_asiento;
         $item->cod_cuenta = $request->cod_cuenta;
@@ -680,8 +706,8 @@ public function saveAsientoAdd(Request $request){
         $item->periodo = $request->periodo;
         $item->fecha = $request->fecha;
         $item->concepto_detalle = $request->concepto_detalle;
-        $item->saldo_debe = $request->saldo_debe;
-        $item->saldo_haber = $request->saldo_haber;
+        $item->saldo_debe = $decimal_debe;
+        $item->saldo_haber = $decimal_haber;
         $item->almacen_id = $request->almacen_id;
         $item->asiento_id = $request->asiento_id;
         
@@ -692,6 +718,94 @@ public function saveAsientoAdd(Request $request){
         }
     }
 } 
+
+
+//Libro
+public function sumSaldoAsiento(Request $request){
+    if ($request->ajax()) {        
+        $asiento_num = $request->num_asiento;
+
+        $data = DB::select( DB::raw("SELECT sum(saldo_debe) as saldo_debe,sum(saldo_haber) as saldo_haber FROM tempdetallasientos WHERE num_asiento = $asiento_num") );
+
+        return response()->json($data);   
+    }
+}
+
+public function sumSaldoAsientoDetall(Request $request){
+    if ($request->ajax()) {        
+        $asiento_num = $request->num_asiento;
+
+        $data = DB::select( DB::raw("SELECT sum(saldo_debe) as saldo_debe,sum(saldo_haber) as saldo_haber FROM detall_asientos WHERE asiento_id = $asiento_num") );
+
+        return response()->json($data);   
+    }
+}
+
+public function verAsiento(Request $request){
+    if ($request->ajax()) {        
+
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $year = $carbon->now()->format('Y');
+
+    $transacciones = detall_asiento::orderBy('id','ASC') ->where('periodo',$year)->where('asiento_id',$request->id)->get();
+    return view('admin/contabilidad/libro/listtrs_asiento', compact('transacciones'));
+
+
+       // return response()->json($data);
+    }
+}
+
+public function verDetallAsiento(Request $request){
+    if ($request->ajax()) {        
+
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $year = $carbon->now()->format('Y');
+
+    $transacciones = detall_asiento::orderBy('id','ASC') ->where('periodo',$year)->where('asiento_id',$request->id)->get();
+    return view('admin/contabilidad/libro/detall_asiento', compact('transacciones'));
+
+
+       // return response()->json($data);
+    }
+}
+
+
+
+public function Edit_detall(Request $request)
+{
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $year = $carbon->now()->format('Y');
+
+    $transacciones = detall_asiento::orderBy('id','ASC')->where('num_asiento',$request->num_asiento)->where('periodo',$year)->get();
+
+    return view('admin/contabilidad/libro/listtrs_asiento', compact('transacciones'));
+}
+
+
+public function DetsumAs(Request $request){
+    if ($request->ajax()) {        
+        $asiento_num = $request->num_asiento;
+        $res = DB::select( DB::raw("SELECT sum(saldo_debe) as saldo_debe,sum(saldo_haber) as saldo_haber FROM detall_asientos WHERE num_asiento = $asiento_num") );
+
+        return response()->json($res);   
+    }
+}
+
+
+
+public function ver_detall(Request $request)
+{
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $year = $carbon->now()->format('Y');
+
+    $transacciones = detall_asiento::orderBy('id','ASC')->where('num_asiento',$request->num_asiento)->where('periodo',$year)->get();
+
+    return view('admin/contabilidad/libro/ver_asiento', compact('transacciones'));
+}
+
+
+
+
 
 
 }

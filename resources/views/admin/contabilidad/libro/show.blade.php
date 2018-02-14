@@ -8,9 +8,17 @@
     @include('admin.contabilidad.sidebar')
     <div class="col-md-10 col-lg-10 col-xs-12 col-sm-8">
       <div class="panel panel-default">
-        <div class="panel-heading">Editar Balance Inicial</div>
+        <div class="panel-heading">Visualizar Asiento # {{ $num_asiento }}</div>
         <div class="panel-body">
-          <a href="{{ url('/admin/balanceinicial') }}" title="Atras"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Atras</button></a>
+
+          <a href="{{ url('/admin/libro') }}" title="Atras">
+            <button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Atras</button>
+          </a>
+
+          <a href="{{ url('/admin/libro/editarAsiento/' . $asiento->id) }}" class="edit-item" title="Editar Asiento # {{ $asiento->id }}">
+            <button class="btn btn-primary btn-xs"  id="editar_asiento" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button>
+          </a>
+
           <br />
           <br />
 
@@ -26,14 +34,83 @@
 
           {!! Form::model($asiento, [
             'method' => 'PATCH',
-            'url' => ['/admin/contabilidad', $asiento->id],
+            'url' => ['/admin/libro', $asiento->id],
             'class' => 'form-horizontal', 
             'enctype'=>'multipart/form-data',
             'files' => true,
             'accept-charset'=>'UTF-8'
             ]) !!}
 
-            @include ('admin.contabilidad.balanceinicial.formedit')
+            
+<div class="col-md-12">
+
+    Asiento Contable
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label class="control-label">{{ $nombre_almacen }}</label>                
+                </div>
+                <div class="col-md-6">
+                    <label class="control-label">Asiento # : </label>
+                    <label class="control-label">{{ $num_asiento }}</label>                
+                </div>
+                <div class="col-md-6">
+                    <label class="control-label">Fecha : </label>
+                    <label class="control-label">{{ $fecha }}</label>                
+                </div>
+                <div class="col-md-6">
+                    <label class="control-label">Período : </label>
+                    <label class="control-label">{{ $year }}</label>                
+                </div>
+                <div class="col-md-6">
+                    <label class="control-label">Responsable : </label>
+                    <label class="control-label">{{ $responsable }}</label>                
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <fieldset>
+
+        <legend>
+        </legend>
+
+        <div class="col-md-6">
+            <div class="form-group {{ $errors->has('cod_cuenta') ? 'has-error' : ''}}">
+                <div class="col-md-8">
+
+                    {!! Form::hidden('almacen_id', $almacen_id, ['id'=>'almacen_id','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('auxiliar') !!}
+
+
+                    {!! Form::hidden('periodo', $year, ['class' => 'form-control input-sm','id'=>'periodo','readonly'=>'readonly','autofocus'=>'autofocus']), old('periodo') !!}
+
+                     {!! Form::hidden('responsable', $responsable, ['class' => 'form-control input-sm','id'=>'responsable','readonly'=>'readonly','autofocus'=>'autofocus']), old('responsable') !!}
+
+                    {!! Form::hidden('fecha', $fecha, ['class' => 'form-control input-sm','id'=>'fecha','readonly'=>'readonly','autofocus'=>'autofocus']), old('periodo') !!}
+
+                    {!! Form::hidden('num_asiento', $num_asiento, ['id'=>'num_asiento','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('num_asiento') !!} 
+
+                    {!! Form::hidden('id', null, ['id'=>'id','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('asiento_id') !!}  
+
+                    {!! $errors->first('cod_cuenta', '<p class="help-block">:message</p>') !!}
+                </div>
+            </div>
+        </div>
+
+
+        
+
+        
+
+        
+
+    </fieldset>
+</div>
+
+
+
 
           </form>
 
@@ -47,36 +124,20 @@
                   <legend>
                   </legend>
 
-                  <button class="btn btn-default btn-sm" title="Vaciar Previo Balance Inicial" id="trashitems" type="button" onClick="trashBalanceInicial({{ $asiento->id }});"><i class="fa fa-trash" aria-hidden="true"></i> Vaciar</button>
-
                   <!-- /.box-header -->
                   <div class="box-body no-padding">
-                    <div id="list-cart">
+                    <div class="table-responsive">
+                      <div id="list-cart">
 
 
 
 
+                      </div> 
                     </div> 
 
                     
 
-                    <div class="row">
-                      <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12"> 
-
-                        <button class="btn btn-success btn-md" title="Actualizar balance inicial registrado" id="guardarBalanceInicialEdit" type="button" onClick="guardaBalanceInicialEdit();"><i class="fa fa-save" aria-hidden="true"></i> ACTUALIZAR BALANCE INICIAL</button>  
-
-                        <div class="box-body">
-                          <div class="" id="alertaBalance">
-                            <h4>Asiento No se encuentra con igualdad de cuadre!</h4>
-
-                            <p>Para que puedan guardar el asiento registrado actualmente, debe ajustar los valores del bede y haber para que sean cuadrados.</p>
-                          </div>
-                        </div> 
-
-
-                      </div>          
-                    </div>   
-
+                  
                   </div>
                   <!-- /.box-body -->
                   <!-- /.box -->
@@ -113,28 +174,38 @@
 
 
   $(document).ready(function(){
-    list_trs_admin_edit();
+    list_trs_admin_ver_asiento();
   });
 
-  function list_trs_admin_edit(){
+  function list_trs_admin_ver_asiento(){
+    var num_asiento= $("#num_asiento").val();
+    console.log(num_asiento);
     console.log('loading items transacciónes admin.');
+    var parametros = {
+        "num_asiento" :num_asiento,
+      }
     $.ajax({
       type:'get',
       //url:'/admin/listtrs/',
-      url:'{{ url("admin/listtrsEdit") }}',
+      url:'{{ url("admin/ver_detall") }}',
+      data:parametros,
       success: function(data){
         console.log(data);
         $('#list-cart').empty().html(data);
-        SumarColumnas();
+        SumarColumnas(num_asiento);
       }
     });
   }  
 
-  function SumarColumnas() { 
+  function SumarColumnas(num_asiento) { 
     console.log('Sumando columnas debe y haber.');
+    var parametros = {
+        "num_asiento" :num_asiento,
+      }
     $.ajax({
       type:'get',
-      url:'{{ url("admin/DetsumBIni") }}',
+      url:'{{ url("admin/DetsumAs") }}',
+      data:parametros,
       success: function(data){
         console.log(data[0]['saldo_debe']);
         console.log(data[0]['saldo_haber']);
@@ -178,7 +249,7 @@
     if(debe==haber){
       var token = $("input[name=_token]").val();
 
-      var route = '{{ url("admin/saveBInicialEdit") }}';
+      var route = '{{ url("admin/saveUpAsiento") }}';
 
       var parametros = {
         "num_asiento" :num_asiento,
@@ -202,17 +273,13 @@
         {
           console.log(data);
           console.log("Update succefull");
-          list_trs_admin_edit();
+          list_trs_admin_edit_asiento();
 
           toastr.success("Transacciòn exitosa");
-      /*$('#alert').show();
-      $('#alert').html(data.message);*/
     },
     error:function(data)
     {
       console.log('Error '+data);
-      /*$('#alert').show();
-      $('#alert').html(data.message);*/      
       toastr.error("!!! Error al realizar transacción...");
     }  
   });
@@ -222,10 +289,6 @@
     }
 
   }
-
-</script>
-<script type="text/javascript">
-
   function consulta_cuenta_admin(){
     var token = $("input[name=_token]").val();
     var cod_cuenta= $("#cod_cuenta").val();
@@ -261,15 +324,13 @@ $('.busca_cuenta').click(function(){
   console.log("busqueda por boton");
   var token = $("input[name=_token]").val();
   var cod_cuenta= $("#cod_cuenta").val();
+  //var route = '/admin/vercuentas/';
   var route = '{{ url("admin/vercuentas") }}';
   document.getElementById("cod_cuenta").value = "";
-
   var parametros = {
     "id" :cod_cuenta
   }
-
   console.log(parametros);
-
   $.ajax({
     url:route,
     headers:{'X-CSRF-TOKEN':token},
@@ -290,7 +351,7 @@ $('.busca_cuenta').click(function(){
   });
 });
 
-$('#guarda_trs_admin_edit').click(function(){
+$('#guarda_trs_admin').click(function(){
   var num_asiento = $("#num_asiento").val();
   var cod_cuenta = $("#cod_cuenta").val();
   var cuenta = $("#cuenta").val();
@@ -304,6 +365,7 @@ $('#guarda_trs_admin_edit').click(function(){
 
   if(valorconvertir=="") {
     toastr.warning("!!! Ingresar un valor 0.00.");
+    $("#valor").focus();
     return true;
   }
 
@@ -312,11 +374,13 @@ $('#guarda_trs_admin_edit').click(function(){
 
   if(cod_cuenta=="") {
     toastr.warning("!!! Ingrese un código de cuenta.");
+    $("#cod_cuenta" ).focus();
     return true;
   }
 
   if(cuenta=="") {
     toastr.warning("!!! Buscar cuenta.");
+    $("#cuenta" ).focus();
     return true;
   }
 
@@ -363,7 +427,7 @@ $('#guarda_trs_admin_edit').click(function(){
       console.log(data);
       console.log("copy data succefull");
       toastr.success("Transacciòn exitosa");
-      list_trs_admin_edit();
+      list_trs_admin_edit_asiento();
       reset_input_trs_admin();
     },
     error:function(data)
@@ -375,40 +439,42 @@ $('#guarda_trs_admin_edit').click(function(){
 });
 
 function trashBalanceInicial(id){
-  if (confirm("Desea eliminar el detalle del balance inicial?")) {
-    console.log(id);
+  console.log(id);
+  if (confirm("Esta seguro que desea eliminar el detalle registrado ?...")) {
     var token = $("input[name=_token]").val();
-  //var route = '/admin/trashSubAuxcuentas/'; 
-  var route = '{{ url("admin/trashBalanceInicialDetall") }}'; 
-  var parametros = {
-    "id" :id
+    //var route = '/admin/trashSubAuxcuentas/'; 
+    var route = '{{ url("admin/trashBalanceInicial") }}'; 
+    var parametros = {
+      "id" :'0'
+    }
+    $.ajax({
+      url:route,
+      headers:{'X-CSRF-TOKEN':token},
+      type:'post',
+      dataType: 'json',
+      data:parametros,
+      success:function(data)
+      {
+        toastr.success("Transaccion exitosa.");
+        console.log('correcto '+data.data);
+        list_trs_admin_edit_asiento();
+      },
+      error:function(data)
+      {
+        toastr.error("!!! Error al realizar esta acción.");
+        console.log('Error '+data);
+      }  
+    });
   }
-  $.ajax({
-    url:route,
-    headers:{'X-CSRF-TOKEN':token},
-    type:'post',
-    dataType: 'json',
-    data:parametros,
-    success:function(data)
-    {
-      console.log(data);
-      console.log('correcto '+data.data);
-      toastr.success("Transacciòn exitosa");
-      list_trs_admin_edit();
-    },
-    error:function(data)
-    {
-      toastr.error("!!! Error al realizar transacción");
-      console.log('Error '+data);
-    }  
-  });
-}
 }
 
+function eliminar_trs_blini(id){
+  var confirma = confirm("Esta seguro que desea eliminar esta transacción?...");
 
-function eliminarTrs(id){
-  if (confirm("Desea eliminar esta transacción?")) {
+  if(confirma){
+
     console.log(id);
+
     var token = $("input[name=_token]").val();
     var route = '{{ url("admin/delete_trs_blinidetall") }}'; 
     var parametros = {
@@ -422,175 +488,18 @@ function eliminarTrs(id){
       data:parametros,
       success:function(data)
       {
-        toastr.success(data.mensaje);
-        list_trs_admin_edit();
+        list_trs_admin_edit_asiento();
+      toastr.success("Transaccion exitosa.");
         console.log('correcto '+data.data);
       },
       error:function(data)
       {
-        toastr.error(data.mensaje);
+      toastr.error("!!! Error al realizar esta transacción.");
         console.log('Error '+data);
       }  
     });
-  } 
+  }
 }
-
-
-$('.busca_cuenta_modal').click(function(){
-  console.log("busqueda por boton desde modal");
-  var token = $("input[name=_token]").val();
-  var cod_cuenta_modal= $("#cod_cuenta_modal").val();
-  //var route = '/admin/vercuentas/';
-  var route = '{{ url("admin/vercuentas") }}';
-  document.getElementById("cod_cuenta_modal").value = "";
-  var parametros = {
-    "id" :cod_cuenta_modal
-  }
-  console.log(parametros);
-  $.ajax({
-    url:route,
-    headers:{'X-CSRF-TOKEN':token},
-    type:'get',
-    dataType: 'json',
-    data:parametros,
-    success:function(data)
-    {
-      console.log(data);
-      document.getElementById("cuenta_modal").value = data.cuenta;
-      document.getElementById("cod_cuenta_modal").value = data.cod;
-      console.log("copy data succefull");
-    },
-    error:function(data)
-    {
-      console.log('Error '+data);
-    }  
-  });
-});
-
-function ver_trs(id){  
-  console.log("buscar datos para modal por "+id);
-  var token = $("input[name=_token]").val();
-  var route = '{{ url("admin/vertrs") }}';
-  var parametros = {
-    "id" :id
-  }
-  console.log(parametros);
-  $.ajax({
-    url:route,
-    headers:{'X-CSRF-TOKEN':token},
-    type:'get',
-    dataType: 'json',
-    data:parametros,
-    success:function(data)
-    {
-      console.log(data);
-      document.getElementById("view_id_modal").value = data.id;
-      document.getElementById("view_cuenta_modal").value = data.cuenta;
-      document.getElementById("view_almacen_id_modal").value = data.almacen_id;
-      document.getElementById("view_periodo_modal").value = data.periodo;
-      document.getElementById("view_responsable_modal").value = data.responsable;
-      document.getElementById("view_fecha_modal").value = data.fecha;
-      document.getElementById("view_num_asiento_modal").value = data.num_asiento;
-      document.getElementById("view_cod_cuenta_modal").value = data.cod_cuenta;
-      document.getElementById("view_saldo_debe_modal").value = data.saldo_debe;
-      document.getElementById("view_saldo_haber_modal").value = data.saldo_haber;
-      document.getElementById("view_concepto_detalle_modal").value = data.concepto_detalle;
-      console.log("copy data succefull");
-    },
-    error:function(data)
-    {
-      console.log('Error '+data);
-    }  
-  });
-}
-
-function ver_trs_edit(id){  
-  console.log("buscar datos para modal por "+id);
-  var token = $("input[name=_token]").val();
-  var route = '{{ url("admin/vertrs") }}';
-  var parametros = {
-    "id" :id
-  }
-  console.log(parametros);
-  $.ajax({
-    url:route,
-    headers:{'X-CSRF-TOKEN':token},
-    type:'get',
-    dataType: 'json',
-    data:parametros,
-    success:function(data)
-    {
-      console.log(data);
-      document.getElementById("id_modal").value = data.id;
-      document.getElementById("cuenta_modal").value = data.cuenta;
-      document.getElementById("almacen_id_modal").value = data.almacen_id;
-      document.getElementById("periodo_modal").value = data.periodo;
-      document.getElementById("responsable_modal").value = data.responsable;
-      document.getElementById("fecha_modal").value = data.fecha;
-      document.getElementById("num_asiento_modal").value = data.num_asiento;
-      document.getElementById("cod_cuenta_modal").value = data.cod_cuenta;
-      document.getElementById("saldo_debe_modal").value = data.saldo_debe;
-      document.getElementById("saldo_haber_modal").value = data.saldo_haber;
-      document.getElementById("concepto_detalle_modal").value = data.concepto_detalle;
-      console.log("copy data succefull");
-    },
-    error:function(data)
-    {
-      console.log('Error '+data);
-    }  
-  });
-}
-
-
-$('.submit-edit-trs').click(function(){
-  console.log("Actualizar datos desde modal");
-  var token = $("input[name=_token]").val();
-  var cod_cuenta_modal= $("#cod_cuenta_modal").val();
-  var periodo_modal= $("#periodo_modal").val();
-  var responsable_modal= $("#responsable_modal").val();
-  var fecha_modal= $("#fecha_modal").val();
-  var num_asiento_modal= $("#num_asiento_modal").val();
-  var cuenta_modal= $("#cuenta_modal").val();
-  var saldo_debe_modal= $("#saldo_debe_modal").val();
-  var saldo_haber_modal= $("#saldo_haber_modal").val();
-  var concepto_detalle_modal= $("#concepto_detalle_modal").val();
-  var id_modal= $("#id_modal").val();
-  //var route = '/admin/vercuentas/';
-  var route = '{{ url("admin/saveAsientoEdit") }}';
-  
-  var parametros = {
-    "num_asiento" :num_asiento_modal,
-    "cod_cuenta" :cod_cuenta_modal,
-    "cuenta" :cuenta_modal,
-    "periodo" :periodo_modal,
-    "fecha" :fecha_modal,
-    "concepto_detalle" :concepto_detalle_modal,
-    "saldo_debe" :saldo_debe_modal,
-    "saldo_haber" :saldo_haber_modal,
-    "id" :id_modal,
-  }
-  console.log(parametros);
-  $.ajax({
-    url:route,
-    headers:{'X-CSRF-TOKEN':token},
-    type:'post',
-    dataType: 'json',
-    data:parametros,
-    success:function(data)
-    {
-      console.log(data);
-      console.log("copy data succefull");
-      list_trs_admin_edit();
-      reset_input_trs_admin();
-      toastr.success("Transacciòn exitosa");
-    },
-    error:function(data)
-    {
-      console.log('Error '+data);
-      toastr.error("!!! Error al realizar transacción...");
-    }  
-  });
-});
 
 function reset_input_trs_admin(){
   console.log('reseting');
@@ -623,7 +532,6 @@ function number_format(amount, decimals) {
 
     return amount_parts.join('.');
 }
-
 
 
 </script>

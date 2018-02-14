@@ -133,3 +133,6 @@ SELECT subauxiliars.codigo as cod, subauxiliars.subauxiliar as cuenta FROM `suba
 
     realizando tag en repositorios github
     https://frontendlabs.io/2005--git-tag-como-quitar-eliminar-tag-git
+
+link pagina web edita imagenes
+    https://crello.com/user/projects/5a7ca38a8101ff0b5ceb8672/

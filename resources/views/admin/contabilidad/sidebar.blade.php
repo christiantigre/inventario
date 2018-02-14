@@ -17,7 +17,7 @@
                     </a>
                 </li>
                 <li role="presentation">
-                    <a href="{{ url('admin/clase') }}">
+                    <a href="{{ url('admin/libro') }}">
                         LIBRO
                     </a>
                 </li>

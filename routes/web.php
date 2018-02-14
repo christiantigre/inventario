@@ -162,10 +162,24 @@ Route::group(['prefix' => 'admin'], function () {
   Route::post('/trashBalanceInicialDetall/','ComponentController@trashBalanceInicialDetall');
   Route::post('/delete_trs_blinidetall/','ComponentController@delete_trs_blinidetall');
   Route::get('/vertrs/','ComponentController@vertrs');
-
   Route::post('/saveAsientoEdit/', 'ComponentController@saveAsientoEdit');
   Route::post('/saveAsientoAdd/', 'ComponentController@saveAsientoAdd');
   Route::get('/saveBInicialEdit/', 'Admin\\ContabilidadController@updateBalanceInicial');
+  //Libro
+  Route::get('/libro/', 'Admin\\ContabilidadController@libro');
+  Route::get('/libro/createAsiento', 'Admin\\ContabilidadController@createAsiento');
+  Route::get('/sumSaldoAsiento/', 'ComponentController@sumSaldoAsiento');  
+  Route::get('/saveAsiento/', 'Admin\\ContabilidadController@storeAsiento');    
+  Route::get('/editarAsiento/','ComponentController@verAsiento');
+  Route::get('/sumSaldoAsientoDetall/', 'ComponentController@sumSaldoAsientoDetall');  
+  Route::get('/libro/editarAsiento/{id}', 'Admin\\ContabilidadController@editarAsiento');
+  Route::get('/libro/verAsiento/{id}', 'Admin\\ContabilidadController@verAsiento');
+  Route::get('/Edit_detall/', 'ComponentController@Edit_detall');   
+  Route::get('/DetsumAs/', 'ComponentController@DetsumAs');  
+  Route::get('/saveUpAsiento/', 'Admin\\ContabilidadController@upAsiento');
+  Route::get('/verDetallAsiento/','ComponentController@verDetallAsiento');
+  Route::get('/verAsiento/','ComponentController@verAsiento');  
+  Route::get('/ver_detall/', 'ComponentController@ver_detall');  
 });
 
 

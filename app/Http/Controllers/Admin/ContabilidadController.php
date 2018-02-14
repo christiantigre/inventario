@@ -57,13 +57,15 @@ class ContabilidadController extends Controller
         return view('admin.contabilidad.index', compact('config','dato'));
     }
 
-    public function balanceinicial(){
-        //\Toastr::success('Messages in here', 'Title', ["positionClass" => "toast-top-center"]);
+    public function balanceinicial(){;
+        //\Toastr::success('Messages in here', 'Title', ["positionClass" => "toast-top-center"])
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $year = $carbon->now()->format('Y');
 
         $dato = $this->gen_section_balance_inicial();
         $this->genLog("Ingresó a balance inicial");
 
-        $asiento = num_asiento::where('num_asiento','1')->first();
+        $asiento = num_asiento::where('num_asiento','1')->where('periodo',$year)->first();
         if(!empty($asiento)){
             $detalles = detall_asiento::where('asiento_id',$asiento['id'])->get();
         }else{
@@ -71,6 +73,18 @@ class ContabilidadController extends Controller
         }
 
         return view('admin.contabilidad.balanceinicial.index', compact('dato','asiento','detalles'));
+    }
+
+    public function libro(){
+
+        $dato = $this->gen_section_balance_inicial();
+        $dato['ventana'] = "Libro";
+        $this->genLog("Ingresó a libro general");
+
+        $asientos= num_asiento::orderBy('id','DESC')->where('num_asiento','>','1')->get();
+        $cuentas = Plan::orderBy('cod', 'ASC')->get();
+
+         return view('admin.contabilidad.libro.index', compact('dato','asientos','cuentas'));
     }
     /**
      * Show the form for creating a new resource.
@@ -110,6 +124,42 @@ class ContabilidadController extends Controller
         $nombre_almacen = $almacen->almacen;
         $almacen_id = $almacen->id;
         return view('admin.contabilidad.balanceinicial.create',compact('dato','cuentas','num_asiento','year','fecha','responsable','nombre_almacen','almacen_id'));
+    }
+
+    public function createAsiento()
+    {
+        try {
+
+            $mailAdmin = auth('admin')->user()->email;
+            $adminid = auth('admin')->user()->id;
+            $administrador = Admin::findOrFail($adminid);
+            $dataArray['mail'] = $mailAdmin;          
+            $dataArray['iduser'] = $adminid;          
+
+        } catch (\Exception $e) {         
+
+            $administrador = Admin::findOrFail(1);
+
+        }
+        $username = $administrador['name'];
+        $userid = $administrador['id'];
+        $useremail = $administrador['email'];
+        $responsable = $username."(".$useremail.")";
+
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $year = $carbon->now()->format('Y');
+        $fecha = $carbon->now()->format('Y-m-d');
+        //$year = "2018";
+        $this->genLog("Ingresó a crear asientos");
+        $dato = $this->gen_section_balance_inicial();
+        $dato['ventana'] = "Libro";
+        $cuentas = Plan::orderBy('cod', 'ASC')->get();
+        $num_asiento = num_asiento::where('periodo',$year)->count();
+        $num_asiento = ($num_asiento+1);
+        $almacen = Almacen::where('activo',1)->first();
+        $nombre_almacen = $almacen->almacen;
+        $almacen_id = $almacen->id;
+        return view('admin.contabilidad.libro.create',compact('dato','cuentas','num_asiento','year','fecha','responsable','nombre_almacen','almacen_id'));
     }
 
     /**
@@ -177,6 +227,50 @@ class ContabilidadController extends Controller
 
     }
 
+     public function storeAsiento(Request $request)
+    {
+        $trs = tempdetallasiento::get();
+        $carbon = new Carbon();
+        $date = $carbon->now();
+
+        $data['saldo_debe'] = DB::table('tempdetallasientos')->sum('saldo_debe');
+        $data['saldo_haber'] = DB::table('tempdetallasientos')->sum('saldo_haber');
+
+
+        $dataAsiento['num_asiento'] = $request['num_asiento'];
+        $dataAsiento['concepto'] = $request['concepto'];
+        $dataAsiento['periodo'] = $request['periodo'];
+        $dataAsiento['fecha'] = $request['fecha'];
+        $dataAsiento['saldo_debe'] = $data['saldo_debe'];
+        $dataAsiento['saldo_haber'] = $data['saldo_haber'];
+        $dataAsiento['responsable'] = $request['responsable'];
+        $dataAsiento['activo'] = "1";
+        $dataAsiento['almacen_id'] = $request['almacen_id'];
+
+        try {
+            //Guarda cabecera del asiento
+            $asiento = num_asiento::create($dataAsiento);
+            //envia los valore del detalle del asiento para guardar el detalle desde la funcion saveItemBalanceInicial
+            foreach ($trs as $item) {
+                $requestData_returned = $this->saveItemBalanciInicial($item,$asiento->id, $dataAsiento['fecha'],$dataAsiento['almacen_id']);
+                $requestData_returned->save();
+            }
+
+            tempdetallasiento::truncate();
+
+            Session::flash('flash_message', 'Asiento Guardado correctamente');
+            return response()->json(array('message' => 'Asiento Registrado con exito'));
+
+        } catch (\Exception $e) {
+
+            Session::flash('warning', 'Error al Guardar el asiento');     
+            return response()->json(array('message' => 'Error al Guardar el asiento !!!')); 
+
+        }
+
+
+    }
+
     protected function saveItemBalanciInicial($detall_asiento, $ass_id, $fecha,$almacen_id)
     {
         $requestData = new detall_asiento;
@@ -222,6 +316,92 @@ class ContabilidadController extends Controller
     {
         //
     }
+
+    public function editarAsiento($id){
+
+        try {
+
+            $mailAdmin = auth('admin')->user()->email;
+            $adminid = auth('admin')->user()->id;
+            $administrador = Admin::findOrFail($adminid);
+            $dataArray['mail'] = $mailAdmin;          
+            $dataArray['iduser'] = $adminid;     
+
+            $asiento = num_asiento::findOrFail($id);   
+            $num_asiento = $asiento->num_asiento;  
+
+            $detall_asiento= detall_asiento::where('asiento_id',$id)->get();
+
+        } catch (\Exception $e) {         
+
+            $administrador = Admin::findOrFail(1);
+
+        }
+        
+        $username = $administrador['name'];
+        $userid = $administrador['id'];
+        $useremail = $administrador['email'];
+        $responsable = $username."(".$useremail.")";
+
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $year = $carbon->now()->format('Y');
+        $fecha = $carbon->now()->format('Y-m-d');
+        //$year = "2018";
+        $this->genLog("Ingresó a editar el asiento id:".$id);
+        $dato = $this->gen_section_balance_inicial();
+        $dato['ventana'] = "Libro";
+        $cuentas = Plan::orderBy('cod', 'ASC')->get();
+        /*$num_asiento = num_asiento::where('periodo',$year)->count();
+        $num_asiento = ($num_asiento+1);*/
+        $almacen = Almacen::where('activo',1)->first();
+        $nombre_almacen = $almacen->almacen;
+        $almacen_id = $almacen->id;
+        return view('admin.contabilidad.libro.edit',compact('asiento','detall_asiento','dato','cuentas','num_asiento','year','fecha','responsable','nombre_almacen','almacen_id'));
+    }
+
+
+    public function verAsiento($id){
+
+        try {
+
+            $mailAdmin = auth('admin')->user()->email;
+            $adminid = auth('admin')->user()->id;
+            $administrador = Admin::findOrFail($adminid);
+            $dataArray['mail'] = $mailAdmin;          
+            $dataArray['iduser'] = $adminid;     
+
+            $asiento = num_asiento::findOrFail($id);   
+            $num_asiento = $asiento->num_asiento;  
+
+            $detall_asiento= detall_asiento::where('asiento_id',$id)->get();
+
+        } catch (\Exception $e) {         
+
+            $administrador = Admin::findOrFail(1);
+
+        }
+        
+        $username = $administrador['name'];
+        $userid = $administrador['id'];
+        $useremail = $administrador['email'];
+        $responsable = $username."(".$useremail.")";
+
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $year = $carbon->now()->format('Y');
+        $fecha = $carbon->now()->format('Y-m-d');
+        //$year = "2018";
+        $this->genLog("Ingresó a editar el asiento id:".$id);
+        $dato = $this->gen_section_balance_inicial();
+        $dato['ventana'] = "Libro";
+        $cuentas = Plan::orderBy('cod', 'ASC')->get();
+        /*$num_asiento = num_asiento::where('periodo',$year)->count();
+        $num_asiento = ($num_asiento+1);*/
+        $almacen = Almacen::where('activo',1)->first();
+        $nombre_almacen = $almacen->almacen;
+        $almacen_id = $almacen->id;
+        return view('admin.contabilidad.libro.show',compact('asiento','detall_asiento','dato','cuentas','num_asiento','year','fecha','responsable','nombre_almacen','almacen_id'));
+    }
+
     
     public function editBalanceInicial($id)
     {
@@ -302,6 +482,41 @@ class ContabilidadController extends Controller
 
             Session::flash('warning', 'Error al Guardar el Balance Inicial');     
             return response()->json(array('message' => 'Error al Actualizar el Balance Inicial !!!','data'=>$request->all())); 
+
+        }
+
+
+    }
+
+     public function upAsiento(Request $request)
+    {
+        $trs = num_asiento::findorfail($request->id);
+
+        $decimal_debe = str_replace (",", "", $request['saldo_debe']);
+        $decimal_haber = str_replace (",", "", $request['saldo_haber']);
+
+        $trs['num_asiento'] = $request['num_asiento'];
+        $trs['concepto'] = $request['concepto'];
+        $trs['periodo'] = $request['periodo'];
+        $trs['fecha'] = $request['fecha'];
+        $trs['saldo_debe'] = $decimal_debe;
+        $trs['saldo_haber'] = $decimal_haber;
+        $trs['responsable'] = $request['responsable'];
+        $trs['activo'] = "1";
+        $trs['almacen_id'] = $request['almacen_id'];
+
+        try {
+            //Actualiza cabecera del asiento
+            if($asiento = $trs->update()){
+                Session::flash('flash_message', 'Asiento '.$$request['num_asiento'].' Actualizado correctamente');
+            return response()->json(array('message' => 'Actualizado con exito'));
+            }
+            
+
+        } catch (\Exception $e) {
+
+            Session::flash('warning', 'Error al Actualziarel asiento');     
+            return response()->json(array('message' => 'Error al Actualizar el asiento !!!','data'=>$request->all())); 
 
         }
 
