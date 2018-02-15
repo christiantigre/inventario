@@ -180,6 +180,10 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/verDetallAsiento/','ComponentController@verDetallAsiento');
   Route::get('/verAsiento/','ComponentController@verAsiento');  
   Route::get('/ver_detall/', 'ComponentController@ver_detall');  
+  //Mayor
+  Route::get('mayor/', 'Admin\\ContabilidadController@mayor');
+  Route::get('situacionfinanciera/', 'Admin\\ContabilidadController@situacionfinanciera');
+
 });
 
 

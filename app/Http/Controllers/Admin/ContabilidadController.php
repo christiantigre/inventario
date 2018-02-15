@@ -84,7 +84,7 @@ class ContabilidadController extends Controller
         $asientos= num_asiento::orderBy('id','DESC')->where('num_asiento','>','1')->get();
         $cuentas = Plan::orderBy('cod', 'ASC')->get();
 
-         return view('admin.contabilidad.libro.index', compact('dato','asientos','cuentas'));
+        return view('admin.contabilidad.libro.index', compact('dato','asientos','cuentas'));
     }
     /**
      * Show the form for creating a new resource.
@@ -227,7 +227,7 @@ class ContabilidadController extends Controller
 
     }
 
-     public function storeAsiento(Request $request)
+    public function storeAsiento(Request $request)
     {
         $trs = tempdetallasiento::get();
         $carbon = new Carbon();
@@ -474,7 +474,7 @@ class ContabilidadController extends Controller
             //Actualiza cabecera del asiento
             if($asiento = $trs->update()){
                 Session::flash('flash_message', 'Balance Inicial Actualizado correctamente');
-            return response()->json(array('message' => 'Balance Inicial Registrado con exito'));
+                return response()->json(array('message' => 'Balance Inicial Registrado con exito'));
             }
             
 
@@ -488,7 +488,7 @@ class ContabilidadController extends Controller
 
     }
 
-     public function upAsiento(Request $request)
+    public function upAsiento(Request $request)
     {
         $trs = num_asiento::findorfail($request->id);
 
@@ -509,7 +509,7 @@ class ContabilidadController extends Controller
             //Actualiza cabecera del asiento
             if($asiento = $trs->update()){
                 Session::flash('flash_message', 'Asiento '.$$request['num_asiento'].' Actualizado correctamente');
-            return response()->json(array('message' => 'Actualizado con exito'));
+                return response()->json(array('message' => 'Actualizado con exito'));
             }
             
 
@@ -571,6 +571,51 @@ class ContabilidadController extends Controller
         return Auth::guard('admin');
     }
 
+
+    public function mayor(){
+
+        $dato = $this->gen_section_balance_inicial();
+        $dato['ventana'] = "Mayor";
+        $this->genLog("Ingresó a Mayor general");
+        /*
+        SELECT `cod_cuenta`,`cuenta`,`periodo`,`fecha`,
+sum(`saldo_debe`) as debe,sum(`saldo_haber`) as haber,
+`asiento_id`,COUNT(*) as contador 
+FROM `detall_asientos` where periodo='2018' 
+GROUP BY cod_cuenta cuenta
+        */
+    $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $year = $carbon->now()->format('Y');
+
+    $mayor = DB::table('detall_asientos')
+    ->select('cod_cuenta','cuenta',DB::raw('sum(saldo_debe) as debe,sum(saldo_haber) as haber, count(*) as count'))
+    ->where('periodo', '=', $year)
+    ->groupBy('cod_cuenta','cuenta')
+    ->get();
+
+        return view('admin.contabilidad.mayor.index', compact('dato','mayor'));
+    }
+
+    public function situacionfinanciera(){
+
+        $dato = $this->gen_section_balance_inicial();
+        $dato['ventana'] = "Situacion Financiera";
+        $this->genLog("Ingresó a Situación Financiera");
+
+        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $year = $carbon->now()->format('Y');
+
+    $situaciofinanciera = DB::table('detall_asientos')
+    ->select('cod_cuenta','cuenta',DB::raw('sum(saldo_debe) as debe,sum(saldo_haber) as haber, count(*) as count'))
+    ->where([
+        ['cod_cuenta', '<', '4'],
+        ['periodo', '=', $year],
+    ])
+    ->groupBy('cod_cuenta','cuenta')
+    ->get();
+
+        return view('admin.contabilidad.situacionfinanciera.index', compact('dato','situaciofinanciera'));
+    }
 
 
 }

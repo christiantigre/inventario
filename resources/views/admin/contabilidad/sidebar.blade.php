@@ -27,12 +27,12 @@
                     </a>
                 </li>
                 <li role="presentation">
-                    <a href="{{ url('admin/grupo') }}">
+                    <a href="{{ url('admin/mayor') }}">
                         MAYOR
                     </a>
                 </li>
                 <li role="presentation">
-                    <a href="{{ url('admin/cuenta') }}">
+                    <a href="{{ url('admin/situacionfinanciera') }}">
                         BALANCE RESULTADOS
                     </a>
                 </li>

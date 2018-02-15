@@ -193,9 +193,9 @@
       toastr.success("Transaccion exitosa.");
       console.log("copy data succefull");
       list_trs_admin();
-
-      document.getElementById("num_asiento").value = num_asiento+1;
-      $("#label_num_asiento").text(num_asiento+1);
+      var incremento = (parseInt(num_asiento)+1);
+      document.getElementById("num_asiento").value = incremento;
+      $("#label_num_asiento").text(incremento);
       $('#alert').show();
       $('#alert').html(data.message);
     },
