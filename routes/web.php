@@ -37,7 +37,7 @@ Route::group(['prefix' => 'admin'], function () {
   Route::post('/password/reset', 'AdminAuth\ResetPasswordController@reset')->name('password.email');
   Route::get('/password/reset', 'AdminAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
   Route::get('/password/reset/{token}', 'AdminAuth\ResetPasswordController@showResetForm');
-  Route::resource('/almacen', 'Admin\\AlmacenController');
+  Route::resource('/almacen', 'Admin\\AlmacenController')->middleware('admin');
   Route::resource('/category', 'Admin\\CategoryController');
   Route::post('/category/trash', 'Admin\\CategoryController@trash');
   Route::get('category/restore/{id}', 'Admin\\CategoryController@restore');
@@ -244,7 +244,7 @@ Route::group(['prefix' => 'person'], function () {
   Route::get('/inventario/downloadExcelEgresos/{type}/{year}/{month}/','Person\\InventarioController@downloadExcelMonthInvEgresos');
   Route::get('/inventario/downloadExcelEgresos/{type}/{year}/{month}/{rangostart}/{rangofinish}', 'Person\\InventarioController@downloadExcelMonthInvEgresosRangos');
 
-  Route::resource('/almacen', 'Person\\AlmaceController');
+  Route::resource('/almacen', 'Person\\AlmaceController')->middleware('person');
 
 
   Route::get('/listclientes/', 'ComponentController@listallClientes');
