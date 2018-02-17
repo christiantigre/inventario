@@ -56,7 +56,7 @@ class VentaController extends Controller
                 ->paginate($perPage);
             $this->genLog("Busqueda datos :".$keyword);
         } else {
-            $venta = Ventum::paginate($perPage);
+            $venta = Ventum::orderBy('id','DESC')->paginate($perPage);
             $this->genLog("Visualizó sección.");
         }
 

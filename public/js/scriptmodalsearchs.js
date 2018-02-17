@@ -174,7 +174,11 @@ $('.select_cli').click(function(){
 			reset_input();
 	var dataId = this.id;
 	var token = $("input[name=_token]").val();
+
 	var route = '/admin/extraerdatoscli/';
+
+    //url:'{{ url("admin/sumSaldoAsiento") }}',
+	//var route = '{{ url("admin/extraerdatoscli") }}';
 	var parametros = {
 		"id" :dataId
 	}

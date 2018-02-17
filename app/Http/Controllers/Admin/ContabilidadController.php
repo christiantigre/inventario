@@ -613,7 +613,9 @@ GROUP BY cod_cuenta cuenta
     ])
     ->groupBy('cod_cuenta','cuenta')
     ->get();
-
+    /*
+    CREATE VIEW balance_comprobacion as SELECT `cod_cuenta`,`cuenta`,`periodo`,`fecha`, sum(`saldo_debe`) as debe, sum(`saldo_haber`) as haber, `asiento_id`,COUNT(*) as contador FROM `detall_asientos` GROUP BY cod_cuenta,cuenta
+    */
         return view('admin.contabilidad.situacionfinanciera.index', compact('dato','situaciofinanciera'));
     }
 
