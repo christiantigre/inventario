@@ -132,9 +132,15 @@
         <label for="id_proveedor" class="col-md-4 col-lg-2 control-label">{{ 'Proveedor' }}</label>
         <div class="col-md-6 col-lg-8">
 
-          <button class="btn btn-default" id="buscarcliente" type="button" data-toggle="modal" data-target="#modal-proveedor"><i class="fa fa-search" aria-hidden="true"></i> Buscar Proveedor</button>
+          <a href="" data-toggle="modal" data-target="#modal-seleccionaprov" class="btn btn-default btn-sm" title="Buscar Proveedor">
+        <i class="fa fa-search" aria-hidden="true"></i> Buscar Proveedor
+    </a>
 
-          <button class="btn btn-default" id="resetproveedor" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i> Reset Proveedor</button>
+          <!--
+          <button class="btn btn-default" id="buscarcliente" type="button" data-toggle="modal" data-target="#modal-proveedor"><i class="fa fa-search" aria-hidden="true"></i> Buscar Proveedor</button>
+          -->
+
+          <button class="btn btn-default btn-sm" id="resetproveedor" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i> Reset Proveedor</button>
 
           <br/>
           <br/>

@@ -20,6 +20,7 @@ use App\Subcategory;
 use Session;
 use App\tempdetallasiento;
 use App\detall_asiento;
+use App\Proveedor;
 use DB;
 use Carbon\Carbon;
 
@@ -125,6 +126,13 @@ class ComponentController extends Controller
             'ivavalor' =>  $iva_mostrar,
             'idiva' =>  $iva_id
         ));
+    }
+
+    
+    public function listallitemsProv()
+    {
+        $proveedores = Proveedor::orderBy('id','ASC')->where('status','1')->get();
+        return view('person/product/list-prov', array('proveedores' =>  $proveedores));
     }
 
     public function deleteItem(Request $request){
@@ -804,7 +812,12 @@ public function ver_detall(Request $request)
 }
 
 
-
+public function extraerdatosProv(Request $request){
+    if ($request->ajax()) {
+        $proveedor = Proveedor::orderBy('id','DESC')->where('id',$request->id)->first();
+        return response()->json($proveedor);
+    }
+}
 
 
 

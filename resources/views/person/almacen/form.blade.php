@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="form-group {{ $errors->has('razon_social') ? 'has-error' : ''}}">
-                <label for="razon_social" class="col-md-4 control-label">{{ 'Razon Social' }}</label>
+                <label for="razon_social" class="col-md-4 control-label">{{ 'Razón Social' }}</label>
                 <div class="col-md-6">
                     <input class="form-control" name="razon_social" type="text" id="razon_social" value="{{ $almacen->razon_social or ''}}" >
                     {!! $errors->first('razon_social', '<p class="help-block">:message</p>') !!}
@@ -133,14 +133,14 @@
 
 
             <div class="form-group {{ $errors->has('fb') ? 'has-error' : ''}}">
-                <label for="fb" class="col-md-4 control-label">{{ 'Fb' }}</label>
+                <label for="fb" class="col-md-4 control-label">{{ 'Facebook' }}</label>
                 <div class="col-md-6">
                     <textarea class="form-control" rows="5" name="fb" type="textarea" id="fb" >{{ $almacen->fb or ''}}</textarea>
                     {!! $errors->first('fb', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
             <div class="form-group {{ $errors->has('tw') ? 'has-error' : ''}}">
-                <label for="tw" class="col-md-4 control-label">{{ 'Tw' }}</label>
+                <label for="tw" class="col-md-4 control-label">{{ 'Twitter' }}</label>
                 <div class="col-md-6">
                     <textarea class="form-control" rows="5" name="tw" type="textarea" id="tw" >{{ $almacen->tw or ''}}</textarea>
                     {!! $errors->first('tw', '<p class="help-block">:message</p>') !!}
@@ -152,7 +152,7 @@
 
             
             <div class="form-group {{ $errors->has('ins') ? 'has-error' : ''}}">
-                <label for="ins" class="col-md-4 control-label">{{ 'Ins' }}</label>
+                <label for="ins" class="col-md-4 control-label">{{ 'Instagram' }}</label>
                 <div class="col-md-6">
                     <textarea class="form-control" rows="5" name="ins" type="textarea" id="ins" >{{ $almacen->ins or ''}}</textarea>
                     {!! $errors->first('ins', '<p class="help-block">:message</p>') !!}
@@ -162,14 +162,14 @@
 
 
             <div class="form-group {{ $errors->has('gg') ? 'has-error' : ''}}">
-                <label for="gg" class="col-md-4 control-label">{{ 'Gg' }}</label>
+                <label for="gg" class="col-md-4 control-label">{{ 'Google' }}</label>
                 <div class="col-md-6">
                     <textarea class="form-control" rows="5" name="gg" type="textarea" id="gg" >{{ $almacen->gg or ''}}</textarea>
                     {!! $errors->first('gg', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
             <div class="form-group {{ $errors->has('funcion_empresa') ? 'has-error' : ''}}">
-                <label for="funcion_empresa" class="col-md-4 control-label">{{ 'Funcion Empresa' }}</label>
+                <label for="funcion_empresa" class="col-md-4 control-label">{{ 'Función Empresa' }}</label>
                 <div class="col-md-6">
                     <textarea class="form-control" rows="5" name="funcion_empresa" type="textarea" id="funcion_empresa" >{{ $almacen->funcion_empresa or ''}}</textarea>
                     {!! $errors->first('funcion_empresa', '<p class="help-block">:message</p>') !!}
@@ -183,7 +183,7 @@
                 </div>
             </div>
             <div class="form-group {{ $errors->has('dir') ? 'has-error' : ''}}">
-                <label for="dir" class="col-md-4 control-label">{{ 'Dir' }}</label>
+                <label for="dir" class="col-md-4 control-label">{{ 'Dirección' }}</label>
                 <div class="col-md-6">
                     <input class="form-control" name="dir" type="text" id="dir" value="{{ $almacen->dir or ''}}" >
                     {!! $errors->first('dir', '<p class="help-block">:message</p>') !!}

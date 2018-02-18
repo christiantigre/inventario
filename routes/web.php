@@ -224,6 +224,9 @@ Route::group(['prefix' => 'person'], function () {
   Route::get('/proveedor/downloadExcel/{type}', 'Person\\ProveedorController@downloadExcel');
   Route::get('proveedor/getcanton/{id}', 'ComponentController@getCanton');
   Route::get('proveedor/{var}/getcanton/{id}', 'ComponentController@getCanton');
+
+  //Route::get('//', 'ComponentController@listallitemsProv');
+  Route::get('/listprovtitems/', 'ComponentController@listallitemsProv');
   /*Modulo de inventario admin*/
   Route::resource('/inventario', 'Person\\InventarioController');
   Route::get('/inventario/ingresos/{dato}', 'Person\\InventarioController@ingresos');  
@@ -248,6 +251,7 @@ Route::group(['prefix' => 'person'], function () {
 
 
   Route::get('/listclientes/', 'ComponentController@listallClientes');
+  Route::get('/extraerdatosprov/','ComponentController@extraerdatosProv');
 
 });
   Route::get('getSubcategory/{id}', 'ComponentController@getSubcategory');

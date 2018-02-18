@@ -1,35 +1,33 @@
-
 <style>
-	.example-modal .modal {
-		position: relative;
-		top: auto;
-		bottom: auto;
-		right: auto;
-		left: auto;
-		display: block;
-		z-index: 1;
-	}
-
-	.example-modal .modal {
-		background: transparent !important;
-	}
+  .example-modal .modal {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    right: auto;
+    left: auto;
+    display: block;
+    z-index: 1;
+  }
+  .example-modal .modal {
+    background: transparent !important;
+  }
 </style>
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
  
 
 <div class="modal fade" id="modal-seleccionacliente">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			{!! Form::open(['id'=>'myForm'])  !!}
-			{{ csrf_field() }}
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span></button>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      {!! Form::open(['id'=>'myForm'])  !!}
+      {{ csrf_field() }}
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
 
-					<h4 class="modal-title">Seleccione Cliente</h4>           
+          <h4 class="modal-title">Seleccione Cliente</h4>           
 
-				</div>
-				<div class="modal-body">
+        </div>
+        <div class="modal-body">
 
 
           <!-- /.box-header -->
@@ -98,7 +96,6 @@
 /*  $(document).ready(function(){
         items_clientes_person();
     });
-
   function items_clientes_person(){
     console.log('loading clientes');
     var route = "{{ url('person/listclientes') }}";
@@ -111,5 +108,4 @@
     });
 }
 */
-
 </script>
