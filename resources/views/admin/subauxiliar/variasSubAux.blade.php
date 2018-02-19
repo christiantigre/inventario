@@ -43,7 +43,7 @@
                 <legend>
                 </legend>
 
-                <button class="btn btn-default btn-sm" title="Eliminar Todas Subcuentas" id="trashitems" type="button" onClick="trashSubAuxCuentas(this.id);"><i class="fa fa-trash" aria-hidden="true"></i> Vaciar</button>
+                <button class="btn btn-default btn-sm" title="Eliminar Todas Subcuentas" id="trashitems" type="button" onClick="trashSubAuxCuentasAdmin(this.id);"><i class="fa fa-trash" aria-hidden="true"></i> Vaciar</button>
 
                 <!-- /.box-header -->
                 <div class="box-body no-padding">
@@ -68,7 +68,118 @@
 
 <script type="text/javascript">
   $(document).ready(function(){
-    list_Subauxcuentas();
+    list_Subauxcuentas_Admin();
   });
+
+  function list_Subauxcuentas_Admin(){
+  console.log('loading items cuentas sub auxiliar');
+  $.ajax({
+    type:'get',
+    //url:'/admin/listsubauxcuentas/',
+    url:'{{ url("admin/listsubauxcuentas") }}',
+    success: function(data){
+      $('#list-cart').empty().html(data);
+    }
+  });
+}
+
+function cuentaSubAuxCuentasAdmin(){
+  var token = $("input[name=_token]").val();
+  var auxiliar_id= $("#auxiliar_id").val();
+  //var route = '/admin/extraercontadorsubauxcuentas/';
+  var route = '{{ url("admin/extraercontadorsubauxcuentas") }}';
+  var parametros = {
+    "id" :auxiliar_id
+  }
+  console.log(parametros);
+  $.ajax({
+    url:route,
+    headers:{'X-CSRF-TOKEN':token},
+    type:'get',
+    dataType: 'json',
+    data:parametros,
+    success:function(data)
+    {
+      console.log(data);
+      document.getElementById("secuencia").value = data.cantidad;
+      document.getElementById("codigo").value = data.cuenta_codigo+'.'+data.cantidad;
+      document.getElementById("auxiliar").value = data.cuenta_codigo;
+      console.log("copy data succefull");
+    },
+    error:function(data)
+    {
+      console.log('Error '+data);
+    }  
+  });
+}
+
+
+
+
+$('.guarda_subauxiliar_admin').click(function(){
+  var auxiliar_id= $("#auxiliar_id").val();
+  var auxiliar= $("#auxiliar").val();
+  var secuencia= $("#secuencia").val();
+  var subauxiliar= $("#subauxiliar").val();
+  var codigo= $("#codigo").val();
+  var token = $("input[name=_token]").val();
+  //var route = '/admin/savesubauxcuenta/';
+  var route = '{{ url("admin/savesubauxcuenta") }}';
+
+  var parametros = {
+    "auxiliar_id" :auxiliar_id,
+    "auxiliar" :auxiliar,
+    "secuencia" :secuencia,
+    "subauxiliar" :subauxiliar,
+    "codigo" :codigo
+  }
+  console.log(parametros);
+  $.ajax({
+    url:route,
+    headers:{'X-CSRF-TOKEN':token},
+    type:'post',
+    dataType: 'json',
+    data:parametros,
+    success:function(data)
+    {
+      console.log(data);
+      console.log("copy data succefull");
+      list_Subauxcuentas_Admin();
+      reset_input_subauxcuentas();
+    },
+    error:function(data)
+    {
+      console.log('Error '+data);
+    }  
+  });
+});
+
+function trashSubAuxCuentasAdmin(id){
+  console.log(id);
+  var token = $("input[name=_token]").val();
+  //var route = '/admin/trashSubAuxcuentas/'; 
+  var route = '{{ url("admin/trashSubAuxcuentas") }}'; 
+  var parametros = {
+    "id" :'0'
+  }
+  $.ajax({
+    url:route,
+    headers:{'X-CSRF-TOKEN':token},
+    type:'post',
+    dataType: 'json',
+    data:parametros,
+    success:function(data)
+    {
+      console.log('correcto '+data.data);
+      list_Subauxcuentas_Admin(); 
+    },
+    error:function(data)
+    {
+      console.log('Error '+data);
+    }  
+  });
+}
+
+
 </script>
 @endsection

@@ -55,6 +55,46 @@
     $(document).ready(function(){
         items_cart();
     });
+
+    $('.select_cli').click(function(){
+            reset_input();
+    var dataId = this.id;
+    var token = $("input[name=_token]").val();
+
+    //var route = '/admin/extraerdatoscli/';
+
+    //url:'{{ url("admin/sumSaldoAsiento") }}',
+    var route = '{{ url("admin/extraerdatoscli") }}';
+    var parametros = {
+        "id" :dataId
+    }
+    $.ajax({
+        url:route,
+        headers:{'X-CSRF-TOKEN':token},
+        type:'get',
+        dataType: 'json',
+        data:parametros,
+        success:function(data)
+        {
+            //data.cel_movi
+            console.log(data.id);
+            console.log("copy data selected");
+            document.getElementById("cliente").value = data.nom_cli+' '+data.app_cli;
+            document.getElementById("ruc_cli").value = data.ruc_cli;
+            document.getElementById("ced_cli").value = data.ced_cli;
+            document.getElementById("cel_cli").value = data.tlf_cli+' '+data.wts_cli;
+            document.getElementById("dir_cli").value = data.dir_cli;
+            document.getElementById("mail_cli").value = data.mail_cli;
+            document.getElementById("id_cliente").value = data.id;
+            console.log("copy data succefull");
+        },
+        error:function(data)
+        {
+            console.log('Error '+data);
+        }  
+    });
+});
+
 </script>
 
 @endsection

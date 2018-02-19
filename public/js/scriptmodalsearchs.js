@@ -174,7 +174,11 @@ $('.select_cli').click(function(){
 			reset_input();
 	var dataId = this.id;
 	var token = $("input[name=_token]").val();
+
 	var route = '/admin/extraerdatoscli/';
+
+    //url:'{{ url("admin/sumSaldoAsiento") }}',
+	//var route = '{{ url("admin/extraerdatoscli") }}';
 	var parametros = {
 		"id" :dataId
 	}
@@ -387,111 +391,14 @@ function trash(id){
 	});
 }
 
-//llena de datos tabla temporal subcuentas en modulo contable
-function list_subcuentas(){
-	console.log('loading items subcuentas');
-	$.ajax({
-		type:'get',
-		url:'/admin/listsubcuentas/',
-		success: function(data){
-			$('#list-cart').empty().html(data);
-		}
-	});
-}
+
 
 //Guardar datos de sub-cuenta en la tabla temporal
-$('.guarda_subcuenta').click(function(){
-	var cuenta_id= $("#cuenta_id").val();
-	var cuenta= $("#cuenta").val();
-	var secuencia= $("#secuencia").val();
-	var subcuenta= $("#subcuenta").val();
-	var codigo= $("#codigo").val();
-	var token = $("input[name=_token]").val();
-	var route = '/admin/savesubcuenta/';
 
-	/*var codigo = $(this).parents("tr").find("td")[0].innerHTML;
-	var subcuenta = $(this).parents("tr").find("td")[1].innerHTML;
-	var cuenta_id = $(this).parents("tr").find("td")[2].innerHTML;
-	var secuencia = $(this).parents("tr").find("td")[3].innerHTML;
-	*/
 
-	var parametros = {
-		"subcuenta" :subcuenta,
-		"cuenta" :cuenta,
-		"cuenta_id" :cuenta_id,
-		"secuencia" :secuencia,
-		"codigo" :codigo
-	}
-	console.log(parametros);
-	$.ajax({
-		url:route,
-		headers:{'X-CSRF-TOKEN':token},
-		type:'post',
-		dataType: 'json',
-		data:parametros,
-		success:function(data)
-		{
-			console.log(data);
-			console.log("copy data succefull");
-		    list_subcuentas();
-		    reset_input_subcuentas();
-		},
-		error:function(data)
-		{
-			console.log('Error '+data);
-		}  
-	});
-});
 
-function trashSubCuentas(id){
-	console.log(id);
-	var token = $("input[name=_token]").val();
-	var route = '/admin/trashSubcuentas/';	
-	var parametros = {
-		"id" :'0'
-	}
-	$.ajax({
-		url:route,
-		headers:{'X-CSRF-TOKEN':token},
-		type:'post',
-		dataType: 'json',
-		data:parametros,
-		success:function(data)
-		{
-			console.log('correcto '+data.data);
-			list_subcuentas();	
-		},
-		error:function(data)
-		{
-			console.log('Error '+data);
-		}  
-	});
-}
 
-function trashAuxCuentas(id){
-	console.log(id);
-	var token = $("input[name=_token]").val();
-	var route = '/admin/trashAuxcuentas/';	
-	var parametros = {
-		"id" :'0'
-	}
-	$.ajax({
-		url:route,
-		headers:{'X-CSRF-TOKEN':token},
-		type:'post',
-		dataType: 'json',
-		data:parametros,
-		success:function(data)
-		{
-			console.log('correcto '+data.data);
-			list_auxcuentas();	
-		},
-		error:function(data)
-		{
-			console.log('Error '+data);
-		}  
-	});
-}
+
 
 function reset_input_subcuentas(){
 			console.log('reseting');
@@ -509,15 +416,6 @@ function reset_input_auxcuentas(){
 			document.getElementById("codigo").value = "";
 		}
 
-		function list_auxcuentas(){
-	console.log('loading items cuentas auxiliar');
-	$.ajax({
-		type:'get',
-		url:'/admin/listauxcuentas/',
-		success: function(data){
-			$('#list-cart').empty().html(data);
-		}
-	});
-}
+		
 
 

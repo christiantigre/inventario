@@ -11,7 +11,7 @@
             <div class="form-group {{ $errors->has('subcuenta_id') ? 'has-error' : ''}}">
                 <label for="subcuenta_id" class="col-md-4 control-label">{{ 'Subcuenta' }}</label>
                 <div class="col-md-6">
-                    {!! Form::select('auxiliar_id', $auxiliares, null, ['class' => 'form-control','id'=>'auxiliar_id','autofocus'=>'autofocus','onchange'=>'cuentaSubAuxCuentas()']) !!}
+                    {!! Form::select('auxiliar_id', $auxiliares, null, ['class' => 'form-control','id'=>'auxiliar_id','autofocus'=>'autofocus','onchange'=>'cuentaSubAuxCuentasAdmin()']) !!}
 
                     {!! Form::hidden('auxiliar', null, ['id'=>'auxiliar','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('auxiliar') !!}
 
@@ -31,7 +31,7 @@
             <div class="form-group {{ $errors->has('subauxiliar') ? 'has-error' : ''}}">
                 <label for="subauxiliar" class="col-md-4 control-label">{{ 'Sub - Auxiliar' }}</label>
                 <div class="col-md-6">
-                    {!! Form::text('subauxiliar', null, ['class' => 'form-control input-sm','id'=>'subauxiliar','autofocus'=>'autofocus','onmouseout'=>'cuentaSubAuxCuentas()']), old('subauxiliar') !!}
+                    {!! Form::text('subauxiliar', null, ['class' => 'form-control input-sm','id'=>'subauxiliar','autofocus'=>'autofocus','onmouseout'=>'cuentaSubAuxCuentasAdmin()']), old('subauxiliar') !!}
                     {!! $errors->first('subauxiliar', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -46,7 +46,7 @@
             <div class="form-group">
                 <div class="col-md-offset-4 col-md-4">
 
-                    <button type='button' id="guarda_subauxiliar" title="Agregar Cuenta Sub - Auxiliar" class="btn btn-primary btn-sm guarda_subauxiliar" data-dismiss='modal'> Guardar</button>
+                    <button type='button' id="guarda_subauxiliar_admin" title="Agregar Cuenta Sub - Auxiliar" class="btn btn-primary btn-sm guarda_subauxiliar_admin" data-dismiss='modal'> Guardar</button>
 
                 </div>
             </div>

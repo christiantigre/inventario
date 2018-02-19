@@ -39,10 +39,19 @@
                 <label for="cod_cuenta" class="col-md-4 control-label">{{ 'Cuenta' }}</label>
                 <div class="col-md-8">
 
-                    {!! Form::text('cod_cuenta', null, ['id'=>'cod_cuenta','list'=>'cuentas','class' => 'form-control','autofocus'=>'autofocus','onSelect'=>'consulta_cuenta()','required'=>'required']), old('cod_cuenta') !!}
+                    <div class="input-group input-group-md">
+                {!! Form::text('cod_cuenta', null, ['id'=>'cod_cuenta','list'=>'cuentas','class' => 'form-control','autofocus'=>'autofocus','onSelect'=>'consulta_cuenta_admin()','required'=>'required']), old('cod_cuenta') !!}
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default btn-flat busca_cuenta">Buscar</button>
+                    </span>
+              </div>
+              <!-- /input-group -->
+              {{--
+                    {!! Form::text('cod_cuenta', null, ['id'=>'cod_cuenta','list'=>'cuentas','class' => 'form-control','autofocus'=>'autofocus','onSelect'=>'consulta_cuenta_admin()','required'=>'required']), old('cod_cuenta') !!}
+                --}}
                     <datalist id="cuentas">
                         @foreach($cuentas as $cuenta)
-                        <option class="form-control" onSelect="consulta_cuenta()" id="{{ $cuenta->cod }}" value="{{ $cuenta->cod }}">{{ $cuenta->cuenta }}</option>
+                        <option class="form-control" onSelect="consulta_cuenta_admin()" id="{{ $cuenta->cod }}" value="{{ $cuenta->cod }}">{{ $cuenta->cuenta }}</option>
                         @endforeach
                     </datalist>
 
@@ -50,6 +59,8 @@
 
 
                     {!! Form::hidden('periodo', $year, ['class' => 'form-control input-sm','id'=>'periodo','readonly'=>'readonly','autofocus'=>'autofocus']), old('periodo') !!}
+
+                     {!! Form::hidden('responsable', $responsable, ['class' => 'form-control input-sm','id'=>'responsable','readonly'=>'readonly','autofocus'=>'autofocus']), old('responsable') !!}
 
                     {!! Form::hidden('fecha', $fecha, ['class' => 'form-control input-sm','id'=>'fecha','readonly'=>'readonly','autofocus'=>'autofocus']), old('periodo') !!}
 
@@ -89,13 +100,13 @@
 
 
         <div class="col-md-10">
-            <div class="form-group {{ $errors->has('concepto_detall') ? 'has-error' : ''}}">
+            <div class="form-group {{ $errors->has('concepto_detalle') ? 'has-error' : ''}}">
                 <label for="concepto_detall" class="col-md-2 control-label">{{ 'Descripción' }}</label>
                 <div class="col-md-8">
 
-                    {!! Form::textarea('concepto_detall',null,['class'=>'form-control', 'rows' => 2, 'cols' => 40,'id'=>'concepto_detall']),old('auxiliar') !!}
+                    {!! Form::textarea('concepto_detalle',null,['class'=>'form-control', 'rows' => 2, 'cols' => 40,'id'=>'concepto_detalle']),old('concepto_detalle') !!}
 
-                    {!! $errors->first('concepto_detall', '<p class="help-block">:message</p>') !!}
+                    {!! $errors->first('concepto_detalle', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
         </div>
@@ -105,7 +116,7 @@
                 <label for="concepto" class="col-md-2 control-label">{{ 'Glosa Asiento' }}</label>
                 <div class="col-md-8">
 
-                    {!! Form::textarea('concepto',null,['class'=>'form-control', 'rows' => 2, 'cols' => 40]),old('auxiliar') !!}
+                    {!! Form::textarea('concepto',null,['class'=>'form-control','id'=>'concepto', 'rows' => 2, 'cols' => 40]),old('auxiliar') !!}
 
                     {!! $errors->first('concepto', '<p class="help-block">:message</p>') !!}
                 </div>
@@ -116,7 +127,7 @@
             <div class="form-group">
                 <div class="col-md-offset-9 col-xs-offset-8 col-md-4">
 
-                    <button type='button' id="guarda_trs" title="Agregar transacción" class="btn btn-success btn-sm guarda_trs" data-dismiss='modal'> Agregar</button>
+                    <button type='button' id="guarda_trs_admin" title="Agregar transacción" class="btn btn-success btn-sm guarda_trs_admin" data-dismiss='modal'> Agregar</button>
 
                 </div>
             </div>
@@ -124,3 +135,5 @@
 
     </fieldset>
 </div>
+
+

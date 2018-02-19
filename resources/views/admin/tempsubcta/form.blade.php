@@ -13,7 +13,7 @@
             <div class="form-group {{ $errors->has('subcuenta') ? 'has-error' : ''}}">
                 <label for="cuenta_id" class="col-md-4 control-label">{{ 'Cuenta' }}</label>
                 <div class="col-md-8">
-                    {!! Form::select('cuenta_id', $cuentas, null, ['class' => 'form-control input-sm','id'=>'cuenta_id','autofocus'=>'autofocus','onchange'=>'cuentaCuentasVarias()']) !!}
+                    {!! Form::select('cuenta_id', $cuentas, null, ['class' => 'form-control input-sm','id'=>'cuenta_id','autofocus'=>'autofocus','onchange'=>'cuentaCuentasVariasAdmin()']) !!}
 
                     {!! Form::hidden('cuenta', null, ['id'=>'cuenta','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('cuenta') !!}
 
@@ -36,7 +36,7 @@
             <div class="form-group {{ $errors->has('subcuenta') ? 'has-error' : ''}}">
                 <label for="subcuenta" class="col-md-4 control-label">{{ 'Subcuenta' }}</label>
                 <div class="col-md-8">
-                 {!! Form::text('subcuenta', null, ['id'=>'subcuenta','class' => 'form-control input-sm','autofocus'=>'autofocus','required'=>'required','onmouseout'=>'cuentaCuentasVarias()']), old('subcuenta') !!}
+                 {!! Form::text('subcuenta', null, ['id'=>'subcuenta','class' => 'form-control input-sm','autofocus'=>'autofocus','required'=>'required','onmouseout'=>'cuentaCuentasVariasAdmin()']), old('subcuenta') !!}
                  {!! $errors->first('subcuenta', '<p class="help-block">:message</p>') !!}
              </div>
          </div>
@@ -57,6 +57,6 @@
 
 <div class="form-group">
     <div class="col-md-offset-10 col-md-2 col-sm-offset-8 col-sm-2">
-        <button type='button' id="guarda_subcuenta" title="Agregar Subcuenta" class="btn btn-primary btn-sm guarda_subcuenta" data-dismiss='modal'> Guardar</button>
+        <button type='button' id="guarda_subcuenta_admin" title="Agregar Subcuenta" class="btn btn-primary btn-sm guarda_subcuenta_admin" data-dismiss='modal'> Guardar</button>
     </div>
 </div>

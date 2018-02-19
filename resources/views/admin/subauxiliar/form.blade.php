@@ -1,7 +1,7 @@
 <div class="form-group {{ $errors->has('auxiliar_id') ? 'has-error' : ''}}">
     <label for="auxiliar_id" class="col-md-4 control-label">{{ 'Auxiliar' }}</label>
     <div class="col-md-6">
-        {!! Form::select('auxiliar_id', $auxiliares, null, ['class' => 'form-control','id'=>'auxiliar_id','autofocus'=>'autofocus','onchange'=>'cuentaAuxCuentas()']) !!}
+        {!! Form::select('auxiliar_id', $auxiliares, null, ['class' => 'form-control','id'=>'auxiliar_id','autofocus'=>'autofocus','onchange'=>'cuentaAuxCuentasAdmin()']) !!}
 
         {!! Form::hidden('auxiliar', null, ['id'=>'auxiliar','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('auxiliar') !!}
         {!! $errors->first('auxiliar_id', '<p class="help-block">:message</p>') !!}
@@ -10,7 +10,7 @@
 <div class="form-group {{ $errors->has('subauxiliar') ? 'has-error' : ''}}">
     <label for="subauxiliar" class="col-md-4 control-label">{{ 'subauxiliar' }}</label>
     <div class="col-md-6">
-        {!! Form::text('subauxiliar', null, ['id'=>'subauxiliar','class' => 'form-control','autofocus'=>'autofocus','required'=>'required']), old('subauxiliar') !!}  
+        {!! Form::text('subauxiliar', null, ['id'=>'subauxiliar','class' => 'form-control','autofocus'=>'autofocus','onmouseout'=>'cuentaAuxCuentasAdmin()','required'=>'required']), old('subauxiliar') !!}  
 
         {!! $errors->first('subauxiliar', '<p class="help-block">:message</p>') !!}
     </div>

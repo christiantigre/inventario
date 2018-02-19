@@ -61,4 +61,69 @@
 
 </section>
 </div>
+@include('person.product.modalselect_prov')
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        items_prov();
+    });
+
+    //llena de datos tabla productos en la modal listcartitems
+function items_prov(){
+    console.log('loading prov');
+    var route = "{{ url('person/listprovtitems') }}";
+    $.ajax({
+        type:'get',
+        url:route,
+        success: function(data){
+            $('#list-prov').empty().html(data);
+        }
+    });
+}
+
+    function select_prov(id){
+        console.log("select proveedor");
+            reset_input_prov();
+    var dataId = this.id;
+    var token = $("input[name=_token]").val();
+    var route = '{{ url("person/extraerdatosprov") }}';
+    var parametros = {
+        "id" :id
+    }
+    $.ajax({
+        url:route,
+        headers:{'X-CSRF-TOKEN':token},
+        type:'get',
+        dataType: 'json',
+        data:parametros,
+        success:function(data)
+        {
+            //data.cel_movi
+            console.log(data);
+            console.log("copy data selected");
+            document.getElementById("id_proveedor").value = data.id;
+            document.getElementById("nom_pro").value = data.proveedor;
+            document.getElementById("mail").value = data.mail;
+            document.getElementById("empresa").value = data.empresa;
+            document.getElementById("contactos").value = data.tlfn+' '+data.cel_movi;
+            
+            console.log("copy data succefull");
+        },
+        error:function(data)
+        {
+            console.log('Error '+data);
+        }  
+    });
+}
+
+function reset_input_prov(){
+            console.log("Cleared");
+
+    document.getElementById("id_proveedor").value = "";
+            document.getElementById("nom_pro").value = "";
+            document.getElementById("mail").value = "";
+            document.getElementById("empresa").value = "";
+            document.getElementById("contactos").value = "";
+}
+</script>
 @endsection
