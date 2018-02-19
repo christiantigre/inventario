@@ -129,6 +129,14 @@ SELECT auxiliars.codigo as cod, auxiliars.auxiliar as cuenta FROM `auxiliars` WH
 UNION
 SELECT subauxiliars.codigo as cod, subauxiliars.subauxiliar as cuenta FROM `subauxiliars` WHERE activo='1'
     
+RESPALDOS COMANDO 
+    php artisan backup:run --only-db (solo db)
+    php artisan backup:run (respalda todo)
+    php artisan backup:list (lista respaldos)
+    php artisan backup:monitor (Monitorea respaldos)
+    php artisan backup:clear (limpia respaldos)
+    php artisan backup:run --only-files (respalda solo archivos)
+    php artisan backup:run --only-to-disk=name-of-your-disk (envia a una ruta especifica el respaldo)
 
 
     realizando tag en repositorios github
@@ -136,3 +144,11 @@ SELECT subauxiliars.codigo as cod, subauxiliars.subauxiliar as cuenta FROM `suba
 
 link pagina web edita imagenes
     https://crello.com/user/projects/5a7ca38a8101ff0b5ceb8672/
+
+    SOLUCION AL ERROR SSL MAIL
+     LINK DE SOLUCION 
+     http://www.derekbliss.com/post/laravel-streamsocketenablecrypto-ssl-operation-failed-with-code-1
+
+    lINEA ADD 259
+    //$options = array();
+    $options['ssl'] = array('verify_peer' => false, 'verify_peer_name' => false, 'allow_self_signed' => true);

@@ -11,6 +11,7 @@
         "barryvdh/laravel-dompdf": "^0.8.1",
         "brian2694/laravel-toastr": "^5.5",
         "fideloper/proxy": "~3.3",
+        "guzzlehttp/guzzle": "^6.3",
         "hesto/multi-auth": "^2.0",
         "intervention/image": "^2.4",
         "jeroennoten/laravel-adminlte": "^1.22",
@@ -19,6 +20,7 @@
         "maatwebsite/excel": "~2.1.0",
         "nesbot/carbon": "^1.22",
         "renatomarinho/laravel-page-speed": "^1.8",
+        "spatie/laravel-backup": "^5.2",
         "spatie/laravel-permission": "^2.7",
         "zizaco/entrust": "5.2.x-dev"
     },
