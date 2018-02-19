@@ -240,6 +240,10 @@ return [
                     'text' => 'Seguimiento',
                     'url'  => 'admin/logs',
                 ],
+                [
+                    'text' => 'Respaldo',
+                    'url'  => 'admin/backups',
+                ],
             ],
         ],
     ],

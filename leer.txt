@@ -152,3 +152,9 @@ link pagina web edita imagenes
     lINEA ADD 259
     //$options = array();
     $options['ssl'] = array('verify_peer' => false, 'verify_peer_name' => false, 'allow_self_signed' => true);
+
+    analizar sistema 
+    https://www.youtube.com/watch?v=q3xP7pgMPsM&ab_channel=KeliRubi
+
+    GENERADOR DE ADMIN LARAVEL
+    https://laravel-news.com/13-laravel-admin-panel-generators

@@ -184,6 +184,9 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('mayor/', 'Admin\\ContabilidadController@mayor');
   Route::get('situacionfinanciera/', 'Admin\\ContabilidadController@situacionfinanciera');
 
+  //backups
+  Route::resource('/backups', 'Admin\\tipocuentaController');
+
 });
 
 
