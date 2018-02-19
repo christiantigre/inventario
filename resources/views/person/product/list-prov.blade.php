@@ -5,6 +5,7 @@
     <table id="example1" class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
       <thead>
         <tr>
+          <th>Actions</th>
           <th>ID</th>
           <th>Proveedor</th>
           <th>Ruc</th>
@@ -12,12 +13,14 @@
           <th>Contactos</th>
           <th>Direcciòn</th>
           <th>Estado</th>
-          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         @foreach($proveedores as $item)
         <tr>
+          <td>
+            <button type='button' id="{{ $item->id }}" value="{{ $item->id }}" class="btn btn-info btn-xs select_prov_person" onclick="select_prov({{ $item->id }})" data-dismiss='modal'> Seleccionar</button>                  
+          </td>
           <td>{{ $item->id }}</td>
           <td>{{ $item->proveedor }} </td>
           <td>{{ $item->ruc }} </td>
@@ -30,9 +33,6 @@
             @else
             Activo
             @endif
-          </td>
-          <td>
-            <button type='button' id="{{ $item->id }}" value="{{ $item->id }}" class="btn btn-info btn-xs select_prov_person" onclick="select_prov({{ $item->id }})" data-dismiss='modal'> Seleccionar</button>                  
           </td>
         </tr>
         @endforeach

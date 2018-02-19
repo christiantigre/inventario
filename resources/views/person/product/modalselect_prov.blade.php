@@ -34,8 +34,10 @@
 
           <!-- /.box-header -->
             <div class="box-body no-padding">
+            	<div class="table-responsive">
               <div id="list-prov">
 
+              </div>  
               </div>  
             </div>
             <!-- /.box-body -->
