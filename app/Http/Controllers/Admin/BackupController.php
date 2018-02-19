@@ -93,10 +93,10 @@ class BackupController extends Controller
     /**
      * Downloads a backup zip file.
      */
-    public function download()
+    public function download(Request $request)
     {
-        $disk = Storage::disk(Request::input('disk'));
-        $file_name = Request::input('file_name');
+        $disk = Storage::disk($request->disk);
+        $file_name = $request->file_name;
         $adapter = $disk->getDriver()->getAdapter();
 
         if ($adapter instanceof Local) {
@@ -123,7 +123,7 @@ class BackupController extends Controller
     	}else{
     		abort(404, trans('backpack::backup.backup_doesnt_exist'));
     	}
-    	
+
         return redirect('admin/backups');
     }
 

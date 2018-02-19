@@ -19,18 +19,15 @@
     <div class="box-body">
 
         <div class="row"> 
-            <div class="col-md-3 col-lg-3 col-xs-6 col-sm-6"> 
-
-                <form method="POST" action="{{ url('/admin/backups') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+            <div class="col-md-1 col-lg-1 col-xs-12 col-sm-12"> 
+                <form method="POST" action="{{ url('/admin/backups') }}" accept-charset="UTF-8" class="form-inline" enctype="multipart/form-data">
                     {{ csrf_field() }}
-                    <input class="btn btn-primary" type="submit" value="{{ $submitButtonText or 'Backup complete' }}">
+                    <input class="btn btn-success btn-xs" type="submit" value="{{ $submitButtonText or 'Backup complete' }}">
                 </form>
-            </div>
-            <div class="col-md-3 col-lg-3 col-xs-6 col-sm-6"> 
 
-                <form method="POST" action="{{ url('/admin/backups/db') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+                <form method="POST" action="{{ url('/admin/backups/db') }}" accept-charset="UTF-8" class="form-inline" enctype="multipart/form-data">
                     {{ csrf_field() }}
-                    <input class="btn btn-primary" type="submit" value="{{ $submitButtonText or 'Backup DB' }}">
+                    <input class="btn btn-success btn-xs" type="submit" value="{{ $submitButtonText or 'Backup DB' }}">
                 </form>
             </div>
         </div>
@@ -57,14 +54,9 @@
             <td class="text-right">{{ round((int)$b['file_size']/1048576, 2).' MB' }}</td>
             <td class="text-right">
                 @if ($b['download'])
-                <a class="btn btn-xs btn-default" href="{{ url('/admin/backups/download/') }}?disk={{ $b['disk'] }}&path={{ urlencode($b['file_path']) }}&file_name={{ urlencode($b['file_name']) }}"><i class="fa fa-cloud-download"></i>Descargar</a>
+                <a class="btn btn-xs btn-default" href="{{ url('/admin/backup/download/') }}?disk={{ $b['disk'] }}&path={{ urlencode($b['file_path']) }}&file_name={{ urlencode($b['file_name']) }}"><i class="fa fa-cloud-download"></i>Descargar</a>
                 @endif
-                    <!--
-                    <form method="POST" action="{{ url('admin/backup/delete/'.$b['file_name']) }}?disk={{ $b['disk'] }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
 
-                        <input class="btn btn-primary" type="submit" value="{{ $submitButtonText or 'Create' }}">
-
-            </form>-->
                 <a class="btn btn-xs btn-danger eliminar" href="{{ url('admin/backup/delete/'.$b['file_name']) }}?disk={{ $b['disk'] }}"><i class="fa fa-trash-o"></i> Eliminar </a>
 
             </td>
