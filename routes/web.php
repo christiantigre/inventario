@@ -185,7 +185,11 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('situacionfinanciera/', 'Admin\\ContabilidadController@situacionfinanciera');
 
   //backups
-  Route::resource('/backups', 'Admin\\tipocuentaController');
+  Route::resource('/backups', 'Admin\\BackupController'); 
+  Route::post('/backups/db', 'Admin\\BackupController@storedb');
+  Route::get('/backups/download/{file_name?}', 'Admin\\BackupController@download');
+  //Route::post('/backups/delete/{route}/{file_name}', 'Admin\\BackupController@stordeleteedb');
+  Route::get('/backup/delete/{file}/{file_name?}', 'Admin\\BackupController@delete');
 
 });
 

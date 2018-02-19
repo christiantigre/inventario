@@ -189,6 +189,9 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         //Barry/dompdf
         Barryvdh\DomPDF\ServiceProvider::class,
+        //backup
+        Spatie\Backup\BackupServiceProvider::class,
+        Backpack\BackupManager\BackupManagerServiceProvider::class,
 
     ],
 

@@ -242,6 +242,10 @@ return [
                 ],
                 [
                     'text' => 'Respaldo',
+                    'url'  => 'admin/backup',
+                ],
+                [
+                    'text' => 'backups',
                     'url'  => 'admin/backups',
                 ],
             ],
