@@ -267,11 +267,12 @@ Route::group(['prefix' => 'person'], function () {
   Route::post('/settings/updatecredentials/{id}', 'Person\\PerfilController@updatecredentials');
   
 });
+
   Route::get('getSubcategory/{id}', 'ComponentController@getSubcategory');
 
-//copiado category y subcategory (carpetas) Realizar la revicion de controladores
-Route::resource('admin/tempauxcta', 'Admin\\TempauxctaController');
-Route::resource('admin/tempsubauxcta', 'Admin\\TempsubauxctaController');
+  //copiado category y subcategory (carpetas) Realizar la revicion de controladores
+  Route::resource('admin/tempauxcta', 'Admin\\TempauxctaController');
+  Route::resource('admin/tempsubauxcta', 'Admin\\TempsubauxctaController');
 
 
 

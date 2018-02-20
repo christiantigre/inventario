@@ -108,25 +108,18 @@ return [
     */
 
     'menu' => [
-        'MENU PRINCIPAL',
+        'CUENTA',
         [
             'text' => 'Blog',
             'url'  => 'admin/blog',
             'can'  => 'manage-blog',
         ],
         [
-            'text'        => 'Pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'file',
-            'label'       => 4,
-            'label_color' => 'success',
+            'text'        => 'Perfíl',
+            'url'         => 'admin/settings',
+            'icon'        => 'user',
         ],
         'ADMINISTRACIÓN',
-        [
-            'text' => 'Perfíl',
-            'url'  => 'admin/settings',
-            'icon' => 'user',
-        ],
         [
             'text' => 'Ventas',
             'url'  => 'admin/venta',
@@ -138,14 +131,19 @@ return [
             'icon' => 'cloud-upload',
         ],
         [
-            'text' => 'Proveedor',
+            'text' => 'Proveedores',
             'url'  => 'admin/proveedor',
             'icon' => 'group',
         ],
         [
-            'text' => 'Cliente',
+            'text' => 'Clientes',
             'url'  => 'admin/cliente',
             'icon' => 'user',
+        ],
+        [
+            'text' => 'Usuarios',
+            'url'  => 'admin/people',
+            'icon' => 'users',
         ],
         [
             'text' => 'Inventario',
@@ -241,11 +239,7 @@ return [
                     'url'  => 'admin/logs',
                 ],
                 [
-                    'text' => 'Respaldo',
-                    'url'  => 'admin/backup',
-                ],
-                [
-                    'text' => 'backups',
+                    'text' => 'Backups',
                     'url'  => 'admin/backups',
                 ],
             ],
