@@ -190,6 +190,9 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/backup/download/{file_name?}', 'Admin\\BackupController@download');
   Route::get('/backup/delete/{file}/{file_name?}', 'Admin\\BackupController@delete');
 
+  //perfil
+  Route::resource('/settings', 'Admin\\PerfilController'); 
+
 });
 
 
@@ -258,7 +261,11 @@ Route::group(['prefix' => 'person'], function () {
 
   Route::get('/listclientes/', 'ComponentController@listallClientes');
   Route::get('/extraerdatosprov/','ComponentController@extraerdatosProv');
-
+  //perfil
+  Route::resource('/settings', 'Person\\PerfilController'); 
+  Route::get('/settings/{id}/editcredentials/', 'Person\\PerfilController@editcredentials');
+  Route::post('/settings/updatecredentials/{id}', 'Person\\PerfilController@updatecredentials');
+  
 });
   Route::get('getSubcategory/{id}', 'ComponentController@getSubcategory');
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\PersonAuth;
 
 use App\Person;
+use App\Perfil;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -64,11 +65,19 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return Person::create([
+        $person = Person::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+
+        Perfil::create([
+            'email' => $person->email,
+            'tipo_usuario' => 'person',
+            'id_usuario' => $person->id,
+        ]);
+
+        return $person;
     }
 
     /**

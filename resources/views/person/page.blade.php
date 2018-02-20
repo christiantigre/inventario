@@ -100,6 +100,13 @@ href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 
                     <span>Sistema</span>
                 </a>
             </li>
+            <li class="">
+                    <a href="{{ url('person/settings') }}"
+                    >
+                    <i class="fa fa-fw fa-user "></i>
+                    <span>Perfíl</span>
+                </a>
+            </li>
 
             <li class="">
                 <a href="{{ url('person/venta') }}"

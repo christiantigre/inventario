@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\AdminAuth;
 
 use App\Admin;
+use App\Perfil;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -63,11 +64,19 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return Admin::create([
+        $admin = Admin::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+
+        Perfil::create([
+            'email' => $admin->email,
+            'tipo_usuario' => 'admin',
+            'id_usuario' => $admin->id,
+        ]);
+
+        return $admin;
     }
 
     /**

@@ -547,6 +547,7 @@ class ContabilidadController extends Controller
         );
         return $data;
     }
+    
     public function gen_section_balance_inicial(){
         $data = array(
             "txtinicio"=>"Inicio",
