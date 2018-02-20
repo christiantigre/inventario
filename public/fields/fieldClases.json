@@ -1,7 +1,7 @@
 {
     "fields": [
         {
-            "name": "num_asiento",
+            "name": "name",
             "type": "text"
         },
         {

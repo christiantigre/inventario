@@ -192,6 +192,8 @@ Route::group(['prefix' => 'admin'], function () {
 
   //perfil
   Route::resource('/settings', 'Admin\\PerfilController'); 
+  //usuarios
+  Route::resource('/people', 'Admin\\PeopleController'); 
 
 });
 
