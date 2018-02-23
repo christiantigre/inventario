@@ -14,9 +14,7 @@
                     <div class="row">
                       <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12"> 
 
-                        <a href="{{ url('/admin/libro/createAsiento') }}" class="btn btn-success btn-md" title="Registrar Asiento">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Nuevo
-                        </a>
+                        Sutiación financiera del periodo actual
 
                     </div>
                 </div>

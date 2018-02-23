@@ -34,7 +34,6 @@ class CreatePlansTable extends Migration
      */
     public function down()
     {
-        
-        DB::statement("DROP VIEW plan_contable");
+        DB::statement("DROP VIEW `plan_contable`");
     }
 }

@@ -36,6 +36,6 @@ class CreateCuentasRelacionadasTable extends Migration
      */
     public function down()
     {
-        DB::statement("DROP VIEW cuentas_relacionadas");
+        DB::statement("DROP VIEW `cuentas_relacionadas`");
     }
 }

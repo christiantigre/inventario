@@ -163,3 +163,7 @@ link pagina web edita imagenes
         DB::commit();
     else
         DB::rollback();
+
+        migrar solo una tabla 
+        C:\xampp\htdocs\inventario\database\migrations
+        php artisan migrate --path=app/database/migrations/2018_02_23_142853_create_agrupacion_sumadas_table.php

@@ -93,6 +93,6 @@ sbc.codigo AS cod_subcuenta,sbc.subcuenta AS subcuenta,a.codigo AS cod_auxiliar,
      */
     public function down()
     {
-        DB::statement("DROP VIEW ctas_group");
+        DB::statement("DROP VIEW `ctas_group`");
     }
 }

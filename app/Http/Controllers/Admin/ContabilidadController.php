@@ -10,6 +10,7 @@ use App\num_asiento;
 use App\Plan;
 use App\Admin;
 use App\Almacen;
+use App\Agrupacion_sumada;
 use Carbon\Carbon;
 use App\SvLogAdmin;
 use App\tempdetallasiento;
@@ -640,12 +641,15 @@ GROUP BY cod_cuenta cuenta
     public function situacionfinanciera(){
 
         $dato = $this->gen_section_balance_inicial();
-        $dato['ventana'] = "Situacion Financiera";
+        $dato['ventana'] = "Situación Financiera";
         $this->genLog("Ingresó a Situación Financiera");
 
         $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
         $year = $carbon->now()->format('Y');
 
+    $situacionfinanciera = Agrupacion_sumada::all();
+    dd($situacionfinanciera);
+    /*
     $situaciofinanciera = DB::table('detall_asientos')
     ->select('cod_cuenta','cuenta',DB::raw('sum(saldo_debe) as debe,sum(saldo_haber) as haber, count(*) as count'))
     ->where([
@@ -653,7 +657,7 @@ GROUP BY cod_cuenta cuenta
         ['periodo', '=', $year],
     ])
     ->groupBy('cod_cuenta','cuenta')
-    ->get();
+    ->get();*/
     /*
     CREATE VIEW balance_comprobacion as SELECT `cod_cuenta`,`cuenta`,`periodo`,`fecha`, sum(`saldo_debe`) as debe, sum(`saldo_haber`) as haber, `asiento_id`,COUNT(*) as contador FROM `detall_asientos` GROUP BY cod_cuenta,cuenta
     */
