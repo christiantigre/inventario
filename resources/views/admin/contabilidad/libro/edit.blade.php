@@ -214,9 +214,9 @@
         {
           console.log(data);
           console.log("Update succefull");
-          list_trs_admin_edit_asiento();
-
           toastr.success("Transacciòn exitosa");
+          window.location.href = "{{URL::to('admin/libro')}}"
+          list_trs_admin_edit_asiento();
     },
     error:function(data)
     {

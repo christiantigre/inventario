@@ -187,6 +187,7 @@
           toastr.success("Transaccion exitosa.");
           console.log("copy data succefull");
           list_trs_admin();
+           window.location.href = "{{URL::to('admin/balanceinicial')}}"
           $('#alert').show();
           $('#alert').html(data.message);
         },

@@ -196,6 +196,7 @@
       var incremento = (parseInt(num_asiento)+1);
       document.getElementById("num_asiento").value = incremento;
       $("#label_num_asiento").text(incremento);
+       window.location.href = "{{URL::to('admin/libro')}}"
       $('#alert').show();
       $('#alert').html(data.message);
     },
@@ -218,7 +219,7 @@
     var token = $("input[name=_token]").val();
     var cod_cuenta= $("#cod_cuenta").val();
   var route = '{{ url("admin/vercuentas") }}';
-  
+
     traer_grupo(cod_cuenta);
   document.getElementById("cod_cuenta").value = "";
   var parametros = {

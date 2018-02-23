@@ -207,17 +207,13 @@
         {
           console.log(data);
           console.log("Update succefull");
-          list_trs_admin_edit();
-
           toastr.success("Transacciòn exitosa");
-      /*$('#alert').show();
-      $('#alert').html(data.message);*/
+          window.location.href = "{{URL::to('admin/balanceinicial')}}"
+          list_trs_admin_edit();
     },
     error:function(data)
     {
       console.log('Error '+data);
-      /*$('#alert').show();
-      $('#alert').html(data.message);*/      
       toastr.error("!!! Error al realizar transacción...");
     }  
   });

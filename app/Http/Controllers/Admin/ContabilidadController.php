@@ -523,14 +523,14 @@ class ContabilidadController extends Controller
         try {
             //Actualiza cabecera del asiento
             if($asiento = $trs->update()){
-                Session::flash('flash_message', 'Asiento '.$$request['num_asiento'].' Actualizado correctamente');
+                Session::flash('flash_message', 'Asiento '.$request['num_asiento'].' Actualizado correctamente');
                 return response()->json(array('message' => 'Actualizado con exito'));
             }
             
 
         } catch (\Exception $e) {
 
-            Session::flash('warning', 'Error al Actualziarel asiento');     
+            Session::flash('warning', 'Error al Actualziarel asiento'.$e);     
             return response()->json(array('message' => 'Error al Actualizar el asiento !!!','data'=>$request->all())); 
 
         }
