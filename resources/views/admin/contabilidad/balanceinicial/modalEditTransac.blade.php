@@ -53,6 +53,13 @@
 
                     {!! Form::hidden('num_asiento_modal', null, ['id'=>'num_asiento_modal','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('num_asiento_modal') !!}
 
+                    {!! Form::hidden('codaux_clase_modal', null, ['id'=>'codaux_clase_modal','class' => 'form-control']), old('codaux_clase') !!}
+                    {!! Form::hidden('codaux_grupo_modal', null, ['id'=>'codaux_grupo_modal','class' => 'form-control']), old('codaux_grupo') !!}
+                    {!! Form::hidden('codaux_cuenta_modal', null, ['id'=>'codaux_cuenta_modal','class' => 'form-control']), old('codaux_cuenta') !!}
+                    {!! Form::hidden('codaux_subcuenta_modal', null, ['id'=>'codaux_subcuenta_modal','class' => 'form-control']), old('codaux_subcuenta') !!}
+                    {!! Form::hidden('codaux_auxiliar_modal', null, ['id'=>'codaux_auxiliar_modal','class' => 'form-control']), old('codaux_auxiliar') !!}
+                    {!! Form::hidden('codaux_subauxiliar_modal', null, ['id'=>'codaux_subauxiliar_modal','class' => 'form-control']), old('codaux_subauxiliar') !!}
+
             <div class="help-block with-errors"></div>
 
           </div>

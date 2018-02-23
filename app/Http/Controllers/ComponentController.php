@@ -16,6 +16,8 @@ use App\Tempsubauxctum;
 use App\auxiliar;
 use App\subauxiliar;
 use App\Plan;
+use App\Cuentas_relacionadas;
+use App\CtasGrupos;
 use App\Subcategory;
 use Session;
 use App\tempdetallasiento;
@@ -342,41 +344,41 @@ public function saveauxcuenta(Request $request){
         $item->auxiliar = $request->auxiliar;
         $item->codigo = $request->codigo;
 
-            if($item->save()){
-                return response()->json(["mensaje"=>"Registrado con exito","data"=>$request->all()]);
-            }else{
-                return response()->json(["mensaje"=>"Error !!! al guardar","data"=>$request->all()]);
-            }
-
-        }
-    } 
-
-    
-    public function trashAuxcuentas(Request $request){
-        if ($request->ajax()) {        
-
-            if(Tempauxctum::truncate()){
-                return response()->json(["mensaje"=>"Vaciado con exito","data"=>"Vaciado"]);
-            }else{
-                return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
-            }
-
+        if($item->save()){
+            return response()->json(["mensaje"=>"Registrado con exito","data"=>$request->all()]);
         }else{
-           return response()->json(["mensaje"=>$request->all()]);   
-       }
+            return response()->json(["mensaje"=>"Error !!! al guardar","data"=>$request->all()]);
+        }
+
+    }
+} 
+
+
+public function trashAuxcuentas(Request $request){
+    if ($request->ajax()) {        
+
+        if(Tempauxctum::truncate()){
+            return response()->json(["mensaje"=>"Vaciado con exito","data"=>"Vaciado"]);
+        }else{
+            return response()->json(["mensaje"=>"Error !!! al vaciar","data"=>$request->all()]);
+        }
+
+    }else{
+       return response()->json(["mensaje"=>$request->all()]);   
    }
+}
 
 
 
 
-   public function guardarAuxCuentas(Request $request){
+public function guardarAuxCuentas(Request $request){
     try {
 
         $auxcuentas = Tempauxctum::get();
-            foreach ($auxcuentas as $cuenta) {
-                $requestData_returned = $this->saveItemAuxiliar($cuenta);
-                $requestData_returned->save();
-            }
+        foreach ($auxcuentas as $cuenta) {
+            $requestData_returned = $this->saveItemAuxiliar($cuenta);
+            $requestData_returned->save();
+        }
 
         Tempauxctum::truncate();
 
@@ -511,6 +513,64 @@ public function vercuentas(Request $request){
     }
 }
 
+public function extraergrupo(Request $request){
+ if ($request->ajax()) { 
+    $search = $request->id;
+    /*$grupo = CtasGrupos::from('ctas_group as a')
+    ->where(function ($query) use ($search) {
+      $query = $query->orWhere('a.cod_clase','like',"$search");
+      $query = $query->orWhere('a.cod_grupo','like',"$search");
+      $query = $query->orWhere('a.cod_cuenta','like',"$search");
+      $query = $query->orWhere('a.cod_subcuenta','like',"$search");
+      $query = $query->orWhere('a.cod_auxiliar','like',"$search");
+      $query = $query->orWhere('a.cod_subauxiliar','like',"$search");*/
+      $count_doots = substr_count($search, '.');
+      if($count_doots=="0"){
+        $grupo = Cuentas_relacionadas::from('cuentas_relacionadas as a')
+        ->where(function ($query) use ($search) {
+          $query = $query->orWhere('a.cod_clase','like',"$search");
+      });
+        $grupo = $grupo->first(); 
+    }
+    if($count_doots=="1"){
+        $grupo = Cuentas_relacionadas::from('cuentas_relacionadas as a')
+        ->where(function ($query) use ($search) {
+          $query = $query->orWhere('a.cod_grupo','like',"$search");
+      });
+        $grupo = $grupo->first(); 
+    }
+    if($count_doots=="2"){
+        $grupo = Cuentas_relacionadas::from('cuentas_relacionadas as a')
+        ->where(function ($query) use ($search) {
+          $query = $query->orWhere('a.cod_cuenta','like',"$search");
+      });
+        $grupo = $grupo->first(); 
+    }
+    if($count_doots=="3"){
+        $grupo = Cuentas_relacionadas::from('cuentas_relacionadas as a')
+        ->where(function ($query) use ($search) {
+          $query = $query->orWhere('a.cod_subcuenta','like',"$search");
+      });
+        $grupo = $grupo->first(); 
+    }
+    if($count_doots=="4"){
+        $grupo = Cuentas_relacionadas::from('cuentas_relacionadas as a')
+        ->where(function ($query) use ($search) {
+          $query = $query->orWhere('a.cod_auxiliar','like',"$search");
+      });
+        $grupo = $grupo->first(); 
+    }
+    if($count_doots=="5"){
+        $grupo = Cuentas_relacionadas::from('cuentas_relacionadas as a')
+        ->where(function ($query) use ($search) {
+          $query = $query->orWhere('a.cod_subauxiliar','like',"$search");
+      });
+        $grupo = $grupo->first(); 
+    }
+    
+    return response()->json($grupo);
+}
+}
 
 public function getSubcategory(Request $request, $id){
     if ($request->ajax()) {
@@ -523,8 +583,8 @@ public function getSubcategory(Request $request, $id){
 public function listaTrs()
 {
 
-        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
-        $year = $carbon->now()->format('Y');
+    $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+    $year = $carbon->now()->format('Y');
 
     $transacciones = tempdetallasiento::orderBy('id','ASC') ->where('periodo',$year)->get();
     return view('admin/contabilidad/balanceinicial/listtrs_asiento', compact('transacciones'));
@@ -543,7 +603,13 @@ public function saveAsiento(Request $request){
         $item->fecha = $request->fecha;
         $item->concepto_detalle = $request->concepto_detalle;
         $item->saldo_debe = $decimal_debe;
-        $item->saldo_haber = $decimal_haber;
+        $item->saldo_haber = $decimal_haber;  
+        $item->codaux_clase =$request->codaux_clase;
+        $item->codaux_grupo =$request->codaux_grupo;
+        $item->codaux_cuenta =$request->codaux_cuenta;
+        $item->codaux_subcuenta =$request->codaux_subcuenta;
+        $item->codaux_auxiliar =$request->codaux_auxiliar;
+        $item->codaux_subauxiliar =$request->codaux_subauxiliar;
         
         if($item->save()){
             return response()->json(["mensaje"=>"Registrado con exito","data"=>$request->all()]);
@@ -616,8 +682,8 @@ public function saveBInicial(Request $request){
 
 public function listaTrsEdit()
 {
-        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
-        $year = $carbon->now()->format('Y');
+    $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+    $year = $carbon->now()->format('Y');
 
     $transacciones = detall_asiento::orderBy('id','ASC')->where('num_asiento',"1")->where('periodo',$year)->get();
 
@@ -692,6 +758,12 @@ public function saveAsientoEdit(Request $request){
         $item->concepto_detalle = $request->concepto_detalle;
         $item->saldo_debe = $decimal_debe;
         $item->saldo_haber = $decimal_haber;
+        $item->codaux_clase = $request->aux_clase_modal;
+        $item->codaux_grupo = $request->aux_grupo_modal;
+        $item->codaux_cuenta = $request->aux_cuenta_modal;
+        $item->codaux_subcuenta = $request->aux_subcuenta_modal;
+        $item->codaux_auxiliar = $request->aux_auxiliar_modal;
+        $item->codaux_subauxiliar = $request->aux_subauxiliar_modal;
         
         if($item->update()){
             return response()->json(["mensaje"=>"Actualizado con exito","data"=>$request->all()]);
@@ -718,6 +790,12 @@ public function saveAsientoAdd(Request $request){
         $item->saldo_haber = $decimal_haber;
         $item->almacen_id = $request->almacen_id;
         $item->asiento_id = $request->asiento_id;
+        $item->codaux_clase = $request->codaux_clase;
+        $item->codaux_grupo = $request->codaux_grupo;
+        $item->codaux_cuenta = $request->codaux_cuenta;
+        $item->codaux_subcuenta = $request->codaux_subcuenta;
+        $item->codaux_auxiliar = $request->codaux_auxiliar;
+        $item->codaux_subauxiliar = $request->codaux_subauxiliar;
         
         if($item->save()){
             return response()->json(["mensaje"=>"Registrado con exito","data"=>$request->all()]);
@@ -755,8 +833,8 @@ public function verAsiento(Request $request){
         $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
         $year = $carbon->now()->format('Y');
 
-    $transacciones = detall_asiento::orderBy('id','ASC') ->where('periodo',$year)->where('asiento_id',$request->id)->get();
-    return view('admin/contabilidad/libro/listtrs_asiento', compact('transacciones'));
+        $transacciones = detall_asiento::orderBy('id','ASC') ->where('periodo',$year)->where('asiento_id',$request->id)->get();
+        return view('admin/contabilidad/libro/listtrs_asiento', compact('transacciones'));
 
 
        // return response()->json($data);
@@ -769,8 +847,8 @@ public function verDetallAsiento(Request $request){
         $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
         $year = $carbon->now()->format('Y');
 
-    $transacciones = detall_asiento::orderBy('id','ASC') ->where('periodo',$year)->where('asiento_id',$request->id)->get();
-    return view('admin/contabilidad/libro/detall_asiento', compact('transacciones'));
+        $transacciones = detall_asiento::orderBy('id','ASC') ->where('periodo',$year)->where('asiento_id',$request->id)->get();
+        return view('admin/contabilidad/libro/detall_asiento', compact('transacciones'));
 
 
        // return response()->json($data);
@@ -781,8 +859,8 @@ public function verDetallAsiento(Request $request){
 
 public function Edit_detall(Request $request)
 {
-        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
-        $year = $carbon->now()->format('Y');
+    $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+    $year = $carbon->now()->format('Y');
 
     $transacciones = detall_asiento::orderBy('id','ASC')->where('num_asiento',$request->num_asiento)->where('periodo',$year)->get();
 
@@ -803,8 +881,8 @@ public function DetsumAs(Request $request){
 
 public function ver_detall(Request $request)
 {
-        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
-        $year = $carbon->now()->format('Y');
+    $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+    $year = $carbon->now()->format('Y');
 
     $transacciones = detall_asiento::orderBy('id','ASC')->where('num_asiento',$request->num_asiento)->where('periodo',$year)->get();
 

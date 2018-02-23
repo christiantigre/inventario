@@ -182,6 +182,7 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/ver_detall/', 'ComponentController@ver_detall');  
   //Mayor
   Route::get('mayor/', 'Admin\\ContabilidadController@mayor');
+  Route::get('mayor/detallecuenta/{cuenta}', 'Admin\\ContabilidadController@mayordetallecuenta');  
   Route::get('situacionfinanciera/', 'Admin\\ContabilidadController@situacionfinanciera');
 
   //backups
@@ -194,7 +195,9 @@ Route::group(['prefix' => 'admin'], function () {
   Route::resource('/settings', 'Admin\\PerfilController'); 
   //usuarios
   Route::resource('/people', 'Admin\\PeopleController'); 
-
+  Route::get('/extraergrupo/','ComponentController@extraergrupo');
+  //Test
+  Route::get('/codcuenta/{cod}', 'Admin\\TestController@index');
 });
 
 

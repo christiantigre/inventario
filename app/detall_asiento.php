@@ -25,7 +25,7 @@ class detall_asiento extends Model
      *
      * @var array
      */
-    protected $fillable = ['num_asiento', 'cod_cuenta', 'cuenta', 'periodo', 'fecha', 'concepto_detalle','saldo_debe', 'saldo_haber', 'almacen_id', 'cuenta_id', 'asiento_id'];
+    protected $fillable = ['num_asiento', 'cod_cuenta', 'cuenta', 'periodo', 'fecha', 'concepto_detalle','saldo_debe', 'saldo_haber', 'almacen_id', 'cuenta_id', 'asiento_id','codaux_clase','codaux_grupo','codaux_cuenta','codaux_subcuenta','codaux_auxiliar','codaux_subauxiliar'];
 
     public function Almacen()
     {

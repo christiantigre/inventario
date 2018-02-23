@@ -51,12 +51,14 @@
 
                   <!-- /.box-header -->
                   <div class="box-body no-padding">
-                    <div id="list-cart">
+                    <div class="table-responsive">
+                      <div id="list-cart">
 
 
 
 
-                    </div> 
+                      </div> 
+                    </div>
 
                     
 
@@ -169,8 +171,11 @@
     var concepto= $("#concepto").val();
     var periodo= $("#periodo").val();
     var fecha= $("#fecha").val();
+
     var saldo_debe= $("#debe").val();
+        saldo_debe = number_format(saldo_debe,2);
     var saldo_haber= $("#haber").val();
+        saldo_haber = number_format(saldo_haber,2);
     var responsable= $("#responsable").val();
     var almacen_id= $("#almacen_id").val();
     var id= $("#id").val();
@@ -223,118 +228,197 @@
 
   }
 
-</script>
-<script type="text/javascript">
 
   function consulta_cuenta_admin(){
     var token = $("input[name=_token]").val();
     var cod_cuenta= $("#cod_cuenta").val();
-  //var route = '/admin/vercuentas/';
-  var route = '{{ url("admin/vercuentas") }}';
-  document.getElementById("cod_cuenta").value = "";
-  var parametros = {
-    "id" :cod_cuenta
+    limpiar_campos_agrupar();
+    traer_grupo(cod_cuenta);
+
+    var route = '{{ url("admin/vercuentas") }}';
+    document.getElementById("cod_cuenta").value = "";
+    var parametros = {
+      "id" :cod_cuenta
+    }
+    console.log(parametros);
+    $.ajax({
+      url:route,
+      headers:{'X-CSRF-TOKEN':token},
+      type:'get',
+      dataType: 'json',
+      data:parametros,
+      success:function(data)
+      {
+        console.log(data);
+        document.getElementById("cuenta").value = data.cuenta;
+        document.getElementById("cod_cuenta").value = data.cod;
+        console.log("copy data succefull");
+      },
+      error:function(data)
+      {
+        console.log('Error '+data);
+      }  
+    });
   }
-  console.log(parametros);
-  $.ajax({
-    url:route,
-    headers:{'X-CSRF-TOKEN':token},
-    type:'get',
-    dataType: 'json',
-    data:parametros,
-    success:function(data)
-    {
-      console.log(data);
-      document.getElementById("cuenta").value = data.cuenta;
-      document.getElementById("cod_cuenta").value = data.cod;
-      console.log("copy data succefull");
-    },
-    error:function(data)
-    {
-      console.log('Error '+data);
-    }  
+  function limpiar_campos_agrupar(){
+    console.log("cleaning inpput for search...");
+    document.getElementById("codaux_clase").value = "";
+    document.getElementById("codaux_grupo").value = "";
+    document.getElementById("codaux_cuenta").value = "";
+    document.getElementById("codaux_subcuenta").value = "";
+    document.getElementById("codaux_auxiliar").value = "";
+    document.getElementById("codaux_subauxiliar").value = "";
+  }
+  function traer_grupo(cod){
+    console.log("Consulta grupo");
+    var token = $("input[name=_token]").val();
+    var cod_cuenta= cod;
+    var route = '{{ url("admin/extraergrupo") }}';
+    var parametros = {
+      "id" :cod_cuenta
+    }
+    $.ajax({
+      url:route,
+      headers:{'X-CSRF-TOKEN':token},
+      type:'get',
+      dataType: 'json',
+      data:parametros,
+      success:function(data)
+      {
+        console.log(data);
+        document.getElementById("codaux_clase").value = data.cod_clase;
+        document.getElementById("codaux_grupo").value = data.cod_grupo;
+        document.getElementById("codaux_cuenta").value = data.cod_cuenta;
+        document.getElementById("codaux_subcuenta").value = data.cod_subcuenta;
+        document.getElementById("codaux_auxiliar").value = data.cod_auxiliar;
+        document.getElementById("codaux_subauxiliar").value = data.cod_subauxiliar;
+        console.log("copy data succefull");
+      },
+      error:function(data)
+      {
+        console.log('Error '+data);
+      }  
+    });
+  }
+
+  function traer_grupo_modal(cod){
+    console.log("Consulta grupo para modal");
+    var token = $("input[name=_token]").val();
+    var cod_cuenta= cod;
+    var route = '{{ url("admin/extraergrupo") }}';
+    var parametros = {
+      "id" :cod_cuenta
+    }
+    $.ajax({
+      url:route,
+      headers:{'X-CSRF-TOKEN':token},
+      type:'get',
+      dataType: 'json',
+      data:parametros,
+      success:function(data)
+      {
+        console.log(data);
+        document.getElementById("codaux_clase_modal").value = data.cod_clase;
+        document.getElementById("codaux_grupo_modal").value = data.cod_grupo;
+        document.getElementById("codaux_cuenta_modal").value = data.cod_cuenta;
+        document.getElementById("codaux_subcuenta_modal").value = data.cod_subcuenta;
+        document.getElementById("codaux_auxiliar_modal").value = data.cod_auxiliar;
+        document.getElementById("codaux_subauxiliar_modal").value = data.cod_subauxiliar;
+        console.log("copy data succefull");
+      },
+      error:function(data)
+      {
+        console.log('Error '+data);
+      }  
+    });
+  }
+
+
+  $('.busca_cuenta').click(function(){
+    console.log("busqueda por boton");
+    var token = $("input[name=_token]").val();
+    var cod_cuenta= $("#cod_cuenta").val();
+    var route = '{{ url("admin/vercuentas") }}';
+    document.getElementById("cod_cuenta").value = "";
+
+    var parametros = {
+      "id" :cod_cuenta
+    }
+    traer_grupo(cod_cuenta);
+    console.log(parametros);
+
+    $.ajax({
+      url:route,
+      headers:{'X-CSRF-TOKEN':token},
+      type:'get',
+      dataType: 'json',
+      data:parametros,
+      success:function(data)
+      {
+        console.log(data);
+        document.getElementById("cuenta").value = data.cuenta;
+        document.getElementById("cod_cuenta").value = data.cod;
+        console.log("copy data succefull");
+      },
+      error:function(data)
+      {
+        console.log('Error '+data);
+      }  
+    });
   });
-}
+
+  $('#guarda_trs_admin_edit').click(function(){
+    var num_asiento = $("#num_asiento").val();
+    var cod_cuenta = $("#cod_cuenta").val();
+    var cuenta = $("#cuenta").val();
+    var periodo = $("#periodo").val();
+    var fecha = $("#fecha").val();
+    var concepto_detalle = $("#concepto_detalle").val();
+    var almacen_id = $("#almacen_id").val();
+    var asiento_id = $("#id").val();
+    var codaux_clase = $("#codaux_clase").val();
+    var codaux_grupo = $("#codaux_grupo").val();
+    var codaux_cuenta = $("#codaux_cuenta").val();
+    var codaux_subcuenta = $("#codaux_subcuenta").val();
+    var codaux_auxiliar = $("#codaux_auxiliar").val();
+    var codaux_subauxiliar = $("#codaux_subauxiliar").val();
 
 
-$('.busca_cuenta').click(function(){
-  console.log("busqueda por boton");
-  var token = $("input[name=_token]").val();
-  var cod_cuenta= $("#cod_cuenta").val();
-  var route = '{{ url("admin/vercuentas") }}';
-  document.getElementById("cod_cuenta").value = "";
+    var valorconvertir =$("#valor").val();
 
-  var parametros = {
-    "id" :cod_cuenta
-  }
+    if(valorconvertir=="") {
+      toastr.warning("!!! Ingresar un valor 0.00.");
+      return true;
+    }
 
-  console.log(parametros);
+    var valor =number_format(valorconvertir,2);
+    var tipo = $("#tipo").val();
 
-  $.ajax({
-    url:route,
-    headers:{'X-CSRF-TOKEN':token},
-    type:'get',
-    dataType: 'json',
-    data:parametros,
-    success:function(data)
-    {
-      console.log(data);
-      document.getElementById("cuenta").value = data.cuenta;
-      document.getElementById("cod_cuenta").value = data.cod;
-      console.log("copy data succefull");
-    },
-    error:function(data)
-    {
-      console.log('Error '+data);
-    }  
-  });
-});
+    if(cod_cuenta=="") {
+      toastr.warning("!!! Ingrese un código de cuenta.");
+      return true;
+    }
 
-$('#guarda_trs_admin_edit').click(function(){
-  var num_asiento = $("#num_asiento").val();
-  var cod_cuenta = $("#cod_cuenta").val();
-  var cuenta = $("#cuenta").val();
-  var periodo = $("#periodo").val();
-  var fecha = $("#fecha").val();
-  var concepto_detalle = $("#concepto_detalle").val();
-  var almacen_id = $("#almacen_id").val();
-  var asiento_id = $("#id").val();
+    if(cuenta=="") {
+      toastr.warning("!!! Buscar cuenta.");
+      return true;
+    }
 
-  var valorconvertir =$("#valor").val();
+    if(valor=="") {
+      toastr.warning("!!! Ingresar un valor 0.00.");
+      return true;
+    }
 
-  if(valorconvertir=="") {
-    toastr.warning("!!! Ingresar un valor 0.00.");
-    return true;
-  }
+    if(tipo=="1"){
+      saldo_debe = valor;
+      saldo_haber = "0.00";
+    }
+    if(tipo=="2"){
+      saldo_debe = "0.00";
+      saldo_haber = valor;
+    }
 
-  var valor =number_format(valorconvertir,2);
-  var tipo = $("#tipo").val();
-
-  if(cod_cuenta=="") {
-    toastr.warning("!!! Ingrese un código de cuenta.");
-    return true;
-  }
-
-  if(cuenta=="") {
-    toastr.warning("!!! Buscar cuenta.");
-    return true;
-  }
-
-  if(valor=="") {
-    toastr.warning("!!! Ingresar un valor 0.00.");
-    return true;
-  }
-
-  if(tipo=="1"){
-    saldo_debe = valor;
-    saldo_haber = "0.00";
-  }
-  if(tipo=="2"){
-    saldo_debe = "0.00";
-    saldo_haber = valor;
-  }
-
-  var token = $("input[name=_token]").val();
+    var token = $("input[name=_token]").val();
 
   //var route = '/admin/saveAsiento/';
   var route = '{{ url("admin/saveAsientoAdd") }}';
@@ -350,7 +434,14 @@ $('#guarda_trs_admin_edit').click(function(){
     "saldo_haber" :saldo_haber,
     "almacen_id" :almacen_id,
     "asiento_id" :asiento_id,
+    "codaux_clase" : codaux_clase,
+    "codaux_grupo" : codaux_grupo,
+    "codaux_cuenta" : codaux_cuenta,
+    "codaux_subcuenta" : codaux_subcuenta,
+    "codaux_auxiliar" : codaux_auxiliar,
+    "codaux_subauxiliar" : codaux_subauxiliar,
   }
+  
   console.log(parametros);
   $.ajax({
     url:route,
@@ -374,10 +465,10 @@ $('#guarda_trs_admin_edit').click(function(){
   });
 });
 
-function trashBalanceInicial(id){
-  if (confirm("Desea eliminar el detalle del balance inicial?")) {
-    console.log(id);
-    var token = $("input[name=_token]").val();
+  function trashBalanceInicial(id){
+    if (confirm("Desea eliminar el detalle del balance inicial?")) {
+      console.log(id);
+      var token = $("input[name=_token]").val();
   //var route = '/admin/trashSubAuxcuentas/'; 
   var route = '{{ url("admin/trashBalanceInicialDetall") }}'; 
   var parametros = {
@@ -437,9 +528,10 @@ function eliminarTrs(id){
 
 
 $('.busca_cuenta_modal').click(function(){
-  console.log("busqueda por boton desde modal");
+  console.log("busqueda por boton desde modal...");
   var token = $("input[name=_token]").val();
   var cod_cuenta_modal= $("#cod_cuenta_modal").val();
+  traer_grupo_modal(cod_cuenta_modal);
   //var route = '/admin/vercuentas/';
   var route = '{{ url("admin/vercuentas") }}';
   document.getElementById("cod_cuenta_modal").value = "";
@@ -505,6 +597,7 @@ function ver_trs(id){
 }
 
 function ver_trs_edit(id){  
+  reset_modal_edit_admin();
   console.log("buscar datos para modal por "+id);
   var token = $("input[name=_token]").val();
   var route = '{{ url("admin/vertrs") }}';
@@ -532,6 +625,12 @@ function ver_trs_edit(id){
       document.getElementById("saldo_debe_modal").value = data.saldo_debe;
       document.getElementById("saldo_haber_modal").value = data.saldo_haber;
       document.getElementById("concepto_detalle_modal").value = data.concepto_detalle;
+      document.getElementById("codaux_clase_modal").value = data.codaux_clase;
+      document.getElementById("codaux_grupo_modal").value = data.codaux_grupo;
+      document.getElementById("codaux_cuenta_modal").value = data.codaux_cuenta;
+      document.getElementById("codaux_subcuenta_modal").value = data.codaux_subcuenta;
+      document.getElementById("codaux_auxiliar_modal").value = data.codaux_auxiliar;
+      document.getElementById("codaux_subauxiliar_modal").value = data.codaux_subauxiliar;
       console.log("copy data succefull");
     },
     error:function(data)
@@ -555,6 +654,13 @@ $('.submit-edit-trs').click(function(){
   var saldo_haber_modal= $("#saldo_haber_modal").val();
   var concepto_detalle_modal= $("#concepto_detalle_modal").val();
   var id_modal= $("#id_modal").val();
+  var codaux_clase_modal= $("#codaux_clase_modal").val();
+  var codaux_grupo_modal= $("#codaux_grupo_modal").val();
+  var codaux_cuenta_modal= $("#codaux_cuenta_modal").val();
+  var codaux_subcuenta_modal= $("#codaux_subcuenta_modal").val();
+  var codaux_auxiliar_modal= $("#codaux_auxiliar_modal").val();
+  var codaux_subauxiliar_modal= $("#codaux_subauxiliar_modal").val();
+
   //var route = '/admin/vercuentas/';
   var route = '{{ url("admin/saveAsientoEdit") }}';
   
@@ -568,6 +674,12 @@ $('.submit-edit-trs').click(function(){
     "saldo_debe" :saldo_debe_modal,
     "saldo_haber" :saldo_haber_modal,
     "id" :id_modal,
+    "aux_clase_modal" : codaux_clase_modal,
+    "aux_grupo_modal" : codaux_grupo_modal,
+    "aux_cuenta_modal" : codaux_cuenta_modal,
+    "aux_subcuenta_modal" : codaux_subcuenta_modal,
+    "aux_auxiliar_modal" : codaux_auxiliar_modal,
+    "aux_subauxiliar_modal" : codaux_subauxiliar_modal,
   }
   console.log(parametros);
   $.ajax({
@@ -600,6 +712,27 @@ function reset_input_trs_admin(){
   document.getElementById("valor").value = "";
 }
 
+function reset_modal_edit_admin(){
+  console.log('reseting modal');
+  document.getElementById("id_modal").value = "";
+  document.getElementById("cuenta_modal").value = "";
+  document.getElementById("almacen_id_modal").value = "";
+  document.getElementById("periodo_modal").value = "";
+  document.getElementById("responsable_modal").value = "";
+  document.getElementById("fecha_modal").value = "";
+  document.getElementById("num_asiento_modal").value = "";
+  document.getElementById("cod_cuenta_modal").value = "";
+  document.getElementById("saldo_debe_modal").value = "";
+  document.getElementById("saldo_haber_modal").value = "";
+  document.getElementById("concepto_detalle_modal").value = "";
+  document.getElementById("codaux_clase_modal").value = "";
+  document.getElementById("codaux_grupo_modal").value = "";
+  document.getElementById("codaux_cuenta_modal").value = "";
+  document.getElementById("codaux_subcuenta_modal").value = "";
+  document.getElementById("codaux_auxiliar_modal").value = "";
+  document.getElementById("codaux_subauxiliar_modal").value = "";
+}
+
 
 function number_format(amount, decimals) {
 
@@ -610,19 +743,19 @@ function number_format(amount, decimals) {
 
     // si no es un numero o es igual a cero retorno el mismo cero
     if (isNaN(amount) || amount === 0) 
-        return parseFloat(0).toFixed(decimals);
+      return parseFloat(0).toFixed(decimals);
 
     // si es mayor o menor que cero retorno el valor formateado como numero
     amount = '' + amount.toFixed(decimals);
 
     var amount_parts = amount.split('.'),
-        regexp = /(\d+)(\d{3})/;
+    regexp = /(\d+)(\d{3})/;
 
     while (regexp.test(amount_parts[0]))
-        amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
+      amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
 
     return amount_parts.join('.');
-}
+  }
 
 
 

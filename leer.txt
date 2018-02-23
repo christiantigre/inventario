@@ -158,3 +158,8 @@ link pagina web edita imagenes
 
     GENERADOR DE ADMIN LARAVEL
     https://laravel-news.com/13-laravel-admin-panel-generators
+
+    if($user->save())
+        DB::commit();
+    else
+        DB::rollback();

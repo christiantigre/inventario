@@ -66,6 +66,14 @@
 
                     {!! Form::hidden('num_asiento', $num_asiento, ['id'=>'num_asiento','class' => 'form-control','autofocus'=>'autofocus','required'=>'required','readonly'=>'readonly']), old('num_asiento') !!}  
 
+                    {!! Form::hidden('codaux_clase', null, ['id'=>'codaux_clase','class' => 'form-control']), old('codaux_clase') !!}
+                    {!! Form::hidden('codaux_grupo', null, ['id'=>'codaux_grupo','class' => 'form-control']), old('codaux_grupo') !!}
+                    {!! Form::hidden('codaux_cuenta', null, ['id'=>'codaux_cuenta','class' => 'form-control']), old('codaux_cuenta') !!}
+                    {!! Form::hidden('codaux_subcuenta', null, ['id'=>'codaux_subcuenta','class' => 'form-control']), old('codaux_subcuenta') !!}
+                    {!! Form::hidden('codaux_auxiliar', null, ['id'=>'codaux_auxiliar','class' => 'form-control']), old('codaux_auxiliar') !!}
+                    {!! Form::hidden('codaux_subauxiliar', null, ['id'=>'codaux_subauxiliar','class' => 'form-control']), old('codaux_subauxiliar') !!}
+
+
                     {!! $errors->first('cod_cuenta', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>

@@ -23,6 +23,12 @@ class CreateTempdetallasientosTable extends Migration
             $table->double('saldo_debe',15,2)->nullable();
             $table->double('saldo_haber',15,2)->nullable();
             $table->text('concepto_detalle')->nullable();
+            $table->text('codaux_clase')->nullable();
+            $table->text('codaux_grupo')->nullable();
+            $table->text('codaux_cuenta')->nullable();
+            $table->text('codaux_subcuenta')->nullable();
+            $table->text('codaux_auxiliar')->nullable();
+            $table->text('codaux_subauxiliar')->nullable();
             $table->timestamps();
         });
     }

@@ -202,6 +202,12 @@ class ContabilidadController extends Controller
         $dataAsiento['responsable'] = $request['responsable'];
         $dataAsiento['activo'] = "1";
         $dataAsiento['almacen_id'] = $request['almacen_id'];
+        $dataAsiento['codaux_clase'] = $request['codaux_clase'];
+        $dataAsiento['codaux_grupo'] = $request['codaux_grupo'];
+        $dataAsiento['codaux_cuenta'] = $request['codaux_cuenta'];
+        $dataAsiento['codaux_subcuenta'] = $request['codaux_subcuenta'];
+        $dataAsiento['codaux_auxiliar'] = $request['codaux_auxiliar'];
+        $dataAsiento['codaux_subauxiliar'] = $request['codaux_subauxiliar'];
 
         try {
             //Guarda cabecera del asiento
@@ -216,6 +222,7 @@ class ContabilidadController extends Controller
 
             Session::flash('flash_message', 'Balance Inicial Guardado correctamente');
             return response()->json(array('message' => 'Balance Inicial Registrado con exito'));
+            //return Redirect::to('admin/contabilidad');
 
         } catch (\Exception $e) {
 
@@ -260,12 +267,12 @@ class ContabilidadController extends Controller
 
             Session::flash('flash_message', 'Asiento Guardado correctamente');
             return response()->json(array('message' => 'Asiento Registrado con exito'));
+            //return Redirect::to('admin/contabilidad');
 
         } catch (\Exception $e) {
 
             Session::flash('warning', 'Error al Guardar el asiento');     
             return response()->json(array('message' => 'Error al Guardar el asiento !!!')); 
-
         }
 
 
@@ -284,6 +291,12 @@ class ContabilidadController extends Controller
         $requestData->concepto_detalle= $detall_asiento->concepto_detalle;
         $requestData->almacen_id= $almacen_id;
         $requestData->asiento_id= $ass_id;
+        $requestData->codaux_clase = $detall_asiento->codaux_clase;
+        $requestData->codaux_grupo = $detall_asiento->codaux_grupo;
+        $requestData->codaux_cuenta = $detall_asiento->codaux_cuenta;
+        $requestData->codaux_subcuenta = $detall_asiento->codaux_subcuenta;
+        $requestData->codaux_auxiliar = $detall_asiento->codaux_auxiliar;
+        $requestData->codaux_subauxiliar = $detall_asiento->codaux_subauxiliar;
         return $requestData;
     }
 
@@ -459,13 +472,15 @@ class ContabilidadController extends Controller
     {
         $trs = num_asiento::findorfail($request->id);
 
+        $decimal_debe = str_replace (",", "", $request['saldo_debe']);
+        $decimal_haber = str_replace (",", "", $request['saldo_haber']);
 
         $trs['num_asiento'] = $request['num_asiento'];
         $trs['concepto'] = $request['concepto'];
         $trs['periodo'] = $request['periodo'];
         $trs['fecha'] = $request['fecha'];
-        $trs['saldo_debe'] = $request['saldo_debe'];
-        $trs['saldo_haber'] = $request['saldo_haber'];
+        $trs['saldo_debe'] = $decimal_debe;
+        $trs['saldo_haber'] = $decimal_haber;
         $trs['responsable'] = $request['responsable'];
         $trs['activo'] = "1";
         $trs['almacen_id'] = $request['almacen_id'];
@@ -594,7 +609,32 @@ GROUP BY cod_cuenta cuenta
     ->groupBy('cod_cuenta','cuenta')
     ->get();
 
-        return view('admin.contabilidad.mayor.index', compact('dato','mayor'));
+    $sumas = DB::table('detall_asientos')
+    ->select(DB::raw('sum(saldo_debe) as saldo_debe,sum(saldo_haber) as saldo_haber'))
+    ->where('periodo', '=' , $year)
+    ->get();
+
+        return view('admin.contabilidad.mayor.index', compact('dato','mayor','sumas'));
+    }
+
+    public function mayordetallecuenta($cuenta){
+
+        $dato = $this->gen_section_balance_inicial();
+        $dato['ventana'] = "Mayor";
+        $this->genLog("Ingresó a detalle Mayor cuenta : ".$cuenta);
+        
+    $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+        $year = $carbon->now()->format('Y');
+
+    $detalle = detall_asiento::where('cod_cuenta',$cuenta)->where('periodo',$year)->get();
+    $sumas = DB::table('detall_asientos')
+    ->select(DB::raw('sum(saldo_debe) as saldo_debe,sum(saldo_haber) as saldo_haber'))
+    ->where('periodo', '=' , $year)
+    ->where('cod_cuenta', '=' , $cuenta)
+    ->get();
+    $cuenta_plan = Plan::where('cod',$cuenta)->first();
+    $cuenta_name = $cuenta_plan['cuenta'];
+        return view('admin.contabilidad.mayor.detall', compact('dato','detalle','cuenta_name','sumas'));
     }
 
     public function situacionfinanciera(){

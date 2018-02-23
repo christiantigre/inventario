@@ -8,7 +8,7 @@
         @include('admin.contabilidad.sidebar')
         <div class="col-md-10 col-lg-10 col-xs-12 col-sm-8">
             <div class="panel panel-default">
-                <div class="panel-heading">BALANCE INICIAL</div>
+                <div class="panel-heading">LIBRO CONTABLE</div>
                 <div class="panel-body">
 
                     <div class="row">

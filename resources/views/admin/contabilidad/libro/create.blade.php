@@ -214,13 +214,12 @@
 
 }
 
-</script>
-<script type="text/javascript">
   function consulta_cuenta_admin(){
     var token = $("input[name=_token]").val();
     var cod_cuenta= $("#cod_cuenta").val();
-  //var route = '/admin/vercuentas/';
   var route = '{{ url("admin/vercuentas") }}';
+  
+    traer_grupo(cod_cuenta);
   document.getElementById("cod_cuenta").value = "";
   var parametros = {
     "id" :cod_cuenta
@@ -245,6 +244,39 @@
     }  
   });
 }
+
+ function traer_grupo(cod){
+    console.log("Consulta grupo cuentas agrupadas");
+    var token = $("input[name=_token]").val();
+    var cod_cuenta= cod;
+    var route = '{{ url("admin/extraergrupo") }}';
+    var parametros = {
+      "id" :cod_cuenta
+    }
+    $.ajax({
+      url:route,
+      headers:{'X-CSRF-TOKEN':token},
+      type:'get',
+      dataType: 'json',
+      data:parametros,
+      success:function(data)
+      {
+        console.log(data);
+        document.getElementById("codaux_clase").value = data.cod_clase;
+        document.getElementById("codaux_grupo").value = data.cod_grupo;
+        document.getElementById("codaux_cuenta").value = data.cod_cuenta;
+        document.getElementById("codaux_subcuenta").value = data.cod_subcuenta;
+        document.getElementById("codaux_auxiliar").value = data.cod_auxiliar;
+        document.getElementById("codaux_subauxiliar").value = data.cod_subauxiliar;
+        console.log("copy data succefull");
+      },
+      error:function(data)
+      {
+        console.log('Error '+data);
+      }  
+    });
+  }
+
 
 
 $('.busca_cuenta').click(function(){
@@ -285,6 +317,12 @@ $('#guarda_trs_admin').click(function(){
   var periodo = $("#periodo").val();
   var fecha = $("#fecha").val();
   var concepto_detalle = $("#concepto_detalle").val();
+    var codaux_clase = $("#codaux_clase").val();
+    var codaux_grupo = $("#codaux_grupo").val();
+    var codaux_cuenta = $("#codaux_cuenta").val();
+    var codaux_subcuenta = $("#codaux_subcuenta").val();
+    var codaux_auxiliar = $("#codaux_auxiliar").val();
+    var codaux_subauxiliar = $("#codaux_subauxiliar").val();
 
   var tipo = $("#tipo").val();
 
@@ -334,6 +372,12 @@ $('#guarda_trs_admin').click(function(){
     "concepto_detalle" :concepto_detalle,
     "saldo_debe" :saldo_debe,
     "saldo_haber" :saldo_haber,
+      "codaux_clase" : codaux_clase,
+      "codaux_grupo" : codaux_grupo,
+      "codaux_cuenta" : codaux_cuenta,
+      "codaux_subcuenta" : codaux_subcuenta,
+      "codaux_auxiliar" : codaux_auxiliar,
+      "codaux_subauxiliar" : codaux_subauxiliar,
   }
   console.log(parametros);
   $.ajax({

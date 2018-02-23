@@ -26,6 +26,12 @@ class CreateDetallAsientosTable extends Migration
             $table->foreign('almacen_id')->references('id')->on('almacens');
             $table->integer('asiento_id')->unsigned();
             $table->foreign('asiento_id')->references('id')->on('num_asientos');
+            $table->text('codaux_clase')->nullable();
+            $table->text('codaux_grupo')->nullable();
+            $table->text('codaux_cuenta')->nullable();
+            $table->text('codaux_subcuenta')->nullable();
+            $table->text('codaux_auxiliar')->nullable();
+            $table->text('codaux_subauxiliar')->nullable();
             $table->timestamps();
         });
     }
