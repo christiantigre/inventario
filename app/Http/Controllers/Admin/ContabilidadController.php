@@ -16,6 +16,8 @@ use App\SvLogAdmin;
 use App\tempdetallasiento;
 use Session;
 use DB;
+use App\Perdidas_Ganancias;
+use Illuminate\Database\Eloquent\Collection;
 
 class ContabilidadController extends Controller
 {
@@ -601,31 +603,43 @@ sum(`saldo_debe`) as debe,sum(`saldo_haber`) as haber,
 FROM `detall_asientos` where periodo='2018' 
 GROUP BY cod_cuenta cuenta
         */
-    $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
-        $year = $carbon->now()->format('Y');
+$carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+$year = $carbon->now()->format('Y');
 
-    $mayor = DB::table('detall_asientos')
-    ->select('cod_cuenta','cuenta',DB::raw('sum(saldo_debe) as debe,sum(saldo_haber) as haber, count(*) as count'))
-    ->where('periodo', '=', $year)
-    ->groupBy('cod_cuenta','cuenta')
-    ->get();
+$mayor = DB::table('detall_asientos')
+->select('cod_cuenta','cuenta',DB::raw('sum(saldo_debe) as debe,sum(saldo_haber) as haber, count(*) as count'))
+->where('periodo', '=', $year)
+->groupBy('cod_cuenta','cuenta')
+->get();
 
-    $sumas = DB::table('detall_asientos')
-    ->select(DB::raw('sum(saldo_debe) as saldo_debe,sum(saldo_haber) as saldo_haber'))
-    ->where('periodo', '=' , $year)
-    ->get();
+$sumas = DB::table('detall_asientos')
+->select(DB::raw('sum(saldo_debe) as saldo_debe,sum(saldo_haber) as saldo_haber'))
+->where('periodo', '=' , $year)
+->get();
 
-        return view('admin.contabilidad.mayor.index', compact('dato','mayor','sumas'));
+$sumas_debe = 0;
+$sumas_haber = 0;
+foreach ($mayor as $obtensaldos) {
+    if ($obtensaldos->debe > $obtensaldos->haber) {
+        $sumas_debe = ($obtensaldos->debe - $obtensaldos->haber)+$sumas_debe;
+    }else{
+        $sumas_haber = ($obtensaldos->haber - $obtensaldos->debe)+$sumas_haber;
     }
+}
+$sumas_saldo['sumas_acreedor']= $sumas_debe;
+$sumas_saldo['sumas_deudor']= $sumas_haber;
 
-    public function mayordetallecuenta($cuenta){
+return view('admin.contabilidad.mayor.index', compact('dato','mayor','sumas','sumas_saldo'));
+}
 
-        $dato = $this->gen_section_balance_inicial();
-        $dato['ventana'] = "Mayor";
-        $this->genLog("Ingresó a detalle Mayor cuenta : ".$cuenta);
-        
+public function mayordetallecuenta($cuenta){
+
+    $dato = $this->gen_section_balance_inicial();
+    $dato['ventana'] = "Mayor";
+    $this->genLog("Ingresó a detalle Mayor cuenta : ".$cuenta);
+
     $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
-        $year = $carbon->now()->format('Y');
+    $year = $carbon->now()->format('Y');
 
     $detalle = detall_asiento::where('cod_cuenta',$cuenta)->where('periodo',$year)->get();
     $sumas = DB::table('detall_asientos')
@@ -635,20 +649,20 @@ GROUP BY cod_cuenta cuenta
     ->get();
     $cuenta_plan = Plan::where('cod',$cuenta)->first();
     $cuenta_name = $cuenta_plan['cuenta'];
-        return view('admin.contabilidad.mayor.detall', compact('dato','detalle','cuenta_name','sumas'));
-    }
+    return view('admin.contabilidad.mayor.detall', compact('dato','detalle','cuenta_name','sumas'));
+}
 
-    public function situacionfinanciera(){
+public function balancecomprobacion(){
 
-        $dato = $this->gen_section_balance_inicial();
-        $dato['ventana'] = "Situación Financiera";
-        $this->genLog("Ingresó a Situación Financiera");
+    $dato = $this->gen_section_balance_inicial();
+    $dato['ventana'] = "Situación Financiera";
+    $this->genLog("Ingresó a Situación Financiera");
 
-        $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
-        $year = $carbon->now()->format('Y');
+    $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+    $year = $carbon->now()->format('Y');
 
-    $situacionfinanciera = Agrupacion_sumada::all();
-    dd($situacionfinanciera);
+    $situacionfinanciera = Agrupacion_sumada::OrderBy('cod_cuenta','ASC')->Where('cod_cuenta','<','4')->Where('periodo','=',$year)->get();
+    
     /*
     $situaciofinanciera = DB::table('detall_asientos')
     ->select('cod_cuenta','cuenta',DB::raw('sum(saldo_debe) as debe,sum(saldo_haber) as haber, count(*) as count'))
@@ -658,11 +672,61 @@ GROUP BY cod_cuenta cuenta
     ])
     ->groupBy('cod_cuenta','cuenta')
     ->get();*/
-    /*
-    CREATE VIEW balance_comprobacion as SELECT `cod_cuenta`,`cuenta`,`periodo`,`fecha`, sum(`saldo_debe`) as debe, sum(`saldo_haber`) as haber, `asiento_id`,COUNT(*) as contador FROM `detall_asientos` GROUP BY cod_cuenta,cuenta
-    */
-        return view('admin.contabilidad.situacionfinanciera.index', compact('dato','situaciofinanciera'));
+    
+        //dd($sumas);
+    
+    return view('admin.contabilidad.balancecomprobacion.index', compact('dato','situacionfinanciera'));
+}
+
+
+public function estadoresultados(){
+
+    $dato = $this->gen_section_balance_inicial();
+    $dato['ventana'] = "Estado de Resultados";
+    $this->genLog("Ingresó a Estado de Resultados");
+
+    $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+    $year = $carbon->now()->format('Y');
+
+    $estadoresultados = Agrupacion_sumada::OrderBy('cod_cuenta','ASC')->Where('cod_cuenta','>=','4')->Where('periodo','=',$year)->get();
+    
+    return view('admin.contabilidad.estadoresultados.index', compact('dato','estadoresultados'));
+}
+
+
+public function selectGrupo($cod_cuenta,$periodo)
+    {
+        $dato = Agrupacion_sumada::where('cod_cuenta',$cod_cuenta)->where('periodo',$periodo)->get();
+        return $dato;
     }
 
 
+
+public function perdidasyganancias(){
+    $dato = $this->gen_section_balance_inicial();
+    $dato['ventana'] = "Perdidas y Ganancias";
+    $this->genLog("Ingresó a Perdidas y Ganancias");
+
+    $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
+    $year = $carbon->now()->format('Y');
+
+        $perdidasyganancias = DB::table('perdidas_ganancias')
+            ->join('sumas_agrupadas', 'perdidas_ganancias.cod_cuenta', '=', 'sumas_agrupadas.cod_cuenta')
+            ->select('sumas_agrupadas.cod_cuenta','sumas_agrupadas.cuenta','sumas_agrupadas.saldo_debe','sumas_agrupadas.saldo_haber')
+            ->where('sumas_agrupadas.periodo',$year)
+            ->get();
+            //dd($perdidasyganancias);
+    
+        return view('admin.contabilidad.perdidasyganancias.index', compact('dato','perdidasyganancias'));
+
+    }
+
+
+
+
+
+
 }
+
+
+

@@ -32,17 +32,17 @@
                     </a>
                 </li>
                 <li role="presentation">
-                    <a href="{{ url('admin/situacionfinanciera') }}">
-                        BALANCE RESULTADOS
+                    <a href="{{ url('admin/balancecomprobacion') }}">
+                        BALANCE COMPROBACIÓN
                     </a>
                 </li>
                 <li role="presentation">
-                    <a href="{{ url('admin/subcuenta') }}">
+                    <a href="{{ url('admin/estadoresultados') }}">
                         ESTADO RESULTADOS
                     </a>
                 </li>
                 <li role="presentation">
-                    <a href="{{ url('admin/auxiliar') }}">
+                    <a href="{{ url('admin/perdidasyganancias') }}">
                         PERDIDAS Y GANANCIAS
                     </a>
                 </li>                

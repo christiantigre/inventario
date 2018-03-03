@@ -8,13 +8,13 @@
         @include('admin.contabilidad.sidebar')
         <div class="col-md-10 col-lg-10 col-xs-12 col-sm-8">
             <div class="panel panel-default">
-                <div class="panel-heading">SITUACIÓN FINANCIERA</div>
+                <div class="panel-heading">ESTADO DE RESULTADOS</div>
                 <div class="panel-body">
 
                     <div class="row">
                       <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12"> 
 
-                        Sutiación financiera del periodo actual
+                        Estado de resultados del periodo actual
 
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                 <br/>
                 
                 <div class="table-responsive">
-                    @if(!empty($situaciofinanciera))
+                    @if(!empty($estadoresultados))
                     <table class="table table-borderless" id="tempBInicial">
                         <thead>
                             <tr>
@@ -33,7 +33,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($situaciofinanciera as $item)
+                            @foreach($estadoresultados as $item)
                             <tr>
                                 <td>{{ $loop->iteration or $item->id }}</td>
                                 <td>{{ $item->cod_cuenta }}.</td>                    
@@ -41,6 +41,22 @@
                                 <?Php
                                 $count_doots = substr_count($item->cod_cuenta, '.');
                                 ?>
+                                @if($count_doots=="0")
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    @if(($item->saldo_debe)>($item->saldo_haber))
+                                    {{ number_format(( $item->saldo_debe-$item->saldo_haber ),2) }}
+                                    @else
+                                    {{ number_format(( $item->saldo_haber-$item->saldo_debe ),2) }}
+                                    @endif
+                            </td>
+                            
+                                @endif 
                                 @if($count_doots=="1")
                                 <td></td>
                                 <td></td>
@@ -48,8 +64,14 @@
                                 <td></td>
                                 <td></td>
                                 <td>
-                                    {{ number_format(( $item->debe-$item->haber ),2) }}
+                                    
+                                    @if(($item->saldo_debe)>($item->saldo_haber))
+                                    {{ number_format(( $item->saldo_debe-$item->saldo_haber ),2) }}
+                                    @else
+                                    {{ number_format(( $item->saldo_haber-$item->saldo_debe ),2) }}
+                                    @endif
                             </td>
+                                <td></td>
                                 @endif 
                                 @if($count_doots=="2")   
                                 <td></td>
@@ -57,8 +79,14 @@
                                 <td></td>
                                 <td></td>
                                 <td>
-                                    {{ number_format(( $item->debe-$item->haber ),2) }}
+                                    
+                                    @if(($item->saldo_debe)>($item->saldo_haber))
+                                    {{ number_format(( $item->saldo_debe-$item->saldo_haber ),2) }}
+                                    @else
+                                    {{ number_format(( $item->saldo_haber-$item->saldo_debe ),2) }}
+                                    @endif
                                 </td>
+                                <td></td>
                                 <td></td>
                                 @endif 
                                 @if($count_doots=="3")   
@@ -66,8 +94,14 @@
                                 <td></td>
                                 <td></td>
                                 <td> 
-                                    {{ number_format(( $item->debe-$item->haber ),2) }}
+                                    
+                                    @if(($item->saldo_debe)>($item->saldo_haber))
+                                    {{ number_format(( $item->saldo_debe-$item->saldo_haber ),2) }}
+                                    @else
+                                    {{ number_format(( $item->saldo_haber-$item->saldo_debe ),2) }}
+                                    @endif
                               </td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 @endif
@@ -75,8 +109,14 @@
                                 <td></td>
                                 <td></td>
                                 <td>
-                                    {{ number_format(( $item->debe-$item->haber ),2) }}
+                                    
+                                    @if(($item->saldo_debe)>($item->saldo_haber))
+                                    {{ number_format(( $item->saldo_debe-$item->saldo_haber ),2) }}
+                                    @else
+                                    {{ number_format(( $item->saldo_haber-$item->saldo_debe ),2) }}
+                                    @endif
                                 </td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -84,8 +124,14 @@
                                 @if($count_doots=="5") 
                                 <td></td>
                                 <td>
-                                    {{ number_format(( $item->debe-$item->haber ),2) }}
+                                    
+                                    @if(($item->saldo_debe)>($item->saldo_haber))
+                                    {{ number_format(( $item->saldo_debe-$item->saldo_haber ),2) }}
+                                    @else
+                                    {{ number_format(( $item->saldo_haber-$item->saldo_debe ),2) }}
+                                    @endif
                                 </td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -93,8 +139,14 @@
                                 @endif                                 
                                 @if($count_doots=="6") 
                                 <td>
-                                    {{ number_format(( $item->debe-$item->haber ),2) }}
+                                    
+                                    @if(($item->saldo_debe)>($item->saldo_haber))
+                                    {{ number_format(( $item->saldo_debe-$item->saldo_haber ),2) }}
+                                    @else
+                                    {{ number_format(( $item->saldo_haber-$item->saldo_debe ),2) }}
+                                    @endif
                                 </td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>

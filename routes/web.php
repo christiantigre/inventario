@@ -183,7 +183,8 @@ Route::group(['prefix' => 'admin'], function () {
   //Mayor
   Route::get('mayor/', 'Admin\\ContabilidadController@mayor');
   Route::get('mayor/detallecuenta/{cuenta}', 'Admin\\ContabilidadController@mayordetallecuenta');  
-  Route::get('situacionfinanciera/', 'Admin\\ContabilidadController@situacionfinanciera');
+  Route::get('balancecomprobacion/', 'Admin\\ContabilidadController@balancecomprobacion');
+  Route::get('estadoresultados/', 'Admin\\ContabilidadController@estadoresultados');
 
   //backups
   Route::resource('/backups', 'Admin\\BackupController'); 
@@ -198,6 +199,15 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/extraergrupo/','ComponentController@extraergrupo');
   //Test
   Route::get('/codcuenta/{cod}', 'Admin\\TestController@index');
+  //Perdidas y Ganancias
+  Route::get('/cuentasperdidasganancias/createcuentaspyg','Admin\\ConfcontblController@crearperdidadyganancias');
+  Route::post('/creaperdidadyganancias', 'Admin\\ConfcontblController@storeperdidadyganancias');
+  Route::get('/cuentaperdidasyganancias/{id}/edit','Admin\\ConfcontblController@editperdidadyganancias');
+  Route::post('/upcreaperdidadyganancias/{id}', 'Admin\\ConfcontblController@updateperdidadyganancias');
+  Route::post('/deletecuentaperdidasyganancias/{id}', 'Admin\\ConfcontblController@destroy');
+  //Perdidas y Ganancias
+  Route::get('perdidasyganancias/', 'Admin\\ContabilidadController@perdidasyganancias');
+
 });
 
 

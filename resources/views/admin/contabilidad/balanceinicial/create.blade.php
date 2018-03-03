@@ -148,6 +148,7 @@
   
   function guardaBalanceInicial(){
     console.log('Guardando Balance Inicial.');
+    if (confirm("Desea continuar con el registro del asiendo contable ?...")) {
     var debe= $("#debe").val();
     var haber= $("#haber").val();
     var num_asiento= $("#num_asiento").val();
@@ -202,6 +203,7 @@
 
     }else{
       alert("El asiento que desea guardar no se encuentra cuadrado");
+    }
     }
 
   }

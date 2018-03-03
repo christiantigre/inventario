@@ -164,7 +164,9 @@
 
   
   function guardaBalanceInicialEdit(){
+
     console.log('Actualizando Balance Inicial.');
+    if (confirm("Desea aplicar todos los cambios ?...")) {
     var debe= $("#debe").val();
     var haber= $("#haber").val();
     var num_asiento= $("#num_asiento").val();
@@ -221,7 +223,7 @@
     }else{
       alert("El asiento que desea guardar no se encuentra cuadrado");
     }
-
+}
   }
 
 

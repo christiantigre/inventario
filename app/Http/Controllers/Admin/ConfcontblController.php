@@ -8,6 +8,8 @@ use App\Confcont;
 use App\SvLogAdmin;
 use Session;
 use App\Cuentum;
+use App\Perdidas_Ganancias;
+use App\Plan;
 
 class ConfcontblController extends Controller
 {
@@ -46,9 +48,10 @@ class ConfcontblController extends Controller
             $this->genLog("Busqueda cont auto :".$keyword);
         } else {
             $config = Confcont::orderBy('id','ASC')->paginate($perPage);
+            $perdidasganancias = Perdidas_Ganancias::orderBy('id','ASC')->paginate($perPage);
             $this->genLog("Visualizó conf auto");  
         }
-        return view('admin.contabilidad.config_contabilidad.index', compact('config','dato'));
+        return view('admin.contabilidad.config_contabilidad.index', compact('config','dato','perdidasganancias'));
     }
 
     /**
@@ -62,6 +65,15 @@ class ConfcontblController extends Controller
         $this->genLog("Ingresó a registrar nuevo tipo de asiento automaticos"); 
     }
 
+    public function crearperdidadyganancias(){
+        $cuentas = Plan::orderBy('cod', 'ASC')->get();
+        $dato = $this->gen_section();
+        $this->genLog("Ingresó a configuración de perdidas y ganancias"); 
+        return view('admin.contabilidad.config_contabilidad.create', compact('dato','cuentas'));
+    }
+
+
+
     /**
      * Store a newly created resource in storage.
      *
@@ -73,6 +85,38 @@ class ConfcontblController extends Controller
         //
     }
 
+    public function storeperdidadyganancias(Request $request)
+    {
+        $this->validate($request, [
+            'cuenta' => 'required|max:200',
+            'cod_cuenta' => 'required|max:75',
+        ]);
+        $requestData = $request->all();
+        try {        
+
+            Perdidas_Ganancias::create($requestData);
+
+            Session::flash('flash_message', 'Guardado correctamente');
+
+        $this->genLog("Registró cuenta ".$request->cuenta); 
+        } catch (\Exception $e) {
+            $this->genLog("Error al crear ".$request->cuenta); 
+
+            Session::flash('warning', 'Error al Guardar');  
+            return redirect()->back()->withInput();
+
+        }
+         return redirect('admin/confcontbl');
+    }
+
+    public function editperdidadyganancias($id){
+
+        $cuentas = Plan::orderBy('cod', 'ASC')->get();
+        $dato = $this->gen_section();
+        $this->genLog("Ingresó a editar cuenta perdidas y ganancias id : ".$id); 
+        $perdidasyganancias = Perdidas_Ganancias::findOrFail($id);
+        return view('admin.contabilidad.config_contabilidad.editpyg', compact('perdidasyganancias','dato','cuentas'));
+    }
     /**
      * Display the specified resource.
      *
@@ -116,12 +160,35 @@ class ConfcontblController extends Controller
             $config->update($requestData);
 
             Session::flash('flash_message', 'Actualizado correctamente');
+
             $this->genLog("Actualizar asientos automaticos"); 
+        } catch (\Exception $e) {
+
+            $this->genLog("Error al actualizar");   
+            Session::flash('warning', '!!!Error al Actualizar asientos automaticos config');          
+
+        }
+
+        return redirect('admin/confcontbl');
+    }
+    
+    public function updateperdidadyganancias(Request $request, $id)
+    {
+        $requestData = $request->all();
+
+        try {
+            
+            $pyg = Perdidas_Ganancias::findOrFail($id);
+
+            $pyg->update($requestData);
+
+            Session::flash('flash_message', 'Actualizado correctamente');
+            $this->genLog("Actualizar cuentas de perdidas y ganancias"); 
 
         } catch (\Exception $e) {
 
-            $this->genLog("Error al actualizar asientos automaticos");             
-            Session::flash('warning', '!!!Error al Actualizar');
+            $this->genLog("Error al actualizar asientos automaticos");   
+            Session::flash('warning', '!!!Error al Actualizar perdidas y ganancias');
 
         }
 
@@ -156,7 +223,16 @@ class ConfcontblController extends Controller
 
     public function destroy($id)
     {
-        //
+        try {
+            Perdidas_Ganancias::destroy($id);
+            $this->genLog("Eliminó a cuenta de perdidas y ganancias id : ".$id); 
+            Session::flash('flash_message', 'Eliminado correctamente');
+        } catch (\Exception $e) {
+            $this->genLog("Error al eliminar cuenta de perdidas y ganancias id : ".$id); 
+            Session::flash('warning', '!!!Error al Eliminar');
+        }
+
+        return redirect('admin/confcontbl');
     }
 
     protected function guard()

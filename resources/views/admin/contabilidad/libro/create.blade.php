@@ -44,8 +44,8 @@
                   <!-- /.box-header -->
                   <div class="box-body no-padding">
                     <div class="table-responsive">
-                    <div id="list-cart">
-                    </div> 
+                      <div id="list-cart">
+                      </div> 
                     </div> 
 
                     
@@ -101,7 +101,7 @@
   });
 
   function list_trs_admin(){
-        var num_asiento = $("#num_asiento").val();
+    var num_asiento = $("#num_asiento").val();
     console.log('loading items transacciónes admin.');
     $.ajax({
       type:'get',
@@ -117,14 +117,14 @@
   function SumarColumnas(num_asiento) { 
     console.log('Sumando columnas debe y haber.');
     var parametros = {
-    "num_asiento" :num_asiento,
-  }
+      "num_asiento" :num_asiento,
+    }
     $.ajax({
       type:'get',
       url:'{{ url("admin/sumSaldoAsiento") }}',
       data:parametros,
       success: function(data){    
-      console.log(parametros);    
+        console.log(parametros);    
         console.log(data[0]['saldo_debe']);
         console.log(data[0]['saldo_haber']);
         debe_float = data[0]['saldo_debe'];
@@ -146,26 +146,27 @@
           $('#alertaBalance').attr("class", "callout callout-danger");
         }
 
-    }
-  });
+      }
+    });
   }
 
   
   function guardaAsiento(){
     console.log('Guardando Asiento Contable.');
-    var debe= $("#debe").val();
-    var haber= $("#haber").val();
-    var num_asiento= $("#num_asiento").val();
-    var concepto= $("#concepto").val();
-    var periodo= $("#periodo").val();
-    var fecha= $("#fecha").val();
-    var saldo_debe= $("#debe").val();
-    var saldo_haber= $("#haber").val();
-    var responsable= $("#responsable").val();
-    var almacen_id= $("#almacen_id").val();
+    if (confirm("Desea continuar con el registro del asiendo contable ?...")) {
+      var debe= $("#debe").val();
+      var haber= $("#haber").val();
+      var num_asiento= $("#num_asiento").val();
+      var concepto= $("#concepto").val();
+      var periodo= $("#periodo").val();
+      var fecha= $("#fecha").val();
+      var saldo_debe= $("#debe").val();
+      var saldo_haber= $("#haber").val();
+      var responsable= $("#responsable").val();
+      var almacen_id= $("#almacen_id").val();
 
-    if(debe==haber){
-      var token = $("input[name=_token]").val();
+      if(debe==haber){
+        var token = $("input[name=_token]").val();
 
   //var route = '/admin/saveAsiento/';
   var route = '{{ url("admin/saveAsiento") }}';
@@ -196,7 +197,7 @@
       var incremento = (parseInt(num_asiento)+1);
       document.getElementById("num_asiento").value = incremento;
       $("#label_num_asiento").text(incremento);
-       window.location.href = "{{URL::to('admin/libro')}}"
+      window.location.href = "{{URL::to('admin/libro')}}"
       $('#alert').show();
       $('#alert').html(data.message);
     },
@@ -207,20 +208,21 @@
       $('#alert').show();
       $('#alert').html(data.message);
     }  
-  });
+});
 
 }else{
   alert("El asiento que desea guardar no se encuentra cuadrado");
 }
+}
 
 }
 
-  function consulta_cuenta_admin(){
-    var token = $("input[name=_token]").val();
-    var cod_cuenta= $("#cod_cuenta").val();
+function consulta_cuenta_admin(){
+  var token = $("input[name=_token]").val();
+  var cod_cuenta= $("#cod_cuenta").val();
   var route = '{{ url("admin/vercuentas") }}';
 
-    traer_grupo(cod_cuenta);
+  traer_grupo(cod_cuenta);
   document.getElementById("cod_cuenta").value = "";
   var parametros = {
     "id" :cod_cuenta
@@ -246,37 +248,37 @@
   });
 }
 
- function traer_grupo(cod){
-    console.log("Consulta grupo cuentas agrupadas");
-    var token = $("input[name=_token]").val();
-    var cod_cuenta= cod;
-    var route = '{{ url("admin/extraergrupo") }}';
-    var parametros = {
-      "id" :cod_cuenta
-    }
-    $.ajax({
-      url:route,
-      headers:{'X-CSRF-TOKEN':token},
-      type:'get',
-      dataType: 'json',
-      data:parametros,
-      success:function(data)
-      {
-        console.log(data);
-        document.getElementById("codaux_clase").value = data.cod_clase;
-        document.getElementById("codaux_grupo").value = data.cod_grupo;
-        document.getElementById("codaux_cuenta").value = data.cod_cuenta;
-        document.getElementById("codaux_subcuenta").value = data.cod_subcuenta;
-        document.getElementById("codaux_auxiliar").value = data.cod_auxiliar;
-        document.getElementById("codaux_subauxiliar").value = data.cod_subauxiliar;
-        console.log("copy data succefull");
-      },
-      error:function(data)
-      {
-        console.log('Error '+data);
-      }  
-    });
+function traer_grupo(cod){
+  console.log("Consulta grupo cuentas agrupadas");
+  var token = $("input[name=_token]").val();
+  var cod_cuenta= cod;
+  var route = '{{ url("admin/extraergrupo") }}';
+  var parametros = {
+    "id" :cod_cuenta
   }
+  $.ajax({
+    url:route,
+    headers:{'X-CSRF-TOKEN':token},
+    type:'get',
+    dataType: 'json',
+    data:parametros,
+    success:function(data)
+    {
+      console.log(data);
+      document.getElementById("codaux_clase").value = data.cod_clase;
+      document.getElementById("codaux_grupo").value = data.cod_grupo;
+      document.getElementById("codaux_cuenta").value = data.cod_cuenta;
+      document.getElementById("codaux_subcuenta").value = data.cod_subcuenta;
+      document.getElementById("codaux_auxiliar").value = data.cod_auxiliar;
+      document.getElementById("codaux_subauxiliar").value = data.cod_subauxiliar;
+      console.log("copy data succefull");
+    },
+    error:function(data)
+    {
+      console.log('Error '+data);
+    }  
+  });
+}
 
 
 
@@ -318,12 +320,12 @@ $('#guarda_trs_admin').click(function(){
   var periodo = $("#periodo").val();
   var fecha = $("#fecha").val();
   var concepto_detalle = $("#concepto_detalle").val();
-    var codaux_clase = $("#codaux_clase").val();
-    var codaux_grupo = $("#codaux_grupo").val();
-    var codaux_cuenta = $("#codaux_cuenta").val();
-    var codaux_subcuenta = $("#codaux_subcuenta").val();
-    var codaux_auxiliar = $("#codaux_auxiliar").val();
-    var codaux_subauxiliar = $("#codaux_subauxiliar").val();
+  var codaux_clase = $("#codaux_clase").val();
+  var codaux_grupo = $("#codaux_grupo").val();
+  var codaux_cuenta = $("#codaux_cuenta").val();
+  var codaux_subcuenta = $("#codaux_subcuenta").val();
+  var codaux_auxiliar = $("#codaux_auxiliar").val();
+  var codaux_subauxiliar = $("#codaux_subauxiliar").val();
 
   var tipo = $("#tipo").val();
 
@@ -373,12 +375,12 @@ $('#guarda_trs_admin').click(function(){
     "concepto_detalle" :concepto_detalle,
     "saldo_debe" :saldo_debe,
     "saldo_haber" :saldo_haber,
-      "codaux_clase" : codaux_clase,
-      "codaux_grupo" : codaux_grupo,
-      "codaux_cuenta" : codaux_cuenta,
-      "codaux_subcuenta" : codaux_subcuenta,
-      "codaux_auxiliar" : codaux_auxiliar,
-      "codaux_subauxiliar" : codaux_subauxiliar,
+    "codaux_clase" : codaux_clase,
+    "codaux_grupo" : codaux_grupo,
+    "codaux_cuenta" : codaux_cuenta,
+    "codaux_subcuenta" : codaux_subcuenta,
+    "codaux_auxiliar" : codaux_auxiliar,
+    "codaux_subauxiliar" : codaux_subauxiliar,
   }
   console.log(parametros);
   $.ajax({
@@ -454,12 +456,12 @@ function eliminar_trs_blini(id){
       success:function(data)
       {
         list_trs_admin();
-      toastr.success("Transaccion exitosa.");
+        toastr.success("Transaccion exitosa.");
         console.log('correcto '+data.data);
       },
       error:function(data)
       {
-      toastr.error("!!! Error al realizar esta transacción.");
+        toastr.error("!!! Error al realizar esta transacción.");
         console.log('Error '+data);
       }  
     });
@@ -484,19 +486,19 @@ function number_format(amount, decimals) {
 
     // si no es un numero o es igual a cero retorno el mismo cero
     if (isNaN(amount) || amount === 0) 
-        return parseFloat(0).toFixed(decimals);
+      return parseFloat(0).toFixed(decimals);
 
     // si es mayor o menor que cero retorno el valor formateado como numero
     amount = '' + amount.toFixed(decimals);
 
     var amount_parts = amount.split('.'),
-        regexp = /(\d+)(\d{3})/;
+    regexp = /(\d+)(\d{3})/;
 
     while (regexp.test(amount_parts[0]))
-        amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
+      amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
 
     return amount_parts.join('.');
-}
+  }
 
 
 </script>

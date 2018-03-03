@@ -11,6 +11,9 @@
                 <div class="panel-heading">Configuración Modulo Contable</div>
                 <div class="panel-body">
 
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12 col-xs-12 col-sm-8">
+
                     <a href="{{ url('/admin/cuenta/create') }}" class="btn btn-success btn-xs" title="Registrar Cuenta">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nuevo
                     </a>
@@ -30,6 +33,10 @@
 
                     <br/>
                     <br/>
+
+                </div>
+                </div>
+
                     <div class="table-responsive">
                         <table class="table table-borderless">
                             <thead>
@@ -173,12 +180,68 @@
  </tbody>
  @endforeach
 </table>
+
+
 <div class="pagination-wrapper"> {!! $config->appends(['search' => Request::get('search')])->render() !!} </div>
 </div>
 
 </div>
 </div>
+
+<div class="row">
+    <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Cuentas de Perdidas y Ganancias</div>
+            <div class="panel-body">
+
+                <a href="{{ url('/admin/cuentasperdidasganancias/createcuentaspyg') }}" class="btn btn-success btn-xs" title="Registrar Cuenta">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Nuevo
+                </a>
+
+                @if(!empty($perdidasganancias))
+                <div class="table-responsive">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>CÓDIGO</th>
+                                <th>CUENTA</th>
+                                <th>ACCIÓNES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($perdidasganancias as $item)
+                            <tr>
+                                <td>{{ $loop->iteration or $item->id }}</td>
+                                <td>{{ $item->cod_cuenta }}.</td>
+                                <td>{{ $item->cuenta }}</td>       
+                                <td>
+                                    <a href="{{ url('/admin/cuentaperdidasyganancias/' . $item->id . '/edit') }}" title="Editar Cuenta"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>
+
+                                    <form method="POST" action="{{ url('/admin/deletecuentaperdidasyganancias' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-danger btn-xs" title="Eliminar Cuenta" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div class="pagination-wrapper"> {!! $perdidasganancias->appends(['search' => Request::get('search')])->render() !!} </div>
+                    @endif
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
+
+
 </div>
+
+
+</div>
+
+
 </section>
 @endsection

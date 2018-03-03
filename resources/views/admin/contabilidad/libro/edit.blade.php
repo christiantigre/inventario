@@ -123,8 +123,8 @@
     console.log(num_asiento);
     console.log('loading items transacciónes admin.');
     var parametros = {
-        "num_asiento" :num_asiento,
-      }
+      "num_asiento" :num_asiento,
+    }
     $.ajax({
       type:'get',
       //url:'/admin/listtrs/',
@@ -141,8 +141,8 @@
   function SumarColumnas(num_asiento) { 
     console.log('Sumando columnas debe y haber.');
     var parametros = {
-        "num_asiento" :num_asiento,
-      }
+      "num_asiento" :num_asiento,
+    }
     $.ajax({
       type:'get',
       url:'{{ url("admin/DetsumAs") }}',
@@ -175,92 +175,95 @@
   
   function guardaBalanceInicialEdit(){
     console.log('Actualizando Balance Inicial.');
-    var debe= $("#debe").val();
-    var haber= $("#haber").val();
-    var num_asiento= $("#num_asiento").val();
-    var concepto= $("#concepto").val();
-    var periodo= $("#periodo").val();
-    var fecha= $("#fecha").val();
-    var saldo_debe= $("#debe").val();
-    var saldo_haber= $("#haber").val();
-    var responsable= $("#responsable").val();
-    var almacen_id= $("#almacen_id").val();
-    var id= $("#id").val();
 
-    if(debe==haber){
-      var token = $("input[name=_token]").val();
+    if (confirm("Desea aplicar todos los cambios ?...")) {
+      var debe= $("#debe").val();
+      var haber= $("#haber").val();
+      var num_asiento= $("#num_asiento").val();
+      var concepto= $("#concepto").val();
+      var periodo= $("#periodo").val();
+      var fecha= $("#fecha").val();
+      var saldo_debe= $("#debe").val();
+      var saldo_haber= $("#haber").val();
+      var responsable= $("#responsable").val();
+      var almacen_id= $("#almacen_id").val();
+      var id= $("#id").val();
 
-      var route = '{{ url("admin/saveUpAsiento") }}';
+      if(debe==haber){
+        var token = $("input[name=_token]").val();
 
-      var parametros = {
-        "num_asiento" :num_asiento,
-        "concepto" :concepto,
-        "periodo" :periodo,
-        "fecha" :fecha,
-        "saldo_debe" :debe,
-        "saldo_haber" :haber,
-        "responsable" :responsable,
-        "almacen_id" :almacen_id,
-        "id" :id,
+        var route = '{{ url("admin/saveUpAsiento") }}';
+
+        var parametros = {
+          "num_asiento" :num_asiento,
+          "concepto" :concepto,
+          "periodo" :periodo,
+          "fecha" :fecha,
+          "saldo_debe" :debe,
+          "saldo_haber" :haber,
+          "responsable" :responsable,
+          "almacen_id" :almacen_id,
+          "id" :id,
+        }
+
+        $.ajax({
+          url:route,
+          headers:{'X-CSRF-TOKEN':token},
+          type:'get',
+          dataType: 'json',
+          data:parametros,
+          success:function(data)
+          {
+            console.log(data);
+            console.log("Update succefull");
+            toastr.success("Transacciòn exitosa");
+            window.location.href = "{{URL::to('admin/libro')}}"
+            list_trs_admin_edit_asiento();
+          },
+          error:function(data)
+          {
+            console.log('Error '+data);
+            toastr.error("!!! Error al realizar transacción...");
+          }  
+        });
+
+      }else{
+        alert("El asiento que desea guardar no se encuentra cuadrado");
       }
-
-      $.ajax({
-        url:route,
-        headers:{'X-CSRF-TOKEN':token},
-        type:'get',
-        dataType: 'json',
-        data:parametros,
-        success:function(data)
-        {
-          console.log(data);
-          console.log("Update succefull");
-          toastr.success("Transacciòn exitosa");
-          window.location.href = "{{URL::to('admin/libro')}}"
-          list_trs_admin_edit_asiento();
-    },
-    error:function(data)
-    {
-      console.log('Error '+data);
-      toastr.error("!!! Error al realizar transacción...");
-    }  
-  });
-
-    }else{
-      alert("El asiento que desea guardar no se encuentra cuadrado");
     }
-
   }
+  
   function consulta_cuenta_admin(){
     var token = $("input[name=_token]").val();
     var cod_cuenta= $("#cod_cuenta").val();
-  var route = '{{ url("admin/vercuentas") }}';
-  traer_grupo(cod_cuenta);
-  document.getElementById("cod_cuenta").value = "";
-  var parametros = {
-    "id" :cod_cuenta
+    var route = '{{ url("admin/vercuentas") }}';
+    traer_grupo(cod_cuenta);
+    document.getElementById("cod_cuenta").value = "";
+    var parametros = {
+      "id" :cod_cuenta
+    }
+    console.log(parametros);
+    $.ajax({
+      url:route,
+      headers:{'X-CSRF-TOKEN':token},
+      type:'get',
+      dataType: 'json',
+      data:parametros,
+      success:function(data)
+      {
+        console.log(data);
+        document.getElementById("cuenta").value = data.cuenta;
+        document.getElementById("cod_cuenta").value = data.cod;
+        console.log("copy data succefull");
+      },
+      error:function(data)
+      {
+        console.log('Error '+data);
+      }  
+    });
   }
-  console.log(parametros);
-  $.ajax({
-    url:route,
-    headers:{'X-CSRF-TOKEN':token},
-    type:'get',
-    dataType: 'json',
-    data:parametros,
-    success:function(data)
-    {
-      console.log(data);
-      document.getElementById("cuenta").value = data.cuenta;
-      document.getElementById("cod_cuenta").value = data.cod;
-      console.log("copy data succefull");
-    },
-    error:function(data)
-    {
-      console.log('Error '+data);
-    }  
-  });
-}
 
-function traer_grupo(cod){
+  function traer_grupo(cod){
     console.log("Consulta grupo");
     var token = $("input[name=_token]").val();
     var cod_cuenta= cod;
@@ -292,46 +295,46 @@ function traer_grupo(cod){
     });
   }
 
-$('.busca_cuenta').click(function(){
-  console.log("busqueda por boton");
-  var token = $("input[name=_token]").val();
-  var cod_cuenta= $("#cod_cuenta").val();
-  traer_grupo(cod_cuenta);
-  var route = '{{ url("admin/vercuentas") }}';
-  document.getElementById("cod_cuenta").value = "";
-  var parametros = {
-    "id" :cod_cuenta
-  }
-  console.log(parametros);
-  $.ajax({
-    url:route,
-    headers:{'X-CSRF-TOKEN':token},
-    type:'get',
-    dataType: 'json',
-    data:parametros,
-    success:function(data)
-    {
-      console.log(data);
-      document.getElementById("cuenta").value = data.cuenta;
-      document.getElementById("cod_cuenta").value = data.cod;
-      console.log("copy data succefull");
-    },
-    error:function(data)
-    {
-      console.log('Error '+data);
-    }  
+  $('.busca_cuenta').click(function(){
+    console.log("busqueda por boton");
+    var token = $("input[name=_token]").val();
+    var cod_cuenta= $("#cod_cuenta").val();
+    traer_grupo(cod_cuenta);
+    var route = '{{ url("admin/vercuentas") }}';
+    document.getElementById("cod_cuenta").value = "";
+    var parametros = {
+      "id" :cod_cuenta
+    }
+    console.log(parametros);
+    $.ajax({
+      url:route,
+      headers:{'X-CSRF-TOKEN':token},
+      type:'get',
+      dataType: 'json',
+      data:parametros,
+      success:function(data)
+      {
+        console.log(data);
+        document.getElementById("cuenta").value = data.cuenta;
+        document.getElementById("cod_cuenta").value = data.cod;
+        console.log("copy data succefull");
+      },
+      error:function(data)
+      {
+        console.log('Error '+data);
+      }  
+    });
   });
-});
 
-$('#guarda_trs_admin').click(function(){
-  var num_asiento = $("#num_asiento").val();
-  var cod_cuenta = $("#cod_cuenta").val();
-  var cuenta = $("#cuenta").val();
-  var periodo = $("#periodo").val();
-  var fecha = $("#fecha").val();
-  var concepto_detalle = $("#concepto_detalle").val();
-  var almacen_id = $("#almacen_id").val();
-  var asiento_id = $("#id").val();
+  $('#guarda_trs_admin').click(function(){
+    var num_asiento = $("#num_asiento").val();
+    var cod_cuenta = $("#cod_cuenta").val();
+    var cuenta = $("#cuenta").val();
+    var periodo = $("#periodo").val();
+    var fecha = $("#fecha").val();
+    var concepto_detalle = $("#concepto_detalle").val();
+    var almacen_id = $("#almacen_id").val();
+    var asiento_id = $("#id").val();
     var codaux_clase = $("#codaux_clase").val();
     var codaux_grupo = $("#codaux_grupo").val();
     var codaux_cuenta = $("#codaux_cuenta").val();
@@ -339,44 +342,44 @@ $('#guarda_trs_admin').click(function(){
     var codaux_auxiliar = $("#codaux_auxiliar").val();
     var codaux_subauxiliar = $("#codaux_subauxiliar").val();
 
-  var valorconvertir =$("#valor").val();
+    var valorconvertir =$("#valor").val();
 
-  if(valorconvertir=="") {
-    toastr.warning("!!! Ingresar un valor 0.00.");
-    $("#valor").focus();
-    return true;
-  }
+    if(valorconvertir=="") {
+      toastr.warning("!!! Ingresar un valor 0.00.");
+      $("#valor").focus();
+      return true;
+    }
 
-  var valor =number_format(valorconvertir,2);
-  var tipo = $("#tipo").val();
+    var valor =number_format(valorconvertir,2);
+    var tipo = $("#tipo").val();
 
-  if(cod_cuenta=="") {
-    toastr.warning("!!! Ingrese un código de cuenta.");
-    $("#cod_cuenta" ).focus();
-    return true;
-  }
+    if(cod_cuenta=="") {
+      toastr.warning("!!! Ingrese un código de cuenta.");
+      $("#cod_cuenta" ).focus();
+      return true;
+    }
 
-  if(cuenta=="") {
-    toastr.warning("!!! Buscar cuenta.");
-    $("#cuenta" ).focus();
-    return true;
-  }
+    if(cuenta=="") {
+      toastr.warning("!!! Buscar cuenta.");
+      $("#cuenta" ).focus();
+      return true;
+    }
 
-  if(valor=="") {
-    toastr.warning("!!! Ingresar un valor 0.00.");
-    return true;
-  }
+    if(valor=="") {
+      toastr.warning("!!! Ingresar un valor 0.00.");
+      return true;
+    }
 
-  if(tipo=="1"){
-    saldo_debe = valor;
-    saldo_haber = "0.00";
-  }
-  if(tipo=="2"){
-    saldo_debe = "0.00";
-    saldo_haber = valor;
-  }
+    if(tipo=="1"){
+      saldo_debe = valor;
+      saldo_haber = "0.00";
+    }
+    if(tipo=="2"){
+      saldo_debe = "0.00";
+      saldo_haber = valor;
+    }
 
-  var token = $("input[name=_token]").val();
+    var token = $("input[name=_token]").val();
 
   //var route = '/admin/saveAsiento/';
   var route = '{{ url("admin/saveAsientoAdd") }}';
@@ -392,12 +395,12 @@ $('#guarda_trs_admin').click(function(){
     "saldo_haber" :saldo_haber,
     "almacen_id" :almacen_id,
     "asiento_id" :asiento_id,
-      "codaux_clase" : codaux_clase,
-      "codaux_grupo" : codaux_grupo,
-      "codaux_cuenta" : codaux_cuenta,
-      "codaux_subcuenta" : codaux_subcuenta,
-      "codaux_auxiliar" : codaux_auxiliar,
-      "codaux_subauxiliar" : codaux_subauxiliar,
+    "codaux_clase" : codaux_clase,
+    "codaux_grupo" : codaux_grupo,
+    "codaux_cuenta" : codaux_cuenta,
+    "codaux_subcuenta" : codaux_subcuenta,
+    "codaux_auxiliar" : codaux_auxiliar,
+    "codaux_subauxiliar" : codaux_subauxiliar,
   }
   console.log(parametros);
   $.ajax({
@@ -422,10 +425,10 @@ $('#guarda_trs_admin').click(function(){
   });
 });
 
-function trashBalanceInicial(id){
-  console.log(id);
-  if (confirm("Esta seguro que desea eliminar el detalle registrado ?...")) {
-    var token = $("input[name=_token]").val();
+  function trashBalanceInicial(id){
+    console.log(id);
+    if (confirm("Esta seguro que desea eliminar el detalle registrado ?...")) {
+      var token = $("input[name=_token]").val();
     //var route = '/admin/trashSubAuxcuentas/'; 
     var route = '{{ url("admin/trashBalanceInicial") }}'; 
     var parametros = {
@@ -473,12 +476,12 @@ function eliminar_trs_blini(id){
       success:function(data)
       {
         list_trs_admin_edit_asiento();
-      toastr.success("Transaccion exitosa.");
+        toastr.success("Transaccion exitosa.");
         console.log('correcto '+data.data);
       },
       error:function(data)
       {
-      toastr.error("!!! Error al realizar esta transacción.");
+        toastr.error("!!! Error al realizar esta transacción.");
         console.log('Error '+data);
       }  
     });
@@ -503,19 +506,19 @@ function number_format(amount, decimals) {
 
     // si no es un numero o es igual a cero retorno el mismo cero
     if (isNaN(amount) || amount === 0) 
-        return parseFloat(0).toFixed(decimals);
+      return parseFloat(0).toFixed(decimals);
 
     // si es mayor o menor que cero retorno el valor formateado como numero
     amount = '' + amount.toFixed(decimals);
 
     var amount_parts = amount.split('.'),
-        regexp = /(\d+)(\d{3})/;
+    regexp = /(\d+)(\d{3})/;
 
     while (regexp.test(amount_parts[0]))
-        amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
+      amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
 
     return amount_parts.join('.');
-}
+  }
 
 
 </script>

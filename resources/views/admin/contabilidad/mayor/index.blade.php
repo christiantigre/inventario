@@ -76,6 +76,8 @@
                                 @foreach($sumas as $itemsuma)
                                     <td>{{ number_format($itemsuma->saldo_debe,2) }}</td>
                                     <td>{{ number_format($itemsuma->saldo_haber,2) }}</td>
+                                    <td>{{ number_format($sumas_saldo['sumas_acreedor'],2) }}</td>
+                                    <td>{{ number_format($sumas_saldo['sumas_deudor'],2) }}</td>
                                 @endforeach
                             </tr>
                         </tfoot>
