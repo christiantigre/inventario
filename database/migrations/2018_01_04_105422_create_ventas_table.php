@@ -30,6 +30,8 @@ class CreateVentasTable extends Migration
             $table->string('can_items',10)->nullable();
             $table->string('vendedor',191)->nullable();
             $table->boolean('documento')->default(0)->nullable();
+            $table->double('descuento',15,2)->nullable();
+            $table->double('propina',15,2)->nullable();
             $table->integer('id_cliente')->unsigned()->nullable();
             $table->integer('id_user')->unsigned()->nullable();
             $table->integer('id_iva')->unsigned()->nullable();

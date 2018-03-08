@@ -207,7 +207,11 @@ Route::group(['prefix' => 'admin'], function () {
   Route::post('/deletecuentaperdidasyganancias/{id}', 'Admin\\ConfcontblController@destroy');
   //Perdidas y Ganancias
   Route::get('perdidasyganancias/', 'Admin\\ContabilidadController@perdidasyganancias');
+  //facturacion-electronica
+  Route::resource('/facturacion-electronica', 'Admin\\FacturacionElectronicaController');
 
+  Route::resource('/descuento', 'Admin\\DescuentoController');
+  Route::resource('/moneda', 'Admin\\MonedaController');
 });
 
 
@@ -280,7 +284,12 @@ Route::group(['prefix' => 'person'], function () {
   Route::resource('/settings', 'Person\\PerfilController'); 
   Route::get('/settings/{id}/editcredentials/', 'Person\\PerfilController@editcredentials');
   Route::post('/settings/updatecredentials/{id}', 'Person\\PerfilController@updatecredentials');
+
+  //Pruebas creando xml factura pasandole el id de la venta realizada
   
+  Route::get('/generar/{id}', ['as' => 'generar', 'uses' => 'Person\\VentaController@genera']);
+  Route::get('/generarClaveAcceso/{id}', ['as' => 'generarClaveAcceso', 'uses' => 'Person\\VentaController@generaclaveacceso']);
+  Route::get('/generarFacturaXml/{id}', ['as' => 'generarFacturaXml', 'uses' => 'Person\\VentaController@generarFacturaXml']);
 });
 
   Route::get('getSubcategory/{id}', 'ComponentController@getSubcategory');

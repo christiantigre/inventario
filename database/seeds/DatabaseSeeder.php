@@ -37,5 +37,8 @@ class DatabaseSeeder extends Seeder
         $this->call(SubcuentaTableSeeder::class);
         $this->call(AuxiliarTableSeeder::class);
         $this->call(ConfcontblTableSeeder::class);
+        $this->call(ComprobanteTableSeeder::class);
+        $this->call(MonedaTableSeeder::class);
+
     }
 }

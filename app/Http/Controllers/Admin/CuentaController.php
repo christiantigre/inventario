@@ -193,7 +193,7 @@ class CuentaController extends Controller
         try {
         Cuentum::destroy($id);
             $this->genLog("Eliminó a cuenta id : ".$id); 
-Session::flash('flash_message', 'Eliminado correctamente');
+            Session::flash('flash_message', 'Eliminado correctamente');
         } catch (\Exception $e) {
             $this->genLog("Error al eliminar cuenta id : ".$id); 
             Session::flash('warning', '!!!Error al Eliminar');
