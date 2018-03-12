@@ -25,7 +25,7 @@ class Iva extends Model
      *
      * @var array
      */
-    protected $fillable = ['iva', 'activo'];
+    protected $fillable = ['iva', 'activo','codporcentaje'];
 
     
 }

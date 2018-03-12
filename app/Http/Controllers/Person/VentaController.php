@@ -94,7 +94,7 @@ class VentaController extends Controller
         //$products = Product::orderBy('id','ASC')->where('cantidad'>'0')->get();
         $products = \DB::table('products')->where('cantidad', '>', 0)->orderBy('id','ASC')->get();
         $cant_incr = $cant_ventas+1;
-        $numbers     = $this->generate_numbers($cant_incr, 1, 8);
+        $numbers     = $this->generate_numbers($cant_incr, 1, 9);
         $numero_venta = implode("", $numbers);
         $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
         $fecha_venta = $carbon->now()->format('Y-m-d H:i:s');
@@ -373,13 +373,16 @@ class VentaController extends Controller
         public function genera(Request $request, $id){
             $venta = Ventum::findOrFail($id);
             $factura = $venta['num_venta'];
-            $claveacceso    = $this->generaclaveacceso($factura);
+            //retorna cadena de 50 caracteres
+            $claveacceso    = $this->generaclaveacceso($id);
+
             $verificador    = $this->generaDigitoModulo11($claveacceso);
             $data['factura'] = $factura;
             $data['clavedeacceso'] = $claveacceso;
             $data['verificador'] = $verificador;
+            //Genera cadena de 51 caracteres
             $codigogenerado = $claveacceso . '' . $verificador . '';
-            
+
             $request['venta_id'] = $venta->id;
             $request['numfactura'] = $factura;
             $request['claveacceso'] = $codigogenerado;
@@ -413,6 +416,51 @@ class VentaController extends Controller
             }
                 
         }
+
+
+
+        public function generaclaveacceso($id){
+            $venta = Ventum::findOrFail($id);
+            $factura = $venta['num_venta'];
+            $date           = Carbon::now();
+            $date->timezone = new \DateTimeZone('America/Guayaquil');
+
+            $d     = $date->format('d');
+            $m     = $date->format('m');
+            $y     = $date->format('Y');
+            $fecha = $d . '' . $m . '' . $y;
+            //tipo comprobante
+            $tipocmprobante = '01';
+            //ruc
+            $dt_empress = Almacen::select()->first();
+            $ruc        = $dt_empress->ruc;
+            //ambiente
+            //$ambiente = $dt_empress->ambiente;
+            $ambiente = '1';
+            //serie de factura = odigo establecimiento concatenado codigogo punto de emision
+            $codestab      = $dt_empress->codestablecimiento;
+            $codpntemision = $dt_empress->codpntemision;
+            $cod           = $codestab . '' . $codpntemision;
+            //serie factura
+            $seriefac = $cod;
+            //Numero factura
+            $numerofactura = $factura;
+            //numero cualquiera 8
+            $random           = $this->randomlongitud(8);
+            $numerocualquiera = $random;
+            //tipo emision
+            $tipoemision   = '1';
+            $clavedeacceso = $fecha . '' . $tipocmprobante . '' . $ruc . '' . $ambiente . '' . $seriefac . '' . $numerofactura . '' . $numerocualquiera . '' . $tipoemision;
+            //$verificador = $this->generaDigitoModulo11($clavedeacceso);
+            //dd($clavedeacceso);
+            $clavedeacceso = $clavedeacceso; 
+            //.''.$verificador;
+
+            //$verificador    = $this->generaDigitoModulo11($clavedeacceso);
+        //dd($clavedeacceso);
+        return $clavedeacceso;
+    }
+
 
 
         public function firmarFactura($id){
@@ -490,7 +538,7 @@ class VentaController extends Controller
         }
 
     }
-    
+
 
 
         public function generaDigitoModulo11($cadena){
@@ -524,47 +572,7 @@ class VentaController extends Controller
         }
 
 
-        public function generaclaveacceso($id){
-            $venta = Ventum::findOrFail($id);
-            $factura = $venta['num_venta'];
 
-            $date           = Carbon::now();
-            $date->timezone = new \DateTimeZone('America/Guayaquil');
-
-            $d     = $date->format('d');
-            $m     = $date->format('m');
-            $y     = $date->format('Y');
-            $fecha = $d . '' . $m . '' . $y;
-            //tipo comprobante
-            $tipocmprobante = '01';
-            //ruc
-            $dt_empress = Almacen::select()->first();
-            $ruc        = $dt_empress->ruc;
-            //ambiente
-            $ambiente = $dt_empress->ambiente;
-            //serie de factura = odigo establecimiento concatenado codigogo punto de emision
-            $codestab      = $dt_empress->codestablecimiento;
-            $codpntemision = $dt_empress->codpntemision;
-            $cod           = $codestab . '' . $codpntemision;
-            //serie factura
-            $seriefac = $cod;
-            //Numero factura
-            $numerofactura = $factura;
-            //numero cualquiera 8
-            $random           = $this->randomlongitud(8);
-            $numerocualquiera = $random;
-            //tipo emision
-            $tipoemision   = '1';
-            $clavedeacceso = $fecha . '' . $tipocmprobante . '' . $ruc . '' . $ambiente . '' . $seriefac . '' . $numerofactura . '' . $numerocualquiera . '' . $tipoemision;
-            //$verificador = $this->generaDigitoModulo11($clavedeacceso);
-            //dd($clavedeacceso);
-            $clavedeacceso = $clavedeacceso; 
-            //.''.$verificador;
-
-            //$verificador    = $this->generaDigitoModulo11($clavedeacceso);
-        return $clavedeacceso;
-        //dd($clavedeacceso);
-    }
 
 
 
@@ -654,7 +662,11 @@ class VentaController extends Controller
             $infoFactura = $xml->createElement('infoFactura');
             $infoFactura = $factura->appendChild($infoFactura);
             //reemplazar feha por date
-            $fechaEmision = $xml->createElement('fechaEmision', $venta['fecha']);
+            //cambiar el formato de la fecha fechaEmision 
+
+            $fechaEmite = Carbon::parse($venta['fecha'])->format('d/m/Y');
+            //dd($fechaEmite);
+            $fechaEmision = $xml->createElement('fechaEmision', $fechaEmite);
             $fechaEmision = $infoFactura->appendChild($fechaEmision);
 
             $dirEstablecimiento = $xml->createElement('dirEstablecimiento', $datos_empresa->dir);
@@ -741,13 +753,17 @@ class VentaController extends Controller
             $detalle = $xml->createElement('detalle');
             $detalle = $detalles->appendChild($detalle);
 
-            $codigoPrincipal = $xml->createElement('codigoPrincipal', $product->producto);
+            $codigoPrincipal = $xml->createElement('codigoPrincipal', $product->id);
             $codigoPrincipal = $detalle->appendChild($codigoPrincipal);
 
             $codigoAuxiliar = $xml->createElement('codigoAuxiliar', $product->id);
             $codigoAuxiliar = $detalle->appendChild($codigoAuxiliar);
-
-            $descripcion = $xml->createElement('descripcion', $product->propaganda);
+            if(!empty($product->propaganda)){
+                $detallproduct = $product->propaganda;
+            }else{
+                $detallproduct = 's/n';
+            }
+            $descripcion = $xml->createElement('descripcion', $detallproduct);
             $descripcion = $detalle->appendChild($descripcion);
 
             $cantidadproducto = $item->cant;
@@ -764,7 +780,8 @@ class VentaController extends Controller
             $precioUnitario = $detalle->appendChild($precioUnitario);
 
              //dd($item); Realizar lectura del modelo de descuentos y extraer el valor que se encuentre en activo
-            $descuento = $xml->createElement('descuento', $item->descuento);
+            //$item->descuento
+            $descuento = $xml->createElement('descuento', 0);
             $descuento = $detalle->appendChild($descuento);
 
             $totsininpuesto = $precioventa * $cantidadproducto;

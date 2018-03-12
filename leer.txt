@@ -170,3 +170,11 @@ link pagina web edita imagenes
 
         leer como hacer una marca de agua con php en imagenes
         https://github.com/pedroventura/watermark-php/blob/master/watermark.php
+
+
+        link webservices servicios varios sri
+        http://empresas.sistemasinteligentes.com.ec/EC/es/150118/1/web/n/Empresas/Web-Service-De-Datos-Publicos-Sri-Registro-Civil-Para-Sistemas-Puntos-De-Ventas/
+
+        https://www.eluniverso.com/noticias/2018/01/09/nota/6558144/1-enero-2018-es-obligatoria-emision-comprobantes-electronicos-bajo
+
+        
