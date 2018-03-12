@@ -290,6 +290,7 @@ Route::group(['prefix' => 'person'], function () {
   Route::get('/generar/{id}', ['as' => 'generar', 'uses' => 'Person\\VentaController@genera']);
   Route::get('/generarClaveAcceso/{id}', ['as' => 'generarClaveAcceso', 'uses' => 'Person\\VentaController@generaclaveacceso']);
   Route::get('/generarFacturaXml/{id}', ['as' => 'generarFacturaXml', 'uses' => 'Person\\VentaController@generarFacturaXml']);
+  Route::get('/firmarfactura/{id}', ['as' => 'generar', 'uses' => 'Person\\VentaController@firmarFactura']);
 });
 
   Route::get('getSubcategory/{id}', 'ComponentController@getSubcategory');

@@ -3,6 +3,8 @@
 /public/logs
 /public/storage
 /public/archivos
+/public/DevelopedSignature
+/public/SRI
 /storage/*.key
 /vendor
 /.idea

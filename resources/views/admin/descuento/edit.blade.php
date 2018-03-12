@@ -9,7 +9,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Edit Descuento #{{ $descuento->id }}</div>
                     <div class="panel-body">
-                        <a href="{{ url('/admin/descuento') }}" title="Back"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
+                        <a href="{{ url('/admin/descuento') }}" title="Atras"><button class="btn btn-warning btn-xs"><i class="fa fa-arrow-left" aria-hidden="true"></i> Atras</button></a>
                         <br />
                         <br />
 
@@ -21,11 +21,19 @@
                             </ul>
                         @endif
 
-                        <form method="POST" action="{{ url('/admin/descuento/' . $descuento->id) }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
-                            {{ method_field('PATCH') }}
+                            {!! Form::model($descuento, [
+                            'method' => 'PATCH',
+                            'url' => ['/admin/descuento', $descuento->id],
+                            'class' => 'form-horizontal', 
+                            'enctype'=>'multipart/form-data',
+                            'files' => true,
+                            'accept-charset'=>'UTF-8'
+                            ]) !!}
+
+
                             {{ csrf_field() }}
 
-                            @include ('admin.descuento.form', ['submitButtonText' => 'Update'])
+                            @include ('admin.descuento.form', ['submitButtonText' => 'Actualizar'])
 
                         </form>
 

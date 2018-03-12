@@ -16,8 +16,8 @@ class CreateComprobanteVentasTable extends Migration
         Schema::create('comprobante_ventas', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_venta')->unsigned();            
-            $table->text('numfactura')->nullable();          
-            $table->text('claveacceso')->nullable();          
+            $table->string('numfactura',191)->unique();          
+            $table->string('claveacceso',191)->unique();          
             $table->boolean('gen_xml')->default(0);          
             $table->boolean('fir_xml')->default(0);          
             $table->boolean('aut_xml')->default(0);          

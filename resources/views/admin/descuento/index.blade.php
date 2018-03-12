@@ -9,8 +9,8 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Descuento</div>
                     <div class="panel-body">
-                        <a href="{{ url('/admin/descuento/create') }}" class="btn btn-success btn-sm" title="Add New Descuento">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Add New
+                        <a href="{{ url('/admin/descuento/create') }}" class="btn btn-success btn-sm" title="Registrar Descuento">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Registrar
                         </a>
 
                         <form method="GET" action="{{ url('/admin/descuento') }}" accept-charset="UTF-8" class="navbar-form navbar-right" role="search">
@@ -37,15 +37,21 @@
                                 @foreach($descuento as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->valor_descuento }}</td><td>{{ $item->estado }}</td>
+                                        <td>{{ $item->valor_descuento }}</td><td>
+                                            @if(($item->estado)=='1')
+                                        <small class="label label-success">Activo</small>
+                                        @else
+                                        <small class="label label-danger">Inactivo</small>
+                                        @endif
+                                        </td>
                                         <td>
-                                            <a href="{{ url('/admin/descuento/' . $item->id) }}" title="View Descuento"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
-                                            <a href="{{ url('/admin/descuento/' . $item->id . '/edit') }}" title="Edit Descuento"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
+                                            <a href="{{ url('/admin/descuento/' . $item->id) }}" title="Ver Descuento"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> Ver</button></a>
+                                            <a href="{{ url('/admin/descuento/' . $item->id . '/edit') }}" title="Editar Descuento"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>
 
                                             <form method="POST" action="{{ url('/admin/descuento' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
                                                 {{ method_field('DELETE') }}
                                                 {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-xs" title="Delete Descuento" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                                <button type="submit" class="btn btn-danger btn-xs" title="Eliminar Descuento" onclick="return confirm(&quot;Desea eliminar?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar</button>
                                             </form>
                                         </td>
                                     </tr>
