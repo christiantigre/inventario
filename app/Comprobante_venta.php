@@ -25,7 +25,7 @@ class Comprobante_venta extends Model
      *
      * @var array
      */
-    protected $fillable = ['id_venta', 'numfactura', 'claveacceso', 'gen_xml', 'fir_xml', 'aut_xml', 'convrt_ride', 'send_ride', 'send_xml', 'num_autorizacion', 'fecha_autorizacion', 'estado_aprobacion', 'mensaje', 'id'];
+    protected $fillable = ['id_venta', 'numfactura', 'claveacceso', 'gen_xml', 'fir_xml', 'env_xml', 'aut_xml', 'convrt_ride', 'send_ride', 'send_xml', 'num_autorizacion', 'fecha_autorizacion', 'estado_aprobacion', 'mensaje', 'id'];
 
     
 }

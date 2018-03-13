@@ -291,6 +291,8 @@ Route::group(['prefix' => 'person'], function () {
   Route::get('/generarClaveAcceso/{id}', ['as' => 'generarClaveAcceso', 'uses' => 'Person\\VentaController@generaclaveacceso']);
   Route::get('/generarFacturaXml/{id}', ['as' => 'generarFacturaXml', 'uses' => 'Person\\VentaController@generarFacturaXml']);
   Route::get('/firmarfactura/{id}', ['as' => 'generar', 'uses' => 'Person\\VentaController@firmarFactura']);
+  Route::get('/autorizarfactura/{id}', ['as' => 'autorizarfactura', 'uses' => 'Person\\VentaController@autorizar']);
+  Route::get('/revisarxml/{id}', ['as' => 'revisarxml', 'uses' => 'Person\\VentaController@revisarXml']);
 });
 
   Route::get('getSubcategory/{id}', 'ComponentController@getSubcategory');

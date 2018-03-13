@@ -177,4 +177,25 @@ link pagina web edita imagenes
 
         https://www.eluniverso.com/noticias/2018/01/09/nota/6558144/1-enero-2018-es-obligatoria-emision-comprobantes-electronicos-bajo
 
-        
+
+
+        mensaje de stackverflow
+        _________________________________________
+
+        $year = $carbon->now()->format('Y');
+
+$perdidasyganancias = Perdidas_Ganancias::pluck('cod_cuenta', 'cuenta');
+
+$collection = $perdidasyganancias->each(function ($cod_cuenta, $cuenta) {
+    return Agrupacion_sumada::OrderBy('cod_cuenta','ASC')
+                            ->where('cod_cuenta',$cod_cuenta)
+                            ->where('cuenta',$cuenta)
+                            ->Where('periodo',$year)
+                            ->get();
+});
+
+dd($collection);
+__________________________________________________
+
+puente de php y java
+https://www.adictosaltrabajo.com/tutoriales/puente-php-java/

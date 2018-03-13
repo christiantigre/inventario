@@ -20,6 +20,7 @@ class CreateComprobanteVentasTable extends Migration
             $table->string('claveacceso',191)->unique();          
             $table->boolean('gen_xml')->default(0);          
             $table->boolean('fir_xml')->default(0);          
+            $table->boolean('env_xml')->default(0);          
             $table->boolean('aut_xml')->default(0);          
             $table->boolean('convrt_ride')->default(0);          
             $table->boolean('send_ride')->default(0);          

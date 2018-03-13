@@ -510,12 +510,44 @@ class VentaController extends Controller
                 }
             }
 
+    public function autorizar($id){
+        try {
+            $comprobante   = Comprobante_venta::where('id_venta',$id)->first();
+            
+            $rutai         = public_path();
+            $ruta          = str_replace("\\", "//", $rutai);
+            $autorizados   = $ruta . '//archivos//' . 'autorizados' . '//';
+            $enviados      = $ruta . '//' . 'enviados' . '//';
+            $firmados      = $ruta . '//archivos//firmados//';
+            $noautorizados = $ruta . '//archivos//' . 'noautorizados' . '//';
+            $pathxmlfirmado= $firmados.$comprobante['claveacceso'].".xml";
 
-            public function enviarautorizar($pathXmlFirmado, $claveAcceso, $autorizados, $rechazados)
-    {
-        \DB::table('sales')
-            ->where('claveacceso', $claveAcceso)
-            ->update(['fir_xml' => '1']);
+            if (\File::exists($pathxmlfirmado))
+            {
+                $nombrexml = $comprobante['claveacceso'];
+                $xmlautorizados   = $autorizados . $nombrexml . '.xml';
+                $xmlNoautorizados = $noautorizados . $nombrexml . '.xml';
+                $res = $this->enviarautorizar($pathxmlfirmado, $nombrexml, $xmlautorizados, $xmlNoautorizados);
+                dd($res);
+            }else{
+                $this->genLog("No existe el archivo xml : ".$comprobante['claveacceso'] );
+            }
+            
+            
+            $this->genLog("Enviado a autorizar xml venta_id : ".$id );
+            \DB::table('comprobante_ventas')
+            ->where('claveacceso', $comprobante['claveacceso'])
+            ->update(['env_xml' => '1']);
+
+        } catch (\Exception $e) {
+            $this->genLog("Error al enviar a autorizar xml venta_id : ".$id );
+            return $e;
+        }
+    }
+
+    public function enviarautorizar($pathXmlFirmado, $claveAcceso, $autorizados, $rechazados){
+        try {
+            
         $start_time       = microtime(true);
         $rutai            = public_path();
         $ruta             = str_replace("\\", "//", $rutai);
@@ -523,18 +555,80 @@ class VentaController extends Controller
         $linkRecepcion    = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantes?wsdl";
         $linkAutorizacion = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantes?wsdl";
         $jar              = $ruta . '//SRI//dist//SRI.jar';
+
         $cmd              = 'cmd /C java -jar ' . $jar . ' ' . $pathXmlFirmado . ' ' . $claveAcceso . ' ' . $autorizados . ' ' . $rechazados . ' ' . $linkRecepcion . ' ' . $linkAutorizacion . ' ';
-        $oExec            = $WshShell->Run($cmd, 0, false);
-        if ($oExec == '0') {
-            \DB::table('sales')
+        //$oExec            = $WshShell->Run($cmd, 10, true);
+        //exec($cmd, $output);
+        //print_r($output);
+        //return $output;
+        //if ($oExec == '0') {
+        if (exec($cmd, $output)) {
+            \DB::table('comprobante_ventas')
                 ->where('claveacceso', $claveAcceso)
-                ->update(['aut_xml' => '1']);
+                ->update(['aut_xml' => '1','mensaje'=>$output[0]]);
             sleep(30);
-            $this->revisarXml($claveAcceso);
+            //$this->revisarXml($claveAcceso);
+            //$this->revisarXml($id);
         } else {
-            \DB::table('sales')
+            \DB::table('comprobante_ventas')
                 ->where('claveacceso', $claveAcceso)
                 ->update(['aut_xml' => '0']);
+        }
+
+        } catch (\Exception $e) {
+            $this->genLog("Error al autorizar xml : ".$claveAcceso );
+            return $e;
+        }
+
+    }
+
+
+    public function revisarXml($id)
+    {
+        $comprobante   = Comprobante_venta::where('id_venta',$id)->first();
+        $claveacceso = $comprobante['claveacceso'];
+        $claveAcceso = $claveacceso;
+        $rutai       = public_path();
+        $ruta        = str_replace("\\", "\\", $rutai);
+        //$autorizados = $ruta.'//archivos//'.'autorizados'.'//';
+
+        $xmlPath = $ruta . "\\archivos\\autorizados\\" . $claveAcceso . ".xml";
+        if (file_exists($xmlPath)) {
+
+            //lee el xml y decodifica
+            $content        = utf8_encode(file_get_contents($xmlPath));
+            $xml            = \simplexml_load_string($content);
+            $cont           = (integer) $xml['counter'];
+            $xml['counter'] = $cont + 1;
+            //guarda temporalmente el xml decodificado
+            $xml->asXML($ruta . "\\archivos\\temp\\" . $claveAcceso . ".xml");
+            //obtiene los valores de los campos del archivo temporal decodificado
+            $doc = new \DOMDocument();
+            $doc->load($ruta . "\\archivos\\temp\\" . $claveAcceso . ".xml");
+            // Reading tag's value.
+            $estado = $doc->getElementsByTagName("estado")->item(0)->nodeValue;
+            if ($estado == "AUTORIZADO") {
+                $numAut  = $doc->getElementsByTagName("numeroAutorizacion")->item(0)->nodeValue;
+                $fechAut = $doc->getElementsByTagName("fechaAutorizacion")->item(0)->nodeValue;
+                \DB::table('comprobante_ventas')
+                    ->where('claveacceso', $claveAcceso)
+                    ->update(['num_autorizacion' => $numAut, 'fecha_autorizacion' => $fechAut, 'estado_aprobacion' => $estado]);
+                $this->generaPdf($claveAcceso);
+            } else {
+                $fechAut = $doc->getElementsByTagName("fechaAutorizacion")->item(0)->nodeValue;
+                $mensaje = $doc->getElementsByTagName("mensajes")->item(0)->nodeValue;
+                $estado  = "NO AUTORIZADO";
+                \DB::table('comprobante_ventas')
+                    ->where('claveacceso', $claveAcceso)
+                    ->update(['mensaje' => $mensaje, 'fecha_autorizacion' => $fechAut, 'estado_aprobacion' => $estado]);
+            }
+        } else {
+            return "Retorna a firmar";
+            $this->firmarFactura($id);
+            $message = 'Su pedido fue realizado con éxito, estamos preparando tu factua y la enviarémos a tu correo electrónico';
+            $message = 'Su pedido fue realizado con éxito, estamos preparando tu factura y la enviarémos a tu correo electrónico';
+
+            \Session::flash('flash_message', $message);
         }
 
     }
@@ -916,7 +1010,17 @@ class VentaController extends Controller
     }
 
 
+    function __exec($tmppath, $cmd){
+    //https://stackoverflow.com/questions/5690134/running-command-line-silently-with-vbscript-and-getting-output
+   $WshShell = new COM("WScript.Shell");
+   $tmpf = rand(1000, 9999).".tmp"; // Temp file
+   $tmpfp = $tmppath.'/'.$tmpf; // Full path to tmp file
 
+   $oExec = $WshShell->Run("cmd /c $cmd -c ... > ".$tmpfp, 0, true);
+
+   // return $oExec == 0 ? true : false; // Return True False after exec
+   return $tmpf;
+}
 
 
 }
