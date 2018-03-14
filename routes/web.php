@@ -212,6 +212,8 @@ Route::group(['prefix' => 'admin'], function () {
 
   Route::resource('/descuento', 'Admin\\DescuentoController');
   Route::resource('/moneda', 'Admin\\MonedaController');
+
+  Route::resource('/entrega', 'Admin\\EntregaController');
 });
 
 
@@ -293,6 +295,8 @@ Route::group(['prefix' => 'person'], function () {
   Route::get('/firmarfactura/{id}', ['as' => 'generar', 'uses' => 'Person\\VentaController@firmarFactura']);
   Route::get('/autorizarfactura/{id}', ['as' => 'autorizarfactura', 'uses' => 'Person\\VentaController@autorizar']);
   Route::get('/revisarxml/{id}', ['as' => 'revisarxml', 'uses' => 'Person\\VentaController@revisarXml']);
+  Route::get('/generarpdf/{id}', ['as' => 'generarpdf', 'uses' => 'Person\\VentaController@generaPdf']);
+  Route::get('/procesosfacturacion/{id}', ['as' => 'procesosfacturacion', 'uses' => 'Person\\VentaController@procesosfacturacion']);
 });
 
   Route::get('getSubcategory/{id}', 'ComponentController@getSubcategory');

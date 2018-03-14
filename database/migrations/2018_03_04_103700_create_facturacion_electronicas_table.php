@@ -18,6 +18,7 @@ class CreateFacturacionElectronicasTable extends Migration
                 $table->text('path_certificado')->nullable();
                 $table->text('clave_certificado')->nullable();
                 $table->boolean('modo_ambiente')->nullable();
+                $table->text('tipo_emision')->nullable();
                 $table->boolean('generar_facturas')->default(1);
                 $table->integer('id_almacen')->unsigned(); 
                 $table->foreign('id_almacen')->references('id')->on('almacens');

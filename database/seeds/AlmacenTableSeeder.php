@@ -19,7 +19,7 @@ class AlmacenTableSeeder extends Seeder
     		'gerente'=>'Nombre Nombre Apellido Apellido',
     		'pag_web'=>'www.empresa.com',
     		'razon_social'=>'Nombre Nombre Apellido Apellido',
-            'ruc'=>'0101001101001',
+            'ruc'=>'0105118509001',
             'auth_sri'=>'1121143187',
             'codestablecimiento'=>'001',
     		'codpntemision'=>'001',
@@ -32,7 +32,8 @@ class AlmacenTableSeeder extends Seeder
     		'watsapp'=>'0990990991',
     		'funcion_empresa'=>'Empresa compra y venta de equipos informáticos, diseño y desarrollo de paginas web, mantenimiento y reparación de hardware.',
             'slogan'=>'Hardware, Software, Tecnología y mas...',
-    		'dir'=>'Gualaceo, Jaime Roldos y Manuel Moreno.',
+            'dirSucursal'=>'Gualaceo, Jaime Roldos y Manuel Moreno.',
+    		'dirMatriz'=>'Gualaceo, Jaime Roldos y Manuel Moreno.',
     		'pais_id'=>1,
     		'provincia_id'=>1,
     		'canton_id'=>3

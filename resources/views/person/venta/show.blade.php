@@ -80,6 +80,7 @@
   <b>Serie:</b> {{ $almacen->codestablecimiento }}-{{ $almacen->codpntemision }}<br>
   <b>Fecha pago:</b> {{ $ventum->fecha }}<br>
   <b>Pago:</b> {{ $ventum->typepay->type }}<br>
+  <b>Entrega:</b> {{ $ventum->entrega->metodo }}<br>
 </div>
 <!-- /.col -->
 </div>

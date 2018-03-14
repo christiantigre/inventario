@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FacturacionElectronica extends Model
+class Entrega extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'facturacion_electronicas';
+    protected $table = 'entregas';
 
     /**
     * The database primary key value.
@@ -25,7 +25,10 @@ class FacturacionElectronica extends Model
      *
      * @var array
      */
-    protected $fillable = ['generar_facturas', 'obligado_contabilidad', 'path_certificado','clave_certificado', 'modo_ambiente','tipo_emision','id_almacen'];
+    protected $fillable = ['metodo', 'detalle', 'activo'];
 
+    public function venta(){
+        return $this->hasMany(Ventum::class);
+    }
     
 }

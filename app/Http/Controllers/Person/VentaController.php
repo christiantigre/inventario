@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Cliente;
 use App\Admin;
+use App\Person;
 use App\Product;
 use App\Ventum;
 use App\ItemVenta;
@@ -22,6 +23,8 @@ use Session;
 use App\SvLog;
 use App\Comprobante_venta;
 use DB;
+use App\Entrega;
+use GearmanClient;
 
 class VentaController extends Controller
 {
@@ -77,13 +80,13 @@ class VentaController extends Controller
         $this->genLog("Ingresó a nuevo registro.");
 
         try {
-            $mailAdmin = auth('admin')->user()->email;
-            $adminid = auth('admin')->user()->id;
-            $administrador = Admin::findOrFail($adminid);
+            $mailAdmin = auth('person')->user()->email;
+            $adminid = auth('person')->user()->id;
+            $administrador = Person::findOrFail($adminid);
             $dataArray['mail'] = $mailAdmin;          
             $dataArray['iduser'] = $adminid;          
         } catch (\Exception $e) {            
-            $administrador = Admin::findOrFail(1);
+            $administrador = Person::findOrFail(1);
         }
         $username = $administrador['name'];
         $userid = $administrador['id'];
@@ -100,7 +103,9 @@ class VentaController extends Controller
         $fecha_venta = $carbon->now()->format('Y-m-d H:i:s');
         $tipospagos = TypePay::orderBy('id', 'ASC')->pluck('type', 'id');
 
-        return view('person.venta.create',compact('numero_venta','fecha_venta','clientes','products','cant_incr','username','userid','useremail','tipospagos'));
+        $entregas = Entrega::where('activo',1)->orderBy('id', 'ASC')->pluck('metodo', 'id');
+
+        return view('person.venta.create',compact('numero_venta','fecha_venta','clientes','products','cant_incr','username','userid','useremail','tipospagos','entregas'));
     }
 
     public function extraerdatoscliente(Request $request){
@@ -148,11 +153,12 @@ class VentaController extends Controller
         $dataVenta['can_items'] = ItemVenta::count();
         $dataVenta['vendedor'] = $request['vendedor'];
         $dataVenta['id_cliente'] = $request['id_cliente'];
+        $dataVenta['id_user'] = $request['vendedor'];
         //$id_user = $request['id_user'];
         $dataVenta['id_iva'] = $request['idiva'];  
         $dataVenta['id_typepay'] = $request['id_typepay'];                
-        /*dd($dataVenta); $requestData = $request->all();        
-        Ventum::create($requestData);*/
+        $dataVenta['id_entrega'] = $request['id_entrega'];                
+       
         try {
             //Guarda cabecera de la factura
             $venta = Ventum::create($dataVenta);
@@ -370,12 +376,45 @@ class VentaController extends Controller
             return redirect('person/venta')->with('flash_message', 'Ventum deleted!');
         }
 
-        public function genera(Request $request, $id){
+        
+        public function procesosfacturacion($id){
+            if (!empty($id)) {
+                $venta = Ventum::findOrFail($id);
+                if(count($venta)>0){
+                    try {
+                        $genera    = $this->genera($id);
+                        if (!empty($genera)) {
+                            $firma    = $this->firmarFactura($id);
+                            if (!empty($firma)) {
+                                $autoriza    = $this->autorizar($id);
+                                if (!empty($autoriza)) {
+                                    $revisar = $this->revisarXml($id);
+                                }else{
+                                    return "Error al revisar xml autorizado";
+                                }                                
+                            }else{
+                                return "Error al autorizar";
+                            }
+                        }else{
+                            return "No se pudo generar el archivo";
+                        }
+                    } catch (\Exception $e) {
+                        return "No se pudo generar el archivo xml";
+                    }
+                }else{
+                    return "No hay registro de esta venta";
+                }
+            }else{
+                return "No se recibio la variable";
+            }
+        }
+
+
+        public function genera($id){
             $venta = Ventum::findOrFail($id);
             $factura = $venta['num_venta'];
             //retorna cadena de 50 caracteres
             $claveacceso    = $this->generaclaveacceso($id);
-
             $verificador    = $this->generaDigitoModulo11($claveacceso);
             $data['factura'] = $factura;
             $data['clavedeacceso'] = $claveacceso;
@@ -386,6 +425,7 @@ class VentaController extends Controller
             $request['venta_id'] = $venta->id;
             $request['numfactura'] = $factura;
             $request['claveacceso'] = $codigogenerado;
+
             try {
                 //registra que se ha generado el comprobante
                 $comprobante = Comprobante_venta::create([
@@ -393,6 +433,7 @@ class VentaController extends Controller
                     'numfactura' => $factura,
                     'claveacceso' => $codigogenerado,
                 ]);
+
                 $this->genLog("Registrado correctamente comprobante de venta id: ".$id); 
 
                 try {
@@ -457,9 +498,8 @@ class VentaController extends Controller
             //.''.$verificador;
 
             //$verificador    = $this->generaDigitoModulo11($clavedeacceso);
-        //dd($clavedeacceso);
-        return $clavedeacceso;
-    }
+            return $clavedeacceso;
+        }
 
 
 
@@ -503,6 +543,7 @@ class VentaController extends Controller
                 $xmlNoautorizados = $noautorizados . $nombrexml . '.xml';
                 \DB::table('comprobante_ventas')->where('claveacceso', $nombrexml)->update(['fir_xml' => '1']);
                     $this->genLog("Firmo archivo xml : ".$nombrexml); 
+                    return $nombrexml;
                 } catch (\Exception $e) {
                     $this->genLog("Error al firmar archivo xml : ".$nombrexml); 
                 }
@@ -510,8 +551,12 @@ class VentaController extends Controller
                 }
             }
 
-    public function autorizar($id){
+        public function autorizar($id){
         try {
+
+            $client = new \GearmanClient();
+            dd($client);
+            
             $comprobante   = Comprobante_venta::where('id_venta',$id)->first();
             
             $rutai         = public_path();
@@ -528,22 +573,23 @@ class VentaController extends Controller
                 $xmlautorizados   = $autorizados . $nombrexml . '.xml';
                 $xmlNoautorizados = $noautorizados . $nombrexml . '.xml';
                 $res = $this->enviarautorizar($pathxmlfirmado, $nombrexml, $xmlautorizados, $xmlNoautorizados);
-                dd($res);
+
+                $this->genLog("Enviado a autorizar xml venta_id : ".$id );
+                \DB::table('comprobante_ventas')
+                ->where('claveacceso', $comprobante['claveacceso'])
+                ->update(['env_xml' => '1']);
+
+                return $res;
+
             }else{
                 $this->genLog("No existe el archivo xml : ".$comprobante['claveacceso'] );
             }
             
-            
-            $this->genLog("Enviado a autorizar xml venta_id : ".$id );
-            \DB::table('comprobante_ventas')
-            ->where('claveacceso', $comprobante['claveacceso'])
-            ->update(['env_xml' => '1']);
-
         } catch (\Exception $e) {
             $this->genLog("Error al enviar a autorizar xml venta_id : ".$id );
             return $e;
         }
-    }
+        }
 
     public function enviarautorizar($pathXmlFirmado, $claveAcceso, $autorizados, $rechazados){
         try {
@@ -563,10 +609,12 @@ class VentaController extends Controller
         //return $output;
         //if ($oExec == '0') {
         if (exec($cmd, $output)) {
+            $cadena = collect($output)->implode(',');
             \DB::table('comprobante_ventas')
                 ->where('claveacceso', $claveAcceso)
-                ->update(['aut_xml' => '1','mensaje'=>$output[0]]);
+                ->update(['aut_xml' => '1','mensaje'=>$cadena]);
             sleep(30);
+            return $cadena;
             //$this->revisarXml($claveAcceso);
             //$this->revisarXml($id);
         } else {
@@ -594,7 +642,6 @@ class VentaController extends Controller
 
         $xmlPath = $ruta . "\\archivos\\autorizados\\" . $claveAcceso . ".xml";
         if (file_exists($xmlPath)) {
-
             //lee el xml y decodifica
             $content        = utf8_encode(file_get_contents($xmlPath));
             $xml            = \simplexml_load_string($content);
@@ -613,7 +660,7 @@ class VentaController extends Controller
                 \DB::table('comprobante_ventas')
                     ->where('claveacceso', $claveAcceso)
                     ->update(['num_autorizacion' => $numAut, 'fecha_autorizacion' => $fechAut, 'estado_aprobacion' => $estado]);
-                $this->generaPdf($claveAcceso);
+                //$this->generaPdf($claveAcceso);
             } else {
                 $fechAut = $doc->getElementsByTagName("fechaAutorizacion")->item(0)->nodeValue;
                 $mensaje = $doc->getElementsByTagName("mensajes")->item(0)->nodeValue;
@@ -635,7 +682,7 @@ class VentaController extends Controller
 
 
 
-        public function generaDigitoModulo11($cadena){
+    public function generaDigitoModulo11($cadena){
             $cadena            = trim($cadena);
             $baseMultiplicador = 7;
             $aux               = new \SplFixedArray(strlen($cadena));
@@ -666,7 +713,66 @@ class VentaController extends Controller
         }
 
 
+    public function generaPdf($id){
+        $rutai      = public_path();
+        $ruta       = str_replace("\\", "//", $rutai);
+        $rutasl     = str_replace("\\", "\\", $rutai);
+        //$dt_empress = Empresaa::select()->get();
+        $dt_empress = Almacen::first();
+        $comprobante   = Comprobante_venta::where('id_venta',$id)->first();
+        //$claveAcceso = "2909201601010511850900110010010000000777687155819";
+        $claveAcceso    = $comprobante['claveacceso'];
+        //$the_sales      = new sales;
+        //$the_user       = new User;
+        //$the_pedido     = new pedido;
+        //$the_cliente    = new client;
+        //$the_item       = new ItemPedido;
+        $date           = Carbon::now();
+        $date->timezone = new \DateTimeZone('America/Guayaquil');
+        $date           = $date->format('d/m/Y');
+        //$sales          = $the_sales->select()->where('claveacceso', '=', $claveAcceso)->first();
+        //$aux_sales      = \DB::table('sales')->where('claveacceso', '=', $claveAcceso)->get();
+        $aux_sales = $venta = Ventum::findOrFail($id);
+        $comprobante = Comprobante_venta::where('id_venta',$aux_sales->id)->first();
+        $aux_clientes = Cliente::where('id',$aux_sales['id_cliente'])->get();
+        $items = detallVenta::where('id_venta',$id)->get();
+        $facturacion = FacturacionElectronica::first();
+        $pedidos = "";
+        /*
+        $orders         = $the_pedido->select()->where('id', $sales->pedido_id)->first();
+        $pedidos        = \DB::table('pedido')->where('id', '=', $sales->pedido_id)->get();
+        $users          = $the_user->select()->where('id', '=', $orders->users_id)->first();
+        $clientes       = $the_cliente->select()->where('id', '=', $users->id)->first();
+        $aux_clientes   = \DB::table('clients')->where('id', '=', $users->id)->get();
+        $items          = ItemPedido::where('pedido_id', '=', $orders->id)->orderBy('id', 'asc')->get();
+        */
+        $pdf            = \PDF::loadView('pdf/vista', ['dt_empress' => $dt_empress, 'aux_sales' => $aux_sales, 'aux_clientes' => $aux_clientes, 'date' => $date, 'items' => $items, 'pedidos' => $pedidos,'facturacion'=>$facturacion,'comprobante'=>$comprobante]);
+        \DB::table('comprobante_ventas')
+            ->where('claveacceso', $claveAcceso)
+            ->update(['convrt_ride' => '1']);
+        $pdf->save($rutasl . "\\archivos\\pdf\\" . $claveAcceso . ".pdf");
+        //return $pdf->download('prueba.pdf');
+        //$this->deleteDir("generados");
+        //$this->deleteDir("firmados");
+        //$this->deleteDir("temp");
 
+        $rutaPdf = $ruta . "//archivos//pdf//" . $claveAcceso . ".pdf";
+        //$pdf->save("C:\\xampp\\htdocs\\repositoriotesis\\tesis\\tienla\\public\\archivos\\pdf\\".$claveAcceso.".pdf");
+        $pdf->save($rutaPdf);
+        if (file_exists($rutaPdf)) {
+            \DB::table('comprobante_ventas')
+                ->where('claveacceso', $claveAcceso)
+                ->update(['convrt_ride' => '1']);
+            //$this->sendEmail($claveAcceso);
+        } else {
+            return "Error";
+            //$this->firmarXml($claveAcceso);
+        }
+        //return $pdf->download('prueba.pdf');
+        //$this->deleteDir("generados");
+        //$this->deleteDir("firmados");
+        //$this->deleteDir("temp");
+    }
 
 
 
@@ -722,7 +828,7 @@ class VentaController extends Controller
             $secuencial = $xml->createElement('secuencial', $sale_comprobante->numfactura);
             $secuencial = $infoTributaria->appendChild($secuencial);
 
-            $dirMatriz = $xml->createElement('dirMatriz', $dt_empres->dir);
+            $dirMatriz = $xml->createElement('dirMatriz', $dt_empres->dirMatriz);
             $dirMatriz = $infoTributaria->appendChild($dirMatriz);
         }
 
@@ -763,7 +869,7 @@ class VentaController extends Controller
             $fechaEmision = $xml->createElement('fechaEmision', $fechaEmite);
             $fechaEmision = $infoFactura->appendChild($fechaEmision);
 
-            $dirEstablecimiento = $xml->createElement('dirEstablecimiento', $datos_empresa->dir);
+            $dirEstablecimiento = $xml->createElement('dirEstablecimiento', $datos_empresa->dirSucursal);
             $dirEstablecimiento = $infoFactura->appendChild($dirEstablecimiento);
             if ($facturacion->obligado_contabilidad == 0) {
                 $obligado = "NO";
@@ -1009,18 +1115,16 @@ class VentaController extends Controller
         return Auth::guard('person');
     }
 
-
+    //Prrobar esta funcion, es para ejecutar script java desde php y recibir la respuesta de la ejecucion
     function __exec($tmppath, $cmd){
-    //https://stackoverflow.com/questions/5690134/running-command-line-silently-with-vbscript-and-getting-output
-   $WshShell = new COM("WScript.Shell");
-   $tmpf = rand(1000, 9999).".tmp"; // Temp file
-   $tmpfp = $tmppath.'/'.$tmpf; // Full path to tmp file
-
-   $oExec = $WshShell->Run("cmd /c $cmd -c ... > ".$tmpfp, 0, true);
-
-   // return $oExec == 0 ? true : false; // Return True False after exec
-   return $tmpf;
-}
+        //https://stackoverflow.com/questions/5690134/running-command-line-silently-with-vbscript-and-getting-output
+        $WshShell = new COM("WScript.Shell");
+        $tmpf = rand(1000, 9999).".tmp"; // Temp file
+        $tmpfp = $tmppath.'/'.$tmpf; // Full path to tmp file
+        $oExec = $WshShell->Run("cmd /c $cmd -c ... > ".$tmpfp, 0, true);
+        // return $oExec == 0 ? true : false; // Return True False after exec
+        return $tmpf;
+    }
 
 
 }

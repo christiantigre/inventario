@@ -54,7 +54,8 @@ class AlmaceController extends Controller
             ->orWhere('ins', 'LIKE', "%$keyword%")
             ->orWhere('gg', 'LIKE', "%$keyword%")
             ->orWhere('funcion_empresa', 'LIKE', "%$keyword%")
-            ->orWhere('dir', 'LIKE', "%$keyword%")
+            ->orWhere('dirMatriz', 'LIKE', "%$keyword%")
+            ->orWhere('dirSucursal', 'LIKE', "%$keyword%")
             ->orWhere('latitud', 'LIKE', "%$keyword%")
             ->orWhere('longitud', 'LIKE', "%$keyword%")
             ->orWhere('pais_id', 'LIKE', "%$keyword%")
@@ -106,7 +107,8 @@ class AlmaceController extends Controller
            'cel_movi' => 'max:15',
            'cel_claro' => 'max:15',
            'watsapp' => 'max:15',
-           'dir' => 'max:191',
+           'dirMatriz' => 'max:191',
+           'dirSucursal' => 'max:191',
            'latitud' => 'max:50',
            'longitud' => 'max:50',            
            'logo' => 'mimes:jpeg,png|max:1500'
@@ -190,7 +192,8 @@ class AlmaceController extends Controller
            'cel_movi' => 'max:15',
            'cel_claro' => 'max:15',
            'watsapp' => 'max:15',
-           'dir' => 'max:191',
+           'dirMatriz' => 'max:191',
+           'dirSucursal' => 'max:191',
            'latitud' => 'max:50',
            'longitud' => 'max:50',
            'logo' => 'mimes:jpeg,png|max:1500'

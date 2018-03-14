@@ -228,6 +228,10 @@ return [
                                     'url'  => 'admin/descuento',
                                 ],
                                 [
+                                    'text' => 'Entrega',
+                                    'url'  => 'admin/entrega',
+                                ],
+                                [
                                     'text' => 'Tipo pagos',
                                     'url'  => 'admin/type-pay',
                                 ],

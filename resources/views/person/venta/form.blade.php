@@ -9,11 +9,11 @@
     <a href="" data-toggle="modal" data-target="#modal-registrocliente" class="btn btn-default btn-sm" title="Registrar Cliente">
         <i class="fa fa-plus" aria-hidden="true"></i> Crear Cliente
     </a>
-        
+    
     <a href="" data-toggle="modal" class="btn btn-default btn-sm cliente-final-person" title="Cliente Final">
         <i class="fa fa-plus" aria-hidden="true"></i> Cliente Final
     </a>
-  
+    
     <div class="form-group {{ $errors->has('num_venta') ? 'has-error' : ''}}">
         <label for="fecha" class="col-md-9 control-label">{{ 'N° Venta:' }}</label>
         <div class="col-md-3">            
@@ -49,12 +49,12 @@
             <div class="form-group {{ $errors->has('cliente') ? 'has-error' : ''}}">
                 <label for="cliente" class="col-md-4 control-label">{{ 'NOMBRE' }}</label>
                 <div class="col-md-8">
-                   <input class="form-control input-sm" name="id_cliente" type="hidden" id="id_cliente" value="{{ $ventum->id_cliente or ''}}" >
-                   <input class="form-control input-sm" name="cliente" type="text" id="cliente" value="{{ $ventum->cliente or ''}}" >
-                   {!! $errors->first('cliente', '<p class="help-block">:message</p>') !!}
-               </div>
-           </div>
-           <div class="form-group {{ $errors->has('documento') ? 'has-error' : ''}}">
+                 <input class="form-control input-sm" name="id_cliente" type="hidden" id="id_cliente" value="{{ $ventum->id_cliente or ''}}" >
+                 <input class="form-control input-sm" name="cliente" type="text" id="cliente" value="{{ $ventum->cliente or ''}}" >
+                 {!! $errors->first('cliente', '<p class="help-block">:message</p>') !!}
+             </div>
+         </div>
+         <div class="form-group {{ $errors->has('documento') ? 'has-error' : ''}}">
             <label for="documento" class="col-md-4 control-label">{{ 'DOCUMENTO' }}</label>
             <div class="col-xs-4">
                 <input class="form-control input-sm" name="ruc_cli" type="text" id="ruc_cli" value="{{ $ventum->ruc_cli or ''}}" placeholder="RUC">
@@ -65,38 +65,47 @@
                 {!! $errors->first('ced_cli', '<p class="help-block">:message</p>') !!}
             </div>
         </div>
-      <div class="form-group {{ $errors->has('mail_cli') ? 'has-error' : ''}}">
-        <label for="mail_cli" class="col-md-4 control-label">{{ 'CORREO' }}</label>
-        <div class="col-md-8">
-            <input class="form-control input-sm" name="mail_cli" type="text" id="mail_cli" value="{{ $ventum->mail_cli or ''}}" >
-            {!! $errors->first('mail_cli', '<p class="help-block">:message</p>') !!}
+        <div class="form-group {{ $errors->has('mail_cli') ? 'has-error' : ''}}">
+            <label for="mail_cli" class="col-md-4 control-label">{{ 'CORREO' }}</label>
+            <div class="col-md-8">
+                <input class="form-control input-sm" name="mail_cli" type="text" id="mail_cli" value="{{ $ventum->mail_cli or ''}}" >
+                {!! $errors->first('mail_cli', '<p class="help-block">:message</p>') !!}
+            </div>
         </div>
     </div>
-</div>
 
-<div class="col-md-6">
-    <div class="form-group {{ $errors->has('cel_cli') ? 'has-error' : ''}}">
-        <label for="cel_cli" class="col-md-4 control-label">{{ 'CONTACTO' }}</label>
-        <div class="col-md-6">
-            <input class="form-control input-sm" name="cel_cli" type="text" id="cel_cli" value="{{ $ventum->cel_cli or ''}}" >
-            {!! $errors->first('cel_cli', '<p class="help-block">:message</p>') !!}
-        </div>
-    </div>
-    <div class="form-group {{ $errors->has('dir_cli') ? 'has-error' : ''}}">
-        <label for="dir_cli" class="col-md-4 control-label">{{ 'DIRECCIÓN' }}</label>
-        <div class="col-md-8">
-            <input class="form-control input-sm" name="dir_cli" type="text" id="dir_cli" value="{{ $ventum->dir_cli or ''}}" >
-            {!! $errors->first('dir_cli', '<p class="help-block">:message</p>') !!}
-        </div>
-    </div>
-    <div class="form-group {{ $errors->has('id_typepay') ? 'has-error' : ''}}">
-    <label for="id_typepay" class="col-md-4 control-label">{{ 'Pago' }}</label>
     <div class="col-md-6">
-        {!! Form::select('id_typepay', $tipospagos, null, ['class' => 'form-control','id'=>'id_typepay']) !!}
-        {!! $errors->first('id_typepay', '<p class="help-block">:message</p>') !!}
+        <div class="form-group {{ $errors->has('cel_cli') ? 'has-error' : ''}}">
+            <label for="cel_cli" class="col-md-4 control-label">{{ 'CONTACTO' }}</label>
+            <div class="col-md-6">
+                <input class="form-control input-sm" name="cel_cli" type="text" id="cel_cli" value="{{ $ventum->cel_cli or ''}}" >
+                {!! $errors->first('cel_cli', '<p class="help-block">:message</p>') !!}
+            </div>
+        </div>
+        <div class="form-group {{ $errors->has('dir_cli') ? 'has-error' : ''}}">
+            <label for="dir_cli" class="col-md-4 control-label">{{ 'DIRECCIÓN' }}</label>
+            <div class="col-md-8">
+                <input class="form-control input-sm" name="dir_cli" type="text" id="dir_cli" value="{{ $ventum->dir_cli or ''}}" >
+                {!! $errors->first('dir_cli', '<p class="help-block">:message</p>') !!}
+            </div>
+        </div>
+        <div class="form-group {{ $errors->has('id_typepay') ? 'has-error' : ''}}">
+            <label for="id_typepay" class="col-md-4 control-label">{{ 'Pago' }}</label>
+            <div class="col-md-6">
+                {!! Form::select('id_typepay', $tipospagos, null, ['class' => 'form-control','id'=>'id_typepay']) !!}
+                {!! $errors->first('id_typepay', '<p class="help-block">:message</p>') !!}
+            </div>
+        </div>
+
+        <div class="form-group {{ $errors->has('id_entrega') ? 'has-error' : ''}}">
+            <label for="identregay" class="col-md-4 control-label">{{ 'Entrega' }}</label>
+            <div class="col-md-6">
+                {!! Form::select('id_entrega', $entregas, null, ['class' => 'form-control','id'=>'id_entrega']) !!}
+                {!! $errors->first('id_entrega', '<p class="help-block">:message</p>') !!}
+            </div>
+        </div>
+        
     </div>
-</div>
-</div>
 </fieldset>
 </div>
 <div class="col-md-6">
@@ -166,27 +175,27 @@
 
 
 <div class="col-md-12"> 
-PRODUCTO
-<fieldset>
-    <legend>
-    </legend>
-              <!--boton id=buscarproducto abre modal id=modal-seleccionaproductos(archivo admin/venta/modalselect_prod) llamado por data-target=modal-seleccionaproductos -->
-              <button class="btn btn-default btn-sm" id="buscarproducto" type="button" data-toggle="modal" data-target="#modal-seleccionaproductos"><i class="fa fa-search" aria-hidden="true"></i> Buscar Producto</button>
-              
-              <button class="btn btn-default btn-sm" id="trashitems" type="button" onClick="trashPerson(this.id);"><i class="fa fa-trash" aria-hidden="true"></i> Vaciar</button>
-              
-            <!-- /.box-header -->
-            <div class="box-body no-padding">
-              <div id="list-cart">
-              </div>             
-            </div>
-            <!-- /.box-body -->
-          <!-- /.box -->
-</fieldset>
-        </div>
-        <!-- /.col -->
-
+    PRODUCTO
+    <fieldset>
+        <legend>
+        </legend>
+        <!--boton id=buscarproducto abre modal id=modal-seleccionaproductos(archivo admin/venta/modalselect_prod) llamado por data-target=modal-seleccionaproductos -->
+        <button class="btn btn-default btn-sm" id="buscarproducto" type="button" data-toggle="modal" data-target="#modal-seleccionaproductos"><i class="fa fa-search" aria-hidden="true"></i> Buscar Producto</button>
         
+        <button class="btn btn-default btn-sm" id="trashitems" type="button" onClick="trashPerson(this.id);"><i class="fa fa-trash" aria-hidden="true"></i> Vaciar</button>
+        
+        <!-- /.box-header -->
+        <div class="box-body no-padding">
+          <div id="list-cart">
+          </div>             
+      </div>
+      <!-- /.box-body -->
+      <!-- /.box -->
+  </fieldset>
+</div>
+<!-- /.col -->
+
+
 
 <div class="form-group">
     <div class="col-lg-offset-10 col-md-offset-10 col-sm-offset-8 col-xs-offset-8 col-md-4 col-lg-4 col-sm-12 col-xs-12">

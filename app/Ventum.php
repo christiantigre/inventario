@@ -25,7 +25,7 @@ class Ventum extends Model
      *
      * @var array
      */
-    protected $fillable = ["id","num_venta","fecha", "cliente", "cel_cli", "ruc_cli","cc_cli", "dir_cli", "mail_cli", "total", "subtotal", "iva_cero", "iva_calculado", "porcentaje_iva","descuento","propina", "can_items", "vendedor", "id_cliente", "id_personal", "id_iva","documento","id_typepay"];
+    protected $fillable = ["id","num_venta","fecha", "cliente", "cel_cli", "ruc_cli","cc_cli", "dir_cli", "mail_cli", "total", "subtotal", "iva_cero", "iva_calculado", "porcentaje_iva","descuento","propina", "can_items", "vendedor", "id_cliente", "id_personal","id_user", "id_iva","documento","id_typepay","id_entrega"];
 
     public function itemventa(){
         return $this->hasMany(ItemVenta::class);
@@ -34,6 +34,11 @@ class Ventum extends Model
     public function typepay()
     {
         return $this->belongsTo('App\TypePay','id_typepay');
+    }
+
+    public function entrega()
+    {
+        return $this->belongsTo('App\Entrega','id_entrega');
     }
 
 }
