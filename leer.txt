@@ -201,3 +201,9 @@ __________________________________________________
 
 puente de php y java
 https://www.adictosaltrabajo.com/tutoriales/puente-php-java/
+
+tutorial queues
+https://www.youtube.com/watch?v=qVlraSBuuzE&ab_channel=MarcoFeregrino
+
+ejemplos de fcatura
+http://www.facturacionelectronica.ec/ejemplo-factura-electronica-del-ecuador-2013/

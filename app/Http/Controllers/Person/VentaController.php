@@ -24,7 +24,9 @@ use App\SvLog;
 use App\Comprobante_venta;
 use DB;
 use App\Entrega;
-use GearmanClient;
+use \Milon\Barcode\DNS1D;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\comprobantesMail;
 
 class VentaController extends Controller
 {
@@ -158,10 +160,11 @@ class VentaController extends Controller
         $dataVenta['id_iva'] = $request['idiva'];  
         $dataVenta['id_typepay'] = $request['id_typepay'];                
         $dataVenta['id_entrega'] = $request['id_entrega'];                
-       
+
         try {
             //Guarda cabecera de la factura
             $venta = Ventum::create($dataVenta);
+            $this->guarda_comprobante($venta->id);
             //envia los valore del detalle de la factura para guardar el detalle desde la funcion saveItem
             foreach ($producto as $product) {
                 $requestData_returned = $this->saveItem($product,$venta->id,$dataVenta['fecha']);
@@ -172,10 +175,10 @@ class VentaController extends Controller
             //Envia al metodo generarFacturaXml y le pasa el id de la venta para generar el archivo factura xml de la venta realizada
             //$this->generarFacturaXml($venta->id);
             Session::flash('flash_message', 'Guardado correctamente');
-            $this->genLog("Registró nuevo : ".$venta->id);
+            $this->genLog("Venta Registrada de id : ".$venta->id);
         } catch (\Exception $e) {
             Session::flash('warning', 'Error al Guardar');  
-            $this->genLog("Error al registrar : ".$venta->id);       
+            $this->genLog("Error al registrar venta id : ".$venta->id);       
         }
         //Redireccióna a ventana show con parametros, para visualizar el detalle de la venta
         return redirect()->route('detallventa', ['id' => $venta->id]);
@@ -376,36 +379,119 @@ class VentaController extends Controller
             return redirect('person/venta')->with('flash_message', 'Ventum deleted!');
         }
 
+        public function verfacturas(){
+            return "facturas";
+        }
+
         
         public function procesosfacturacion($id){
+
+            $rutai         = public_path();
+            $ruta          = str_replace("\\", "//", $rutai);
+
             if (!empty($id)) {
                 $venta = Ventum::findOrFail($id);
+                $comprobante   = Comprobante_venta::where('id_venta',$id)->first();
+                $nombrearchivo = $comprobante['claveacceso'];
+                $nombrearchivo = $nombrearchivo.'.xml';
+
                 if(count($venta)>0){
+
                     try {
                         $genera    = $this->genera($id);
-                        if (!empty($genera)) {
-                            $firma    = $this->firmarFactura($id);
-                            if (!empty($firma)) {
-                                $autoriza    = $this->autorizar($id);
-                                if (!empty($autoriza)) {
-                                    $revisar = $this->revisarXml($id);
-                                }else{
-                                    return "Error al revisar xml autorizado";
-                                }                                
+                        //verificar si existe el archivo
+                        $generado     = $ruta . '/archivos//generados' . '/'.$nombrearchivo;
+
+                        if (!empty($generado)) {
+                            if (\File::exists($generado)) {
+
+                                try {
+
+                                    $firma    = $this->firmarFactura($id); 
+
+                                    $firmado      = $ruta . '//archivos//firmados//'.$nombrearchivo;
+
+                                    if (\File::exists($firmado)) {
+
+
+                                        $autoriza    = $this->autorizar($id);
+
+                                        $autorizado   = $ruta . '//archivos//' . 'autorizados' . '//'.$nombrearchivo;
+
+                                        try {
+
+                                            if (\File::exists($autorizado)) {
+                                                $revisar = $this->revisarXml($id);
+                                            }else{
+
+                                                return "No se encuentra el archivo autorizado";
+
+                                            } 
+
+                                        } catch (\Exception $e) {
+                                            return "No se encuentra el archivo firmado";
+                                        }
+
+                                    }else{
+                                        return "No se pudo obtener autorizacion";
+                                    }
+
+                                } catch (\Exception $e) {
+                                    return "No se pudo firmar el archivo";
+                                }
+
+
                             }else{
-                                return "Error al autorizar";
+                                $this->procesosfacturacion($id);
                             }
+
                         }else{
-                            return "No se pudo generar el archivo";
+                            $this->procesosfacturacion($id);
                         }
+                        
+
                     } catch (\Exception $e) {
                         return "No se pudo generar el archivo xml";
                     }
+
                 }else{
                     return "No hay registro de esta venta";
                 }
+
             }else{
                 return "No se recibio la variable";
+            }
+
+        }
+
+        public function guarda_comprobante($id){
+            $venta = Ventum::findOrFail($id);
+            $factura = $venta['num_venta'];
+            //retorna cadena de 50 caracteres
+            $claveacceso    = $this->generaclaveacceso($id);
+            $verificador    = $this->generaDigitoModulo11($claveacceso);
+            $data['factura'] = $factura;
+            $data['clavedeacceso'] = $claveacceso;
+            $data['verificador'] = $verificador;
+            //Genera cadena de 51 caracteres
+            $codigogenerado = $claveacceso . '' . $verificador . '';
+
+            try {
+
+
+
+                $comprobante = Comprobante_venta::create([
+                    'id_venta' => $venta->id,
+                    'numfactura' => $factura,
+                    'claveacceso' => $codigogenerado,
+                ]);
+
+
+                $this->genLog("Registró comprobante : ".$codigogenerado);
+
+
+            } catch (\Exception $e) {
+                $this->genLog("No se registro comprobante : ".$e);   
             }
         }
 
@@ -428,34 +514,36 @@ class VentaController extends Controller
 
             try {
                 //registra que se ha generado el comprobante
+                /*
                 $comprobante = Comprobante_venta::create([
                     'id_venta' => $venta->id,
                     'numfactura' => $factura,
                     'claveacceso' => $codigogenerado,
                 ]);
+                */
 
                 $this->genLog("Registrado correctamente comprobante de venta id: ".$id); 
 
                 try {
-                
-                if ($generado = $this->generarFacturaXml($id)) {
-                    Comprobante_venta::where('id', $comprobante->id)
-                    ->where('claveacceso', $comprobante->claveacceso)
-                    ->update(['gen_xml' => 1]);
+
+                    if ($generado = $this->generarFacturaXml($id)) {
+                        Comprobante_venta::where('id', $comprobante->id)
+                        ->where('claveacceso', $comprobante->claveacceso)
+                        ->update(['gen_xml' => 1]);
+                    }
+                    return $generado;
+                } catch (\Exception $e) {
+                    $comprobante = "ERROR".$e;
+                    $this->genLog("ERROR al crear comprobante de venta id: ".$id);
+                    return $e; 
                 }
-                return $generado;
-            } catch (\Exception $e) {
-                $comprobante = "ERROR".$e;
-                $this->genLog("ERROR al crear comprobante de venta id: ".$id);
-                return $e; 
-            }
 
 
             } catch (\Exception $e) {
                 $this->genLog("Error al generar comprobante de venta id: ".$id);
                 return $e;
             }
-                
+
         }
 
 
@@ -534,311 +622,313 @@ class VentaController extends Controller
                 $pathsalida       = $firmados;
                 $pathgenerado     = $generados . $nombrexml . '.xml';
                 try {
-                    
-                $jar              = $ruta . '//DevelopedSignature/dist/firmaJava.jar';
-                $cmd              = 'cmd /C java -jar ' . $jar . ' ' . $pathfirma . ' ' . $pass . ' ' . $pathgenerado . ' ' . $pathsalida . ' ' . $xml . ' ';
-                $oExec            = $WshShell->Run($cmd, 0, false);
-                $pathxmlfirmado   = $pathsalida . '' . $xml;
-                $xmlautorizados   = $autorizados . $nombrexml . '.xml';
-                $xmlNoautorizados = $noautorizados . $nombrexml . '.xml';
-                \DB::table('comprobante_ventas')->where('claveacceso', $nombrexml)->update(['fir_xml' => '1']);
+
+                    $jar              = $ruta . '//DevelopedSignature/dist/firmaJava.jar';
+                    $cmd              = 'cmd /C java -jar ' . $jar . ' ' . $pathfirma . ' ' . $pass . ' ' . $pathgenerado . ' ' . $pathsalida . ' ' . $xml . ' ';
+                    $oExec            = $WshShell->Run($cmd, 0, false);
+                    $pathxmlfirmado   = $pathsalida . '' . $xml;
+                    $xmlautorizados   = $autorizados . $nombrexml . '.xml';
+                    $xmlNoautorizados = $noautorizados . $nombrexml . '.xml';
+                    \DB::table('comprobante_ventas')->where('claveacceso', $nombrexml)->update(['fir_xml' => '1']);
                     $this->genLog("Firmo archivo xml : ".$nombrexml); 
                     return $nombrexml;
                 } catch (\Exception $e) {
                     $this->genLog("Error al firmar archivo xml : ".$nombrexml); 
                 }
                 //$this->enviarautorizar($pathxmlfirmado, $nombrexml, $xmlautorizados, $xmlNoautorizados);
+            }
+        }
+
+        public function autorizar($id){
+            try {
+
+                $comprobante   = Comprobante_venta::where('id_venta',$id)->first();
+
+                $rutai         = public_path();
+                $ruta          = str_replace("\\", "//", $rutai);
+                $autorizados   = $ruta . '//archivos//' . 'autorizados' . '//';
+                $enviados      = $ruta . '//' . 'enviados' . '//';
+                $firmados      = $ruta . '//archivos//firmados//';
+                $noautorizados = $ruta . '//archivos//' . 'noautorizados' . '//';
+                $pathxmlfirmado= $firmados.$comprobante['claveacceso'].".xml";
+
+                if (\File::exists($pathxmlfirmado))
+                    {
+                        $nombrexml = $comprobante['claveacceso'];
+                        $xmlautorizados   = $autorizados . $nombrexml . '.xml';
+                        $xmlNoautorizados = $noautorizados . $nombrexml . '.xml';
+                        $res = $this->enviarautorizar($pathxmlfirmado, $nombrexml, $xmlautorizados, $xmlNoautorizados);
+
+                        $this->genLog("Enviado a autorizar xml venta_id : ".$id );
+                        \DB::table('comprobante_ventas')
+                        ->where('claveacceso', $comprobante['claveacceso'])
+                        ->update(['env_xml' => '1']);
+
+                        return $res;
+
+                    }else{
+                        $this->genLog("No existe el archivo xml : ".$comprobante['claveacceso'] );
+                    }
+
+                } catch (\Exception $e) {
+                    $this->genLog("Error al enviar a autorizar xml venta_id : ".$id );
+                    return $e;
                 }
             }
 
-        public function autorizar($id){
-        try {
+            public function enviarautorizar($pathXmlFirmado, $claveAcceso, $autorizados, $rechazados){
+                try {
 
-            $client = new \GearmanClient();
-            dd($client);
-            
-            $comprobante   = Comprobante_venta::where('id_venta',$id)->first();
-            
-            $rutai         = public_path();
-            $ruta          = str_replace("\\", "//", $rutai);
-            $autorizados   = $ruta . '//archivos//' . 'autorizados' . '//';
-            $enviados      = $ruta . '//' . 'enviados' . '//';
-            $firmados      = $ruta . '//archivos//firmados//';
-            $noautorizados = $ruta . '//archivos//' . 'noautorizados' . '//';
-            $pathxmlfirmado= $firmados.$comprobante['claveacceso'].".xml";
+                    $start_time       = microtime(true);
+                    $rutai            = public_path();
+                    $ruta             = str_replace("\\", "//", $rutai);
+                    $WshShell         = new \COM("WScript.Shell");
+                    $linkRecepcion    = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantes?wsdl";
+                    $linkAutorizacion = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantes?wsdl";
+                    $jar              = $ruta . '//SRI//dist//SRI.jar';
 
-            if (\File::exists($pathxmlfirmado))
-            {
-                $nombrexml = $comprobante['claveacceso'];
-                $xmlautorizados   = $autorizados . $nombrexml . '.xml';
-                $xmlNoautorizados = $noautorizados . $nombrexml . '.xml';
-                $res = $this->enviarautorizar($pathxmlfirmado, $nombrexml, $xmlautorizados, $xmlNoautorizados);
-
-                $this->genLog("Enviado a autorizar xml venta_id : ".$id );
-                \DB::table('comprobante_ventas')
-                ->where('claveacceso', $comprobante['claveacceso'])
-                ->update(['env_xml' => '1']);
-
-                return $res;
-
-            }else{
-                $this->genLog("No existe el archivo xml : ".$comprobante['claveacceso'] );
-            }
-            
-        } catch (\Exception $e) {
-            $this->genLog("Error al enviar a autorizar xml venta_id : ".$id );
-            return $e;
-        }
-        }
-
-    public function enviarautorizar($pathXmlFirmado, $claveAcceso, $autorizados, $rechazados){
-        try {
-            
-        $start_time       = microtime(true);
-        $rutai            = public_path();
-        $ruta             = str_replace("\\", "//", $rutai);
-        $WshShell         = new \COM("WScript.Shell");
-        $linkRecepcion    = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantes?wsdl";
-        $linkAutorizacion = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantes?wsdl";
-        $jar              = $ruta . '//SRI//dist//SRI.jar';
-
-        $cmd              = 'cmd /C java -jar ' . $jar . ' ' . $pathXmlFirmado . ' ' . $claveAcceso . ' ' . $autorizados . ' ' . $rechazados . ' ' . $linkRecepcion . ' ' . $linkAutorizacion . ' ';
+                    $cmd              = 'cmd /C java -jar ' . $jar . ' ' . $pathXmlFirmado . ' ' . $claveAcceso . ' ' . $autorizados . ' ' . $rechazados . ' ' . $linkRecepcion . ' ' . $linkAutorizacion . ' ';
         //$oExec            = $WshShell->Run($cmd, 10, true);
         //exec($cmd, $output);
         //print_r($output);
         //return $output;
         //if ($oExec == '0') {
-        if (exec($cmd, $output)) {
-            $cadena = collect($output)->implode(',');
-            \DB::table('comprobante_ventas')
-                ->where('claveacceso', $claveAcceso)
-                ->update(['aut_xml' => '1','mensaje'=>$cadena]);
-            sleep(30);
-            return $cadena;
+                    if (exec($cmd, $output)) {
+                        if(count($output)){
+                            $cadena = collect($output)->implode(',');
+                        }else{
+                            $cadena = $output;
+                        }
+                        $cadena = utf8_encode($cadena);
+                        //$cadena = collect($output)->implode(',');
+                        $sql = \DB::table('comprobante_ventas')
+                        ->where('claveacceso', $claveAcceso)
+                        ->update(['aut_xml' => '1','mensaje'=>$cadena]);
+                        //sleep(30);
+                        return $cadena;
             //$this->revisarXml($claveAcceso);
             //$this->revisarXml($id);
-        } else {
-            \DB::table('comprobante_ventas')
-                ->where('claveacceso', $claveAcceso)
-                ->update(['aut_xml' => '0']);
-        }
+                    } else {
+                        \DB::table('comprobante_ventas')
+                        ->where('claveacceso', $claveAcceso)
+                        ->update(['aut_xml' => '0']);
+                    }
 
-        } catch (\Exception $e) {
-            $this->genLog("Error al autorizar xml : ".$claveAcceso );
-            return $e;
-        }
+                } catch (\Exception $e) {
+                    $this->genLog("Error al autorizar xml : ".$claveAcceso );
+                    return $e;
+                }
 
-    }
+            }
 
 
-    public function revisarXml($id)
-    {
-        $comprobante   = Comprobante_venta::where('id_venta',$id)->first();
-        $claveacceso = $comprobante['claveacceso'];
-        $claveAcceso = $claveacceso;
-        $rutai       = public_path();
-        $ruta        = str_replace("\\", "\\", $rutai);
+            public function revisarXml($id)
+            {
+                $comprobante   = Comprobante_venta::where('id_venta',$id)->first();
+                $claveacceso = $comprobante['claveacceso'];
+                $claveAcceso = $claveacceso;
+                $rutai       = public_path();
+                $ruta        = str_replace("\\", "\\", $rutai);
         //$autorizados = $ruta.'//archivos//'.'autorizados'.'//';
 
-        $xmlPath = $ruta . "\\archivos\\autorizados\\" . $claveAcceso . ".xml";
-        if (file_exists($xmlPath)) {
+                $xmlPath = $ruta . "\\archivos\\autorizados\\" . $claveAcceso . ".xml";
+                if (file_exists($xmlPath)) {
             //lee el xml y decodifica
-            $content        = utf8_encode(file_get_contents($xmlPath));
-            $xml            = \simplexml_load_string($content);
-            $cont           = (integer) $xml['counter'];
-            $xml['counter'] = $cont + 1;
+                    $content        = utf8_encode(file_get_contents($xmlPath));
+                    $xml            = \simplexml_load_string($content);
+                    $cont           = (integer) $xml['counter'];
+                    $xml['counter'] = $cont + 1;
             //guarda temporalmente el xml decodificado
-            $xml->asXML($ruta . "\\archivos\\temp\\" . $claveAcceso . ".xml");
+                    $xml->asXML($ruta . "\\archivos\\temp\\" . $claveAcceso . ".xml");
             //obtiene los valores de los campos del archivo temporal decodificado
-            $doc = new \DOMDocument();
-            $doc->load($ruta . "\\archivos\\temp\\" . $claveAcceso . ".xml");
+                    $doc = new \DOMDocument();
+                    $doc->load($ruta . "\\archivos\\temp\\" . $claveAcceso . ".xml");
             // Reading tag's value.
-            $estado = $doc->getElementsByTagName("estado")->item(0)->nodeValue;
-            if ($estado == "AUTORIZADO") {
-                $numAut  = $doc->getElementsByTagName("numeroAutorizacion")->item(0)->nodeValue;
-                $fechAut = $doc->getElementsByTagName("fechaAutorizacion")->item(0)->nodeValue;
-                \DB::table('comprobante_ventas')
-                    ->where('claveacceso', $claveAcceso)
-                    ->update(['num_autorizacion' => $numAut, 'fecha_autorizacion' => $fechAut, 'estado_aprobacion' => $estado]);
-                //$this->generaPdf($claveAcceso);
-            } else {
-                $fechAut = $doc->getElementsByTagName("fechaAutorizacion")->item(0)->nodeValue;
-                $mensaje = $doc->getElementsByTagName("mensajes")->item(0)->nodeValue;
-                $estado  = "NO AUTORIZADO";
-                \DB::table('comprobante_ventas')
-                    ->where('claveacceso', $claveAcceso)
-                    ->update(['mensaje' => $mensaje, 'fecha_autorizacion' => $fechAut, 'estado_aprobacion' => $estado]);
-            }
-        } else {
-            return "Retorna a firmar";
-            $this->firmarFactura($id);
-            $message = 'Su pedido fue realizado con éxito, estamos preparando tu factua y la enviarémos a tu correo electrónico';
-            $message = 'Su pedido fue realizado con éxito, estamos preparando tu factura y la enviarémos a tu correo electrónico';
+                    $estado = $doc->getElementsByTagName("estado")->item(0)->nodeValue;
+                    if ($estado == "AUTORIZADO") {
+                        $numAut  = $doc->getElementsByTagName("numeroAutorizacion")->item(0)->nodeValue;
+                        $fechAut = $doc->getElementsByTagName("fechaAutorizacion")->item(0)->nodeValue;
+                        \DB::table('comprobante_ventas')
+                        ->where('claveacceso', $claveAcceso)
+                        ->update(['num_autorizacion' => $numAut, 'fecha_autorizacion' => $fechAut, 'estado_aprobacion' => $estado]);
+                        try {
 
-            \Session::flash('flash_message', $message);
-        }
+                            $this->generaPdf($claveAcceso);
 
-    }
+                        } catch (\Exception $e) {
 
+                            $this->genLog("Error al convertir xml a pdf : ".$claveAcceso );
+                            
+                        }
 
+                    } else {
+                        $fechAut = $doc->getElementsByTagName("fechaAutorizacion")->item(0)->nodeValue;
+                        $mensaje = $doc->getElementsByTagName("mensajes")->item(0)->nodeValue;
+                        $estado  = "NO AUTORIZADO";
+                        \DB::table('comprobante_ventas')
+                        ->where('claveacceso', $claveAcceso)
+                        ->update(['mensaje' => $mensaje, 'fecha_autorizacion' => $fechAut, 'estado_aprobacion' => $estado]);
+                    }
+                } else {
+                    //return "Retorna a firmar";
+                    //$this->firmarFactura($id);
+                    $message = 'Su pedido fue realizado con éxito, estamos preparando tu factua y la enviarémos a tu correo electrónico';
+                    $message = 'Su pedido fue realizado con éxito, estamos preparando tu factura y la enviarémos a tu correo electrónico';
 
-    public function generaDigitoModulo11($cadena){
-            $cadena            = trim($cadena);
-            $baseMultiplicador = 7;
-            $aux               = new \SplFixedArray(strlen($cadena));
-            $aux               = $aux->toArray();
-            $multiplicador     = 2;
-            $total             = 0;
-            $verificador       = 0;
-            for ($i = count($aux) - 1; $i >= 0; --$i) {
-                $aux[$i] = substr($cadena, $i, 1);
-                $aux[$i] *= $multiplicador;
-                ++$multiplicador;
-                if ($multiplicador > $baseMultiplicador) {
-                    $multiplicador = 2;
+                    \Session::flash('flash_message', $message);
                 }
-                $total += $aux[$i];
+
             }
 
-            if (($total == 0) || ($total == 1)) {
-                $verificador = 0;
-            } else {
-                $verificador = (11 - ($total % 11) == 11) ? 0 : 11 - ($total % 11);
+
+
+            public function generaDigitoModulo11($cadena){
+                $cadena            = trim($cadena);
+                $baseMultiplicador = 7;
+                $aux               = new \SplFixedArray(strlen($cadena));
+                $aux               = $aux->toArray();
+                $multiplicador     = 2;
+                $total             = 0;
+                $verificador       = 0;
+                for ($i = count($aux) - 1; $i >= 0; --$i) {
+                    $aux[$i] = substr($cadena, $i, 1);
+                    $aux[$i] *= $multiplicador;
+                    ++$multiplicador;
+                    if ($multiplicador > $baseMultiplicador) {
+                        $multiplicador = 2;
+                    }
+                    $total += $aux[$i];
+                }
+
+                if (($total == 0) || ($total == 1)) {
+                    $verificador = 0;
+                } else {
+                    $verificador = (11 - ($total % 11) == 11) ? 0 : 11 - ($total % 11);
+                }
+
+                if ($verificador == 10) {
+                    $verificador = 1;
+                }
+                return $verificador;
             }
 
-            if ($verificador == 10) {
-                $verificador = 1;
-            }
-            return $verificador;
-        }
+
+            public function generaPdf($id){
 
 
-    public function generaPdf($id){
-        $rutai      = public_path();
-        $ruta       = str_replace("\\", "//", $rutai);
-        $rutasl     = str_replace("\\", "\\", $rutai);
-        //$dt_empress = Empresaa::select()->get();
-        $dt_empress = Almacen::first();
-        $comprobante   = Comprobante_venta::where('id_venta',$id)->first();
-        //$claveAcceso = "2909201601010511850900110010010000000777687155819";
-        $claveAcceso    = $comprobante['claveacceso'];
-        //$the_sales      = new sales;
-        //$the_user       = new User;
-        //$the_pedido     = new pedido;
-        //$the_cliente    = new client;
-        //$the_item       = new ItemPedido;
-        $date           = Carbon::now();
-        $date->timezone = new \DateTimeZone('America/Guayaquil');
-        $date           = $date->format('d/m/Y');
-        //$sales          = $the_sales->select()->where('claveacceso', '=', $claveAcceso)->first();
-        //$aux_sales      = \DB::table('sales')->where('claveacceso', '=', $claveAcceso)->get();
-        $aux_sales = $venta = Ventum::findOrFail($id);
-        $comprobante = Comprobante_venta::where('id_venta',$aux_sales->id)->first();
-        $aux_clientes = Cliente::where('id',$aux_sales['id_cliente'])->get();
-        $items = detallVenta::where('id_venta',$id)->get();
-        $facturacion = FacturacionElectronica::first();
-        $pedidos = "";
-        /*
-        $orders         = $the_pedido->select()->where('id', $sales->pedido_id)->first();
-        $pedidos        = \DB::table('pedido')->where('id', '=', $sales->pedido_id)->get();
-        $users          = $the_user->select()->where('id', '=', $orders->users_id)->first();
-        $clientes       = $the_cliente->select()->where('id', '=', $users->id)->first();
-        $aux_clientes   = \DB::table('clients')->where('id', '=', $users->id)->get();
-        $items          = ItemPedido::where('pedido_id', '=', $orders->id)->orderBy('id', 'asc')->get();
-        */
-        $pdf            = \PDF::loadView('pdf/vista', ['dt_empress' => $dt_empress, 'aux_sales' => $aux_sales, 'aux_clientes' => $aux_clientes, 'date' => $date, 'items' => $items, 'pedidos' => $pedidos,'facturacion'=>$facturacion,'comprobante'=>$comprobante]);
-        \DB::table('comprobante_ventas')
-            ->where('claveacceso', $claveAcceso)
-            ->update(['convrt_ride' => '1']);
-        $pdf->save($rutasl . "\\archivos\\pdf\\" . $claveAcceso . ".pdf");
-        //return $pdf->download('prueba.pdf');
-        //$this->deleteDir("generados");
-        //$this->deleteDir("firmados");
-        //$this->deleteDir("temp");
+                $rutai      = public_path();
+                $ruta       = str_replace("\\", "//", $rutai);
+                $rutasl     = str_replace("\\", "\\", $rutai);
 
-        $rutaPdf = $ruta . "//archivos//pdf//" . $claveAcceso . ".pdf";
-        //$pdf->save("C:\\xampp\\htdocs\\repositoriotesis\\tesis\\tienla\\public\\archivos\\pdf\\".$claveAcceso.".pdf");
-        $pdf->save($rutaPdf);
-        if (file_exists($rutaPdf)) {
-            \DB::table('comprobante_ventas')
+                $dt_empress = Almacen::first();
+                $comprobante   = Comprobante_venta::where('id_venta',$id)->first();
+
+                $claveAcceso    = $comprobante['claveacceso'];
+
+                $date           = Carbon::now();
+                $date->timezone = new \DateTimeZone('America/Guayaquil');
+                $date           = $date->format('d/m/Y');
+
+                $aux_sales = $venta = Ventum::findOrFail($id);
+                $comprobante = Comprobante_venta::where('id_venta',$aux_sales->id)->first();
+                $aux_clientes = Cliente::where('id',$aux_sales['id_cliente'])->get();
+                $items = detallVenta::where('id_venta',$id)->get();
+                $facturacion = FacturacionElectronica::first();
+                $pedidos = "";
+
+                $pdf            = \PDF::loadView('pdf/vista', ['dt_empress' => $dt_empress, 'aux_sales' => $aux_sales, 'aux_clientes' => $aux_clientes, 'date' => $date, 'items' => $items, 'pedidos' => $pedidos,'facturacion'=>$facturacion,'comprobante'=>$comprobante]);
+                \DB::table('comprobante_ventas')
                 ->where('claveacceso', $claveAcceso)
                 ->update(['convrt_ride' => '1']);
-            //$this->sendEmail($claveAcceso);
-        } else {
-            return "Error";
-            //$this->firmarXml($claveAcceso);
-        }
+                $pdf->save($rutasl . "\\archivos\\pdf\\" . $claveAcceso . ".pdf");
         //return $pdf->download('prueba.pdf');
         //$this->deleteDir("generados");
         //$this->deleteDir("firmados");
         //$this->deleteDir("temp");
-    }
+
+                $rutaPdf = $ruta . "//archivos//pdf//" . $claveAcceso . ".pdf";
+        //$pdf->save("C:\\xampp\\htdocs\\repositoriotesis\\tesis\\tienla\\public\\archivos\\pdf\\".$claveAcceso.".pdf");
+                $pdf->save($rutaPdf);
+                if (file_exists($rutaPdf)) {
+                    \DB::table('comprobante_ventas')
+                    ->where('claveacceso', $claveAcceso)
+                    ->update(['convrt_ride' => '1']);
+            //$this->sendEmail($claveAcceso);
+                } else {
+                    return "Error";
+            //$this->firmarXml($claveAcceso);
+                }
+        //return $pdf->download('prueba.pdf');
+        //$this->deleteDir("generados");
+        //$this->deleteDir("firmados");
+        //$this->deleteDir("temp");
+            }
 
 
 
-    public function generarFacturaXml($id){        
-        $venta = Ventum::findOrFail($id);
-        $items = detallVenta::where('id_venta',$id)->get();
-        $perfils = Cliente::where('id',$venta['id_cliente'])->get();
-        $sale_comprobante = Comprobante_venta::select('claveacceso', 'numfactura')->where('id_venta',$venta->id)->first();
-        $dt_empress = DB::table('almacens')
-            ->join('facturacion_electronicas', 'facturacion_electronicas.id_almacen', '=', 'almacens.id')
-            ->select('facturacion_electronicas.*','almacens.*')
-            ->get();
-        $datos_empresa = Almacen::first();
-        $facturacion = FacturacionElectronica::first();        
+            public function generarFacturaXml($id){        
+                $venta = Ventum::findOrFail($id);
+                $items = detallVenta::where('id_venta',$id)->get();
+                $perfils = Cliente::where('id',$venta['id_cliente'])->get();
+                $sale_comprobante = Comprobante_venta::select('claveacceso', 'numfactura')->where('id_venta',$venta->id)->first();
+                $dt_empress = DB::table('almacens')
+                ->join('facturacion_electronicas', 'facturacion_electronicas.id_almacen', '=', 'almacens.id')
+                ->select('facturacion_electronicas.*','almacens.*')
+                ->get();
+                $datos_empresa = Almacen::first();
+                $facturacion = FacturacionElectronica::first();        
 
-        $xml     = new \DomDocument('1.0', 'UTF-8');
-        $factura = $xml->createElement('factura');
-        $factura->setAttribute('id', 'comprobante');
-        $factura->setAttribute('version', '1.0.0');
-        $factura = $xml->appendChild($factura);
+                $xml     = new \DomDocument('1.0', 'UTF-8');
+                $factura = $xml->createElement('factura');
+                $factura->setAttribute('id', 'comprobante');
+                $factura->setAttribute('version', '1.0.0');
+                $factura = $xml->appendChild($factura);
 
-        $infoTributaria = $xml->createElement('infoTributaria');
-        $infoTributaria = $factura->appendChild($infoTributaria);
+                $infoTributaria = $xml->createElement('infoTributaria');
+                $infoTributaria = $factura->appendChild($infoTributaria);
 
-        foreach ($dt_empress as $dt_empres) {
-            $ambiente = $xml->createElement('ambiente', $dt_empres->modo_ambiente);
-            $ambiente = $infoTributaria->appendChild($ambiente);
+                foreach ($dt_empress as $dt_empres) {
+                    $ambiente = $xml->createElement('ambiente', $dt_empres->modo_ambiente);
+                    $ambiente = $infoTributaria->appendChild($ambiente);
 
-            $tipoEmision = $xml->createElement('tipoEmision', '1');
-            $tipoEmision = $infoTributaria->appendChild($tipoEmision);
+                    $tipoEmision = $xml->createElement('tipoEmision', '1');
+                    $tipoEmision = $infoTributaria->appendChild($tipoEmision);
 
-            $razonSocial = $xml->createElement('razonSocial', $dt_empres->propietario);
-            $razonSocial = $infoTributaria->appendChild($razonSocial);
+                    $razonSocial = $xml->createElement('razonSocial', $dt_empres->propietario);
+                    $razonSocial = $infoTributaria->appendChild($razonSocial);
 
-            $nombreComercial = $xml->createElement('nombreComercial', $dt_empres->almacen);
-            $nombreComercial = $infoTributaria->appendChild($nombreComercial);
+                    $nombreComercial = $xml->createElement('nombreComercial', $dt_empres->almacen);
+                    $nombreComercial = $infoTributaria->appendChild($nombreComercial);
 
-            $ruc = $xml->createElement('ruc', $dt_empres->ruc);
-            $ruc = $infoTributaria->appendChild($ruc);
+                    $ruc = $xml->createElement('ruc', $dt_empres->ruc);
+                    $ruc = $infoTributaria->appendChild($ruc);
 
-            $claveAcceso = $xml->createElement('claveAcceso', $sale_comprobante->claveacceso);
-            $claveAcceso = $infoTributaria->appendChild($claveAcceso);
+                    $claveAcceso = $xml->createElement('claveAcceso', $sale_comprobante->claveacceso);
+                    $claveAcceso = $infoTributaria->appendChild($claveAcceso);
 
-            $codDoc = $xml->createElement('codDoc', '01');
-            $codDoc = $infoTributaria->appendChild($codDoc);
+                    $codDoc = $xml->createElement('codDoc', '01');
+                    $codDoc = $infoTributaria->appendChild($codDoc);
 
-            $estab = $xml->createElement('estab', $dt_empres->codestablecimiento);
-            $estab = $infoTributaria->appendChild($estab);
+                    $estab = $xml->createElement('estab', $dt_empres->codestablecimiento);
+                    $estab = $infoTributaria->appendChild($estab);
 
-            $ptoEmi = $xml->createElement('ptoEmi', $dt_empres->codpntemision);
-            $ptoEmi = $infoTributaria->appendChild($ptoEmi);
+                    $ptoEmi = $xml->createElement('ptoEmi', $dt_empres->codpntemision);
+                    $ptoEmi = $infoTributaria->appendChild($ptoEmi);
 
-            $secuencial = $xml->createElement('secuencial', $sale_comprobante->numfactura);
-            $secuencial = $infoTributaria->appendChild($secuencial);
+                    $secuencial = $xml->createElement('secuencial', $sale_comprobante->numfactura);
+                    $secuencial = $infoTributaria->appendChild($secuencial);
 
-            $dirMatriz = $xml->createElement('dirMatriz', $dt_empres->dirMatriz);
-            $dirMatriz = $infoTributaria->appendChild($dirMatriz);
-        }
+                    $dirMatriz = $xml->createElement('dirMatriz', $dt_empres->dirMatriz);
+                    $dirMatriz = $infoTributaria->appendChild($dirMatriz);
+                }
 
-        
 
-        foreach ($perfils as $perfil) {
 
-            $cedula = $datos_empresa->cedula;
-            $ruc    = $datos_empresa->ruc;
-            if (!empty($ruc)) {
+                foreach ($perfils as $perfil) {
+
+                    $cedula = $datos_empresa->cedula;
+                    $ruc    = $datos_empresa->ruc;
+                    if (!empty($ruc)) {
                 $identificacion = '04'; //ruc
                 $id             = $ruc;
             } elseif (!empty($cedula)) {
@@ -852,17 +942,24 @@ class VentaController extends Controller
             $iva             = $tabiva->iva;
             $codporcentaje   = $tabiva->codporcentaje;
             $tarifa          = $iva * 1;
-            $valor           = $iva + 100;
-            $obtnvl          = $valor / 100;
+            //$valor           = $iva + 100;
+            //$obtnvl          = $valor / 100;
+            $obtnvl          = $tarifa / 100;
+            
             $totalfactura    = $venta->total;
             $valsinimpuestos = $totalfactura / $obtnvl;
 
-            $valor = $totalfactura - $valsinimpuestos;
+            $valor = $totalfactura * $obtnvl;
 
             $infoFactura = $xml->createElement('infoFactura');
             $infoFactura = $factura->appendChild($infoFactura);
             //reemplazar feha por date
             //cambiar el formato de la fecha fechaEmision 
+
+            $calculo_total = $venta->total;
+            $calculo_subtotal = $venta->subtotal;
+            $calculo_iva_calculado = $venta->iva_calculado;
+            $calculo_total_sin_impuestos = ($calculo_total - $calculo_subtotal);
 
             $fechaEmite = Carbon::parse($venta['fecha'])->format('d/m/Y');
             //dd($fechaEmite);
@@ -871,7 +968,7 @@ class VentaController extends Controller
 
             $dirEstablecimiento = $xml->createElement('dirEstablecimiento', $datos_empresa->dirSucursal);
             $dirEstablecimiento = $infoFactura->appendChild($dirEstablecimiento);
-            if ($facturacion->obligado_contabilidad == 0) {
+            if ($facturacion['obligado_contabilidad'] == 0) {
                 $obligado = "NO";
             } else {
                 $obligado = "SI";
@@ -889,7 +986,7 @@ class VentaController extends Controller
             $identificacionComprador = $xml->createElement('identificacionComprador', $id);
             $identificacionComprador = $infoFactura->appendChild($identificacionComprador);
 
-            $totalSinImpuestos = $xml->createElement('totalSinImpuestos', number_format($valsinimpuestos, 2, '.', ','));
+            $totalSinImpuestos = $xml->createElement('totalSinImpuestos', number_format($calculo_total-$calculo_iva_calculado, 2, '.', ','));
             $totalSinImpuestos = $infoFactura->appendChild($totalSinImpuestos);
             
             if($venta->descuento==null){
@@ -914,13 +1011,13 @@ class VentaController extends Controller
             $codigoPorcentaje = $xml->createElement('codigoPorcentaje', $codporcentaje);
             $codigoPorcentaje = $totalImpuesto->appendChild($codigoPorcentaje);
 
-            $baseImponible = $xml->createElement('baseImponible', number_format($valsinimpuestos, 2, '.', ','));
+            $baseImponible = $xml->createElement('baseImponible', number_format($calculo_total-$calculo_iva_calculado, 2, '.', ','));
             $baseImponible = $totalImpuesto->appendChild($baseImponible);
 
             $tarifa = $xml->createElement('tarifa', $tarifa);
             $tarifa = $totalImpuesto->appendChild($tarifa);
 
-            $valor = $xml->createElement('valor', number_format($valor, 2, '.', ','));
+            $valor = $xml->createElement('valor', number_format($calculo_iva_calculado, 2, '.', ','));
             $valor = $totalImpuesto->appendChild($valor);
 
             $propina = $xml->createElement('propina', number_format($venta->propina, 2, '.', ','));
@@ -956,7 +1053,7 @@ class VentaController extends Controller
             $codigoPrincipal = $xml->createElement('codigoPrincipal', $product->id);
             $codigoPrincipal = $detalle->appendChild($codigoPrincipal);
 
-            $codigoAuxiliar = $xml->createElement('codigoAuxiliar', $product->id);
+            $codigoAuxiliar = $xml->createElement('codigoAuxiliar', $product->cod_barra);
             $codigoAuxiliar = $detalle->appendChild($codigoAuxiliar);
             if(!empty($product->propaganda)){
                 $detallproduct = $product->propaganda;
@@ -971,12 +1068,13 @@ class VentaController extends Controller
 
             $cantidad       = $xml->createElement('cantidad', $cantidadproducto);
             $cantidad       = $detalle->appendChild($cantidad);
-            $productoprecio = $product->pre_venta;
+            
+            /*$productoprecio = $product->pre_venta;
             $valsiniv       = $productoprecio / $obtnvl;
             $ivcero         = $iva / 100;
-            $valiv          = $valsiniv * $ivcero;
+            $valiv          = $valsiniv * $ivcero;*/
 
-            $precioUnitario = $xml->createElement('precioUnitario', number_format($valsiniv, 2, '.', ','));
+            $precioUnitario = $xml->createElement('precioUnitario', number_format($item->precio, 2, '.', ','));
             $precioUnitario = $detalle->appendChild($precioUnitario);
 
              //dd($item); Realizar lectura del modelo de descuentos y extraer el valor que se encuentre en activo
@@ -984,8 +1082,11 @@ class VentaController extends Controller
             $descuento = $xml->createElement('descuento', 0);
             $descuento = $detalle->appendChild($descuento);
 
+            /*
             $totsininpuesto = $precioventa * $cantidadproducto;
             $sinInp         = ($valsiniv * $cantidadproducto);
+            */
+            $sinInp = ($item->precio * $item->cant);
 
             //$precioTotalSinImpuesto = $xml->createElement('precioTotalSinImpuesto',number_format($valsinimpuestos, 2, '.', ','));
             $precioTotalSinImpuesto = $xml->createElement('precioTotalSinImpuesto', number_format($sinInp, 2, '.', ','));
@@ -1010,7 +1111,15 @@ class VentaController extends Controller
             $baseImponible = $xml->createElement('baseImponible', number_format($sinInp, 2, '.', ','));
             $baseImponible = $impuesto->appendChild($baseImponible);
 
-            $totivaval = $valiv * $cantidadproducto;
+            /*$productoprecio = $item->precio;
+            $valsiniv       = $productoprecio / $obtnvl;
+
+            $ivcero         = $iva / 100;
+            $valiv          = $valsiniv * $ivcero;
+            $cantidadproducto = $item->cant;*/
+            //$totivaval = $valiv * $cantidadproducto;
+
+            $totivaval = $obtnvl * ($item->cant * $item->precio);
 
             $valor = $xml->createElement('valor', number_format($totivaval, 2, '.', ','));
             $valor = $impuesto->appendChild($valor);
@@ -1076,6 +1185,103 @@ class VentaController extends Controller
         return response($el_xml)->header('Content-Type', 'text/xml');
         */
         
+    }
+
+
+    public function sendEmail($id)
+    {
+        $empresa = Almacen::first();
+        $comprobante   = Comprobante_venta::where('id_venta',$id)->first();
+
+        $clavedeacceso = $comprobante->claveacceso;
+
+        $venta = Ventum::findOrFail($id);
+        $cliente = Cliente::where('id',$venta['id_cliente'])->first();
+
+        
+        $data['empresa']       = $emp           = $empresa->almacen;
+        $data['tlfun']         = $tlfun         = $empresa->telefono;
+        $data['tlfds']         = $tlfds         = "";
+        $data['cel']           = $cel           = $empresa->cel_movi.' '.$empresa->cel_claro;
+        $data['dir']           = $dir           = $empresa->dirMatriz;
+        $data['pagweb']        = $pagweb        = $empresa->pag_web;
+        $data['email']         = $email         = $empresa->email;
+        $data['count']         = $count         = "";
+        $data['ciu']           = $ciu           = "Azuay";
+        $data['email_cliente'] = $emailcliente = $cliente->mail_cli;
+        $data['name']          = $nombrecliente          = $cliente->nom_cli.' '.$cliente->app_cli;
+        $rutai                 = public_path();
+        $ruta                  = str_replace("\\", "//", $rutai);
+        $data['xml']           = $autorizados           = $ruta . '//archivos//' . 'autorizados' . '//' . $clavedeacceso . '.xml';
+        $data['pdf']           = $convertidos           = $ruta . '//archivos//' . 'pdf' . '//' . $clavedeacceso . '.pdf';
+        $data['clave']         = $clavedeacceso;
+        $data['message']         = "Gracias por preferirnos.";
+        
+        if (\File::exists($autorizados)) {
+            if (\File::exists($convertidos)) {
+            
+            
+                try {
+
+                Mail::to($emailcliente)->send(new comprobantesMail($data));
+                    
+                } catch (\Exception $e) {
+                    $this->genLog("Error : ".$e );
+                }
+                //Mail::to($to)->send(new SendSolicita($data));
+                /*\Mail::send("emails.comprobantesMail", ['data' => $data], function ($message) use ($data) {
+                    $message->to($data['email_cliente'], "christian ")
+                        ->subject("Comprobante Electrónico");
+                    $rutaPdf = $data['xml'];
+                    $rutaXml = $data['pdf'];
+                    $message->attach($rutaXml);
+                    $message->attach($rutaPdf);
+                });*/
+                $this->genLog("comprobantes enviados : ".$clavedeacceso );
+                \DB::table('comprobante_ventas')
+                    ->where('claveacceso', $clavedeacceso)
+                    ->update(['send_xml' => '1', 'send_ride' => '1']);
+                $pdfdelete = $clavedeacceso . ".pdf";
+                $xmldelete = $clavedeacceso . ".xml";
+                /*$this->moveFile($clavedeacceso);
+                $this->deleteFile("generados", $xmldelete);
+                $this->deleteFile("firmados", $xmldelete);
+                $this->deleteFile("autorizados", $xmldelete);
+                $this->deleteFile("noautorizados", $xmldelete);
+                $this->deleteFile("temp", $xmldelete);
+                $this->deleteFile("pdf", $pdfdelete);*/
+            } else {
+                $this->genLog("comprobantes no enviados : ".$clavedeacceso );
+
+                \DB::table('comprobante_ventas')
+                    ->where('claveacceso', $clavedeacceso)
+                    ->update(['send_ride' => '0']);
+            }
+        } else {
+
+            \DB::table('comprobante_ventas')
+                ->where('claveacceso', $clavedeacceso)
+                ->update(['send_xml' => '0']);
+        }
+    }
+
+    protected function deleteFile($directorio, $archivo)
+    {
+        $rutai   = public_path();
+        $ruta    = str_replace("\\", "\\", $rutai);
+        $archivo = $ruta . "\\archivos\\" . $directorio . "\\" . $archivo;
+        if (file_exists($archivo)) {
+            unlink($archivo);
+        }
+    }
+
+    private function moveFile($clavedeacceso)
+    {
+        $rutai   = public_path();
+        $ruta    = str_replace("\\", "//", $rutai);
+        $origen  = $ruta . '//archivos//' . 'pdf' . '//' . $clavedeacceso . '.pdf';
+        $destino = $ruta . '//archivos//' . 'enviados' . '//' . $clavedeacceso . '.pdf';
+        copy($origen, $destino);
     }
 
 

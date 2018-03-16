@@ -214,6 +214,8 @@ Route::group(['prefix' => 'admin'], function () {
   Route::resource('/moneda', 'Admin\\MonedaController');
 
   Route::resource('/entrega', 'Admin\\EntregaController');
+  //Realizar controlador para mostrar las facturas y sus estados
+  //Route::resource('/facturacion', 'Admin\\VentaController@verfacturas');
 });
 
 
@@ -297,6 +299,8 @@ Route::group(['prefix' => 'person'], function () {
   Route::get('/revisarxml/{id}', ['as' => 'revisarxml', 'uses' => 'Person\\VentaController@revisarXml']);
   Route::get('/generarpdf/{id}', ['as' => 'generarpdf', 'uses' => 'Person\\VentaController@generaPdf']);
   Route::get('/procesosfacturacion/{id}', ['as' => 'procesosfacturacion', 'uses' => 'Person\\VentaController@procesosfacturacion']);
+  Route::resource('facturacion', 'Person\\FacturacionController'); 
+  Route::get('/enviarcomprobantes/{id}', ['as' => 'enviarcomprobantes', 'uses' => 'Person\\VentaController@sendEmail']);
 });
 
   Route::get('getSubcategory/{id}', 'ComponentController@getSubcategory');
@@ -309,3 +313,11 @@ Route::group(['prefix' => 'person'], function () {
 
   Route::get('getcanton/{id}', 'ComponentController@getCanton');
   Route::get('{var}/getcanton/{id}', 'ComponentController@getCanton');
+
+  Route::get('solicitarAutorizacion', function(){
+    //$comprobante = new \App\Comprobante_venta();
+    //$job = new \App\Jobs\solicitarAutorizacion($comprobante);
+    $job = new \App\Jobs\solicitarAutorizacion();
+    dispatch($job);
+  }
+  );

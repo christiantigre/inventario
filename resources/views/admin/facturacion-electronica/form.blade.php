@@ -30,7 +30,7 @@
 
         <select name="generar_facturas" class="form-control" id="generar_facturas" >
             @foreach (json_decode('{"1":"Activo","0":"Inactivo"}', true) as $optionKey => $optionValue)
-            <option value="{{ $optionKey }}" {{ (isset($almacen->generar_facturas) && $almacen->generar_facturas == $optionKey) ? 'selected' : ''}}>{{ $optionValue }}</option>
+            <option value="{{ $optionKey }}" {{ (isset($facturacionelectronica->generar_facturas) && $facturacionelectronica->generar_facturas == $optionKey) ? 'selected' : ''}}>{{ $optionValue }}</option>
             @endforeach
         </select>
 
@@ -43,7 +43,7 @@
 
         <select name="obligado_contabilidad" class="form-control" id="obligado_contabilidad" >
             @foreach (json_decode('{"1":"SI","0":"NO"}', true) as $optionKey => $optionValue)
-            <option value="{{ $optionKey }}" {{ (isset($almacen->obligado_contabilidad) && $almacen->obligado_contabilidad == $optionKey) ? 'selected' : ''}}>{{ $optionValue }}</option>
+            <option value="{{ $optionKey }}" {{ (isset($facturacionelectronica->obligado_contabilidad) && $facturacionelectronica->obligado_contabilidad == $optionKey) ? 'selected' : ''}}>{{ $optionValue }}</option>
             @endforeach
         </select>
 
