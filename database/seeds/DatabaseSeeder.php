@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
         $this->call(TypepayTableseeder::class);
         $this->call(ClausuleTableSeeder::class);
         $this->call(CantonesTableSeeder::class);
+        $this->call(DescuentosTableSeeder::class);
+        $this->call(MetodoTableSeeder::class);
         //
         $this->call(AlmacenTableSeeder::class);
         $this->call(ParroquiasTableSeeder::class);
@@ -37,5 +39,8 @@ class DatabaseSeeder extends Seeder
         $this->call(SubcuentaTableSeeder::class);
         $this->call(AuxiliarTableSeeder::class);
         $this->call(ConfcontblTableSeeder::class);
+        $this->call(ComprobanteTableSeeder::class);
+        $this->call(MonedaTableSeeder::class);
+
     }
 }

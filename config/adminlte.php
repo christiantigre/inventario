@@ -168,6 +168,10 @@ return [
                             'url'  => 'admin/almacen',
                         ],
                         [
+                            'text' => 'Facturación',
+                            'url'  => 'admin/facturacion-electronica',
+                        ],
+                        [
                             'text'    => 'Localidades',
                             'url'     => '#',
                             'submenu' => [
@@ -212,8 +216,20 @@ return [
                                     'url'  => 'admin/marca',
                                 ],
                                 [
+                                    'text' => 'Moneda',
+                                    'url'  => 'admin/moneda',
+                                ],
+                                [
                                     'text' => 'Iva',
                                     'url'  => 'admin/iva',
+                                ],
+                                [
+                                    'text' => 'Descuentos',
+                                    'url'  => 'admin/descuento',
+                                ],
+                                [
+                                    'text' => 'Entrega',
+                                    'url'  => 'admin/entrega',
                                 ],
                                 [
                                     'text' => 'Tipo pagos',

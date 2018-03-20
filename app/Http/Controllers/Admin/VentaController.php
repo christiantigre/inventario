@@ -11,6 +11,7 @@ use App\Ventum;
 use App\ItemVenta;
 use App\detallVenta;
 use App\Almacen;
+use App\Entrega;
 use App\Iva;
 use App\TypePay;
 use App\Clausule;
@@ -90,8 +91,9 @@ class VentaController extends Controller
         $carbon = Carbon::now(new \DateTimeZone('America/Guayaquil'));
         $fecha_venta = $carbon->now()->format('Y-m-d H:i:s');
         $tipospagos = TypePay::orderBy('id', 'ASC')->pluck('type', 'id');
+        $entregas = Entrega::where('activo',1)->orderBy('id', 'ASC')->pluck('metodo', 'id');
 
-        return view('admin.venta.create',compact('numero_venta','fecha_venta','clientes','products','cant_incr','username','userid','useremail','tipospagos'));
+        return view('admin.venta.create',compact('numero_venta','fecha_venta','clientes','products','cant_incr','username','userid','useremail','tipospagos','entregas'));
     }
 
     public function extraerdatoscliente(Request $request){

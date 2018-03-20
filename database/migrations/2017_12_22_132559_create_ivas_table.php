@@ -15,6 +15,7 @@ class CreateIvasTable extends Migration
         Schema::create('ivas', function (Blueprint $table) {
             $table->increments('id');
             $table->double('iva',15,2)->nullable();
+            $table->text('codporcentaje',11)->nullable();
             $table->boolean('activo')->default(1);
             $table->timestamps();
             });

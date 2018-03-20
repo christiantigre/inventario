@@ -116,6 +116,14 @@ href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 
             </a>
         </li>
         <li class="">
+                <a href="{{ url('person/facturacion') }}"
+                >
+                <i class="fa fa-fw fa-calculator "></i>
+                <span>Facturación</span>
+            </a>
+        </li>
+
+        <li class="">
             <a href="{{ url('person/product') }}"><i class="fa fa-fw fa-cloud-upload "></i>
                 <span>Productos</span></a>
             </li>

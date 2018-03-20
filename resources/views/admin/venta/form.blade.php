@@ -102,6 +102,14 @@
             </div>
         </div>
 
+        <div class="form-group {{ $errors->has('id_entrega') ? 'has-error' : ''}}">
+            <label for="identregay" class="col-md-4 control-label">{{ 'Entrega' }}</label>
+            <div class="col-md-6">
+                {!! Form::select('id_entrega', $entregas, null, ['class' => 'form-control','id'=>'id_entrega']) !!}
+                {!! $errors->first('id_entrega', '<p class="help-block">:message</p>') !!}
+            </div>
+        </div>
+
     </div>
 </fieldset>
 </div>

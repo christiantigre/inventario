@@ -33,15 +33,21 @@
                             <table class="table table-borderless">
                                 <thead>
                                     <tr>
-                                        <th>#</th><th>Fecha</th><th>Cliente</th><th>Cel Cli</th><th>Ruc Cli</th><th>Mail Cli</th><th>TOTAL</th><th>Actions</th>
+                                        <th>#</th><th>Factura</th><th>Fecha</th><th>Cliente</th><th>Cel Cli</th><th>Ruc Cli</th><th>Mail Cli</th><th>TOTAL</th><th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($venta as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->fecha }}</td><td>{{ $item->cliente }}</td><td>{{ $item->cel_cli }}</td><td>{{ $item->ruc_cli }}</td><td>{{ $item->mail_cli }}</td>
-                                        <td>{{ number_format($item->total,2) }}</td><td>
+                                        <td>{{ $item->num_venta }}</td>
+                                        <td>{{ $item->fecha }}</td>
+                                        <td>{{ $item->cliente }}</td>
+                                        <td>{{ $item->cel_cli }}</td>
+                                        <td>{{ $item->ruc_cli }}</td>
+                                        <td>{{ $item->mail_cli }}</td>
+                                        <td>{{ number_format($item->total,2) }}</td>
+                                        <td>
                                             <a href="{{ url('/person/venta/' . $item->id) }}" title="Ver Venta"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> Ver</button></a>
                                             <!--
                                             <a href="{{ url('/person/venta/' . $item->id . '/edit') }}" title="Editar Venta"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>

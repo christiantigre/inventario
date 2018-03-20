@@ -115,10 +115,13 @@ class ComponentController extends Controller
         $iva_valor=$iva->iva;
         $iva_id=$iva->id;
         $iva_mostrar = ($iva_valor*1);
-        $mult = $iva_valor+100;
-        $iva_final = $mult/100;
+        $mult = $iva_valor/100;
+        $iva_final = $mult;
+        //$mult = $iva_valor+100;
+        //$iva_final = $mult/100;
 
-        $subtotal = ($total/$iva_final);
+        //$subtotal = ($total/$iva_final);
+        $subtotal = $total - ($total*$iva_final);
         $valor_con_iva = ($total-$subtotal);
 
         return view('person/venta/list-cartitems', compact('carrito'),array(

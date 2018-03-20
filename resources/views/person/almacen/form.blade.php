@@ -182,13 +182,20 @@
                     {!! $errors->first('slogan', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
-            <div class="form-group {{ $errors->has('dir') ? 'has-error' : ''}}">
-                <label for="dir" class="col-md-4 control-label">{{ 'Dirección' }}</label>
-                <div class="col-md-6">
-                    <input class="form-control" name="dir" type="text" id="dir" value="{{ $almacen->dir or ''}}" >
-                    {!! $errors->first('dir', '<p class="help-block">:message</p>') !!}
-                </div>
-            </div><div class="form-group {{ $errors->has('latitud') ? 'has-error' : ''}}">
+            <div class="form-group {{ $errors->has('dirMatriz') ? 'has-error' : ''}}">
+    <label for="dirMatriz" class="col-md-4 control-label">{{ 'dir Matriz' }}</label>
+    <div class="col-md-6">
+        <input class="form-control" name="dirMatriz" type="text" id="dirMatriz" value="{{ $almacen->dirMatriz or ''}}" >
+        {!! $errors->first('dirMatriz', '<p class="help-block">:message</p>') !!}
+    </div>
+</div><div class="form-group {{ $errors->has('dirSucursal') ? 'has-error' : ''}}">
+    <label for="dirSucursal" class="col-md-4 control-label">{{ 'dir Sucursal' }}</label>
+    <div class="col-md-6">
+        <input class="form-control" name="dirSucursal" type="text" id="dirSucursal" value="{{ $almacen->dirSucursal or ''}}" >
+        {!! $errors->first('dirSucursal', '<p class="help-block">:message</p>') !!}
+    </div>
+</div>
+            <div class="form-group {{ $errors->has('latitud') ? 'has-error' : ''}}">
                 <label for="latitud" class="col-md-4 control-label">{{ 'Latitud' }}</label>
                 <div class="col-md-6">
                     <input class="form-control" name="latitud" type="text" id="latitud" value="{{ $almacen->latitud or ''}}" >

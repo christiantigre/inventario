@@ -30,6 +30,8 @@ php artisan crud:generate Almacen --fields='nom_almacen#string; propietario#stri
 
 php artisan crud:generate Category --fields='category#string; detall#string; gerente#string; activo#boolean' --view-path=admin --controller-namespace=Admin --route-group=admin --form-helper=html
 
+php artisan crud:generate Entrega --fields='metodo#string; detalle#string; activo#boolean' --view-path=admin --controller-namespace=Admin --route-group=admin --form-helper=html
+
 php artisan crud:generate tipocuenta --fields='tipocuenta#string; codigo#string; nombre#string; detall#string; activo#boolean' --view-path=admin --controller-namespace=Admin --route-group=admin --form-helper=html
 
 php artisan crud:generate clase --fields='clase#string; codigo#string; detall#string; activo#boolean' --view-path=admin --controller-namespace=Admin --route-group=admin --form-helper=html
@@ -42,7 +44,7 @@ php artisan crud:generate Marca --fields='marca#string; detall#string; img#file;
 
 php artisan crud:generate Iva --fields='iva#integer; activo#boolean' --view-path=admin --controller-namespace=Admin --route-group=admin --form-helper=html
 
-php artisan crud:generate Almacen --fields_from_file="C:/Users/Andres/Dropbox/Dropbox/inventario/public/fields/fieldsalmacen.json" --view-path=admin --controller-namespace=Admin --route-group=admin
+php artisan crud:generate Moneda --fields_from_file="C:/xampp/htdocs/inventario/public/fields/fieldClases.json" --view-path=admin --controller-namespace=Admin --route-group=admin
 
 php artisan crud:generate Grupo --fields_from_file="C:/Users/Andres/Dropbox/Dropbox/inventario/public/fields/fieldClases.json" --view-path=admin --controller-namespace=Admin --route-group=admin
 
@@ -167,3 +169,41 @@ link pagina web edita imagenes
         migrar solo una tabla 
         C:\xampp\htdocs\inventario\database\migrations
         php artisan migrate --path=app/database/migrations/2018_02_23_142853_create_agrupacion_sumadas_table.php
+
+        leer como hacer una marca de agua con php en imagenes
+        https://github.com/pedroventura/watermark-php/blob/master/watermark.php
+
+
+        link webservices servicios varios sri
+        http://empresas.sistemasinteligentes.com.ec/EC/es/150118/1/web/n/Empresas/Web-Service-De-Datos-Publicos-Sri-Registro-Civil-Para-Sistemas-Puntos-De-Ventas/
+
+        https://www.eluniverso.com/noticias/2018/01/09/nota/6558144/1-enero-2018-es-obligatoria-emision-comprobantes-electronicos-bajo
+
+
+
+        mensaje de stackverflow
+        _________________________________________
+
+        $year = $carbon->now()->format('Y');
+
+$perdidasyganancias = Perdidas_Ganancias::pluck('cod_cuenta', 'cuenta');
+
+$collection = $perdidasyganancias->each(function ($cod_cuenta, $cuenta) {
+    return Agrupacion_sumada::OrderBy('cod_cuenta','ASC')
+                            ->where('cod_cuenta',$cod_cuenta)
+                            ->where('cuenta',$cuenta)
+                            ->Where('periodo',$year)
+                            ->get();
+});
+
+dd($collection);
+__________________________________________________
+
+puente de php y java
+https://www.adictosaltrabajo.com/tutoriales/puente-php-java/
+
+tutorial queues
+https://www.youtube.com/watch?v=qVlraSBuuzE&ab_channel=MarcoFeregrino
+
+ejemplos de fcatura
+http://www.facturacionelectronica.ec/ejemplo-factura-electronica-del-ecuador-2013/

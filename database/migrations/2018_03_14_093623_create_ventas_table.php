@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateVentasTable extends Migration
 {
@@ -30,17 +31,22 @@ class CreateVentasTable extends Migration
             $table->string('can_items',10)->nullable();
             $table->string('vendedor',191)->nullable();
             $table->boolean('documento')->default(0)->nullable();
+            $table->double('descuento',15,2)->nullable();
+            $table->double('propina',15,2)->nullable();
             $table->integer('id_cliente')->unsigned()->nullable();
             $table->integer('id_user')->unsigned()->nullable();
             $table->integer('id_iva')->unsigned()->nullable();
             $table->integer('id_typepay')->unsigned()->nullable();
+            $table->integer('id_entrega')->unsigned()->nullable();
             $table->foreign('id_cliente')->references('id')->on('clientes');
-            $table->foreign('id_user')->references('id')->on('users');
+            $table->foreign('id_user')->references('id')->on('people');
             $table->foreign('id_iva')->references('id')->on('ivas');
             $table->foreign('id_typepay')->references('id')->on('type_pays');
+            $table->foreign('id_entrega')->references('id')->on('entregas');
             $table->timestamps();
-            });
+        });
     }
+
     /**
      * Reverse the migrations.
      *
@@ -48,6 +54,6 @@ class CreateVentasTable extends Migration
      */
     public function down()
     {
-        Schema::drop('ventas');
+        Schema::dropIfExists('ventas');
     }
 }

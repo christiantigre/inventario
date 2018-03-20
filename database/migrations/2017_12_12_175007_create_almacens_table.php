@@ -33,12 +33,14 @@ class CreateAlmacensTable extends Migration
             $table->string('cel_movi',15)->nullable();
             $table->string('cel_claro',15)->nullable();
             $table->string('watsapp',15)->nullable();
+            $table->text('fax')->nullable();
             $table->text('fb')->nullable();
             $table->text('tw')->nullable();
             $table->text('ins')->nullable();
             $table->text('gg')->nullable();
             $table->text('funcion_empresa')->nullable();
-            $table->text('dir',191)->nullable();
+            $table->text('dirMatriz',191)->nullable();
+            $table->text('dirSucursal',191)->nullable();
             $table->string('latitud',50)->nullable();
             $table->string('longitud',50)->nullable();
             $table->integer('pais_id')->unsigned()->nullable();

@@ -1,44 +1,12 @@
 {
     "fields": [
         {
-            "name": "name",
+            "name": "moneda",
             "type": "text"
         },
         {
-            "name": "cod_cuenta",
-            "type": "text"
-        },
-        {
-            "name": "cuenta",
-            "type": "text"
-        },
-        {
-            "name": "periodo",
-            "type": "text"
-        },
-        {
-            "name": "fecha",
-            "type": "date"
-        },
-        {
-            "name": "saldo_debe",
-            "type": "double"
-        },
-        {
-            "name": "saldo_haber",
-            "type": "double"
-        },
-        {
-            "name": "almacen_id",
-            "type": "integer#unsigned"
-        },
-        {
-            "name": "cuenta_id",
-            "type": "integer#unsigned"
-        },
-        {
-            "name": "asiento_id",
-            "type": "integer#unsigned"
+            "name": "estado",
+            "type": "boolean"
         }
     ]
 }
