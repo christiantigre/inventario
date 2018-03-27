@@ -495,6 +495,461 @@ class VentaController extends Controller
             }
         }
 
+        //PROCESOS INDEPENDIENTES
+        public function generafactura($id){
+
+            $rutai         = public_path();
+            $ruta          = str_replace("\\", "//", $rutai);
+
+            try {
+                $venta = Ventum::findOrFail($id);
+                $comprobante = Comprobante_venta::where('id_venta',$id)->first();
+
+                $archivo = $comprobante['claveacceso'].".xml";
+
+                $archivogenerado     = $ruta . '/archivos//generados' . '/'.$archivo;
+
+                if (\File::exists($archivogenerado)) {
+
+                    Session::flash('warning', 'El archivo ya existe.');   
+
+                }else{
+                    if ($generado =$this->genera($id)) {
+                        Comprobante_venta::where('id', $comprobante['id'])
+                        ->where('claveacceso', $comprobante['claveacceso'])
+                        ->update(['gen_xml' => 1]);
+                        
+                        $this->genLog("Comprobante generado venta_id: ".$id);
+                        Session::flash('flash_message', 'Acción realizada con exito.');
+
+                    }
+                }
+
+                
+            } catch (\Exception $e) {
+                $this->genLog("No se genero comprobante venta_id: ".$id);
+                Session::flash('warning', 'No se pudo realizar esta acción'); 
+            }
+
+            return redirect('person/facturacion');
+
+        }
+
+        public function f_firmafactura($id){
+
+            $rutai         = public_path();
+            $ruta          = str_replace("\\", "//", $rutai);
+
+            try {
+
+                $comprobante = Comprobante_venta::where('id_venta',$id)->first();
+
+                $archivo = $comprobante['claveacceso'].".xml";
+
+                $archivogenerado     = $ruta . '/archivos//generados' . '/'.$archivo;
+                $archivofirmado     = $ruta . '/archivos//firmados' . '/'.$archivo;
+
+                if (\File::exists($archivogenerado)) {
+
+                    if (\File::exists($archivofirmado)) {
+                        Session::flash('warning', 'Ya existe un archivo firmado, no se puede continuar.'); 
+                    }else{
+                        if ($firmado =$this->firmarFactura($id)) {
+                            Comprobante_venta::where('id_venta', $id)
+                            ->update(['fir_xml' => 1]);
+
+                            $this->genLog("Comprobante firmado venta_id: ".$id);
+                            Session::flash('flash_message', 'Documento firmado con exito.');
+                        }
+                    }
+
+                }else{
+                    Session::flash('warning', 'No se encuentra el archivo generado.');     
+                }
+
+                
+
+            } catch (\Exception $e) {
+                $this->genLog("No se genero firmo el comprobante venta_id: ".$id);
+                Session::flash('warning', 'No se pudo firmar el comprobante.'); 
+            }
+
+            return redirect('person/facturacion');
+        }
+
+        public function f_autorizarfactura($id){
+
+            $rutai         = public_path();
+            $ruta          = str_replace("\\", "//", $rutai);
+
+            try {
+
+                $comprobante = Comprobante_venta::where('id_venta',$id)->first();
+
+                $archivo = $comprobante['claveacceso'].".xml";
+
+                $archivofirmado     = $ruta . '/archivos//firmados' . '/'.$archivo;
+                $archivoautorizado     = $ruta . '/archivos//autorizados' . '/'.$archivo;
+
+                if (\File::exists($archivofirmado)) {
+
+                    if (\File::exists($archivoautorizado)) {
+                        Session::flash('warning', 'Ya existe un archivo autorizado, no se puede continuar.'); 
+                    }else{
+
+                        if ($autorizado = $this->autorizar($id)) {
+
+                            
+
+                            $this->genLog("Comprobante respuesta venta_id: ".$id." / mensaje ".$autorizado);
+                            Session::flash('flash_message', 'Respuesta '.$autorizado);
+
+                            try {
+                                $this->revisarXml($id);
+                            } catch (\Exception $e) {
+
+                            $this->genLog("Revisado xml venta_id: ".$id);
+                                
+                            }
+
+                        }
+
+                    }
+
+                }else{
+                    Session::flash('warning', 'No se encuentra el archivo firmado.');     
+                }
+
+                
+
+            } catch (\Exception $e) {
+                $this->genLog("No se pudo autorizar el comprobante venta_id: ".$id);
+                Session::flash('warning', 'No se pudo autorizar el comprobante.'); 
+            }
+
+            return redirect('person/facturacion');
+        }
+
+
+
+        public function f_generarpdf($id){
+            $rutai         = public_path();
+            $ruta          = str_replace("\\", "//", $rutai);
+
+            try {
+
+                $comprobante = Comprobante_venta::where('id_venta',$id)->first();
+
+                $archivo = $comprobante['claveacceso'].".xml";
+                $archivopdf = $comprobante['claveacceso'].".pdf";
+
+                $archivoautorizado     = $ruta . '/archivos//autorizados' . '/'.$archivo;
+                $archivopdf     = $ruta . '/archivos//pdf' . '/'.$archivopdf;
+
+                if (\File::exists($archivoautorizado)) {
+
+                    if (\File::exists($archivopdf)) {
+                        Session::flash('warning', 'Ya existe un archivo pdf, no se puede continuar.'); 
+                    }else{
+
+                        if ($pdf = $this->generaPdf($id)) {
+
+                            Comprobante_venta::where('id', $comprobante['id'])
+                        ->where('claveacceso', $comprobante['claveacceso'])
+                        ->update(['convrt_ride' => 1]);
+
+                            $this->genLog("Comprobante respuesta venta_id: ".$id." / mensaje ".$autorizado);
+                            Session::flash('flash_message', 'RIDE generado correctamente');
+
+                        }
+
+                    }
+
+                }else{
+                    Session::flash('warning', 'No se encuentra el archivo autorizado.');     
+                }
+
+                
+            } catch (\Exception $e) {
+                $this->genLog("No se pudo convertir el comprobante venta_id: ".$id);
+                Session::flash('warning', 'No se pudo convertir convertir el pdf.'); 
+            }
+
+            return redirect('person/facturacion');
+        }
+
+
+
+        public function f_sendEmail($id){
+            $rutai         = public_path();
+            $ruta          = str_replace("\\", "//", $rutai);
+
+            try {
+
+                $comprobante = Comprobante_venta::where('id_venta',$id)->first();
+
+                $archivo = $comprobante['claveacceso'].".xml";
+                $archivopdf = $comprobante['claveacceso'].".pdf";
+
+                $archivoautorizado     = $ruta . '/archivos//autorizados' . '/'.$archivo;
+                $archivopdf     = $ruta . '/archivos//pdf' . '/'.$archivopdf;
+
+                if (\File::exists($archivoautorizado)) {
+
+                    if (\File::exists($archivopdf)) {
+                        if ($pdf = $this->sendEmail($id)) {
+
+                            Comprobante_venta::where('id', $comprobante['id'])
+                        ->where('claveacceso', $comprobante['claveacceso'])
+                        ->update(['send_xml' => '1', 'send_ride' => '1']);
+
+                            $this->genLog("Comprobantes enviados venta_id: ".$id);
+                            Session::flash('flash_message', 'Comprobantes enviados correctamente');
+
+                        }
+                    }else{
+
+                        Session::flash('warning', 'No se puede encontrar el archivo pdf.');                     
+                    }
+
+                }else{
+                    Session::flash('warning', 'No se encuentra el archivo autorizado.');     
+                }
+
+                
+            } catch (\Exception $e) {
+                $this->genLog("No se pudo enviar los comprobantes venta_id: ".$id);
+                Session::flash('warning', 'No se pudo enviar los comprobantes.'); 
+            }
+
+            return redirect('person/facturacion');            
+        }
+
+        //PROCESOS CON RETORNO 
+        public function return_generafactura($id){
+
+            $rutai         = public_path();
+            $ruta          = str_replace("\\", "//", $rutai);
+
+            try {
+                $venta = Ventum::findOrFail($id);
+                $comprobante = Comprobante_venta::where('id_venta',$id)->first();
+
+                $archivo = $comprobante['claveacceso'].".xml";
+
+                $archivogenerado     = $ruta . '/archivos//generados' . '/'.$archivo;
+
+                if (\File::exists($archivogenerado)) {
+                    
+                    Session::flash('warning', 'El archivo ya existe.');   
+
+                }else{
+                    if ($generado =$this->genera($id)) {
+                        Comprobante_venta::where('id', $comprobante['id'])
+                        ->where('claveacceso', $comprobante['claveacceso'])
+                        ->update(['gen_xml' => 1]);
+                        
+                        $this->genLog("Comprobante generado venta_id: ".$id);
+                        Session::flash('flash_message', 'Acción realizada con exito.');
+
+                    }
+                }
+
+                
+            } catch (\Exception $e) {
+                $this->genLog("No se genero comprobante venta_id: ".$id);
+                Session::flash('warning', 'No se pudo realizar esta acción'); 
+            }
+
+            return redirect()->back();
+        }
+
+        public function return_firmafactura($id){
+
+            $rutai         = public_path();
+            $ruta          = str_replace("\\", "//", $rutai);
+
+            try {
+
+                $comprobante = Comprobante_venta::where('id_venta',$id)->first();
+
+                $archivo = $comprobante['claveacceso'].".xml";
+
+                $archivogenerado     = $ruta . '/archivos//generados' . '/'.$archivo;
+                $archivofirmado     = $ruta . '/archivos//firmados' . '/'.$archivo;
+
+                if (\File::exists($archivogenerado)) {
+
+                    if (\File::exists($archivofirmado)) {
+                        Session::flash('warning', 'Ya existe un archivo firmado, no se puede continuar.'); 
+                    }else{
+                        if ($firmado =$this->firmarFactura($id)) {
+                            Comprobante_venta::where('id_venta', $id)
+                            ->update(['fir_xml' => 1]);
+
+                            $this->genLog("Comprobante firmado venta_id: ".$id);
+                            Session::flash('flash_message', 'Documento firmado con exito.');
+                        }
+                    }
+
+                }else{
+                    Session::flash('warning', 'No se encuentra el archivo generado.');     
+                }
+
+                
+
+            } catch (\Exception $e) {
+                $this->genLog("No se genero firmo el comprobante venta_id: ".$id);
+                Session::flash('warning', 'No se pudo firmar el comprobante.'); 
+            }
+
+            return redirect()->back();            
+        }
+
+        public function return_autorizarfactura($id){
+
+            $rutai         = public_path();
+            $ruta          = str_replace("\\", "//", $rutai);
+
+            try {
+
+                $comprobante = Comprobante_venta::where('id_venta',$id)->first();
+
+                $archivo = $comprobante['claveacceso'].".xml";
+
+                $archivofirmado     = $ruta . '/archivos//firmados' . '/'.$archivo;
+                $archivoautorizado     = $ruta . '/archivos//autorizados' . '/'.$archivo;
+
+                if (\File::exists($archivofirmado)) {
+
+                    if (\File::exists($archivoautorizado)) {
+                        Session::flash('warning', 'Ya existe un archivo autorizado, no se puede continuar.'); 
+                    }else{
+
+                        if ($autorizado = $this->autorizar($id)) {
+
+                            
+
+                            $this->genLog("Comprobante respuesta venta_id: ".$id." / mensaje ".$autorizado);
+                            Session::flash('flash_message', 'Respuesta '.$autorizado);
+
+                            try {
+                                $this->revisarXml($id);
+                            } catch (\Exception $e) {
+
+                            $this->genLog("Revisado xml venta_id: ".$id);
+                                
+                            }
+
+                        }
+
+                    }
+
+                }else{
+                    Session::flash('warning', 'No se encuentra el archivo firmado.');     
+                }
+
+                
+
+            } catch (\Exception $e) {
+                $this->genLog("No se pudo autorizar el comprobante venta_id: ".$id);
+                Session::flash('warning', 'No se pudo autorizar el comprobante.'); 
+            }
+
+            return redirect()->back();
+        }
+
+        public function return_generarpdf($id){
+            $rutai         = public_path();
+            $ruta          = str_replace("\\", "//", $rutai);
+
+            try {
+
+                $comprobante = Comprobante_venta::where('id_venta',$id)->first();
+
+                $archivo = $comprobante['claveacceso'].".xml";
+                $archivopdf = $comprobante['claveacceso'].".pdf";
+
+                $archivoautorizado     = $ruta . '/archivos//autorizados' . '/'.$archivo;
+                $archivopdf     = $ruta . '/archivos//pdf' . '/'.$archivopdf;
+
+                if (\File::exists($archivoautorizado)) {
+
+                    if (\File::exists($archivopdf)) {
+                        Session::flash('warning', 'Ya existe un archivo pdf, no se puede continuar.'); 
+                    }else{
+
+                        if ($pdf = $this->generaPdf($id)) {
+
+                            Comprobante_venta::where('id', $comprobante['id'])
+                        ->where('claveacceso', $comprobante['claveacceso'])
+                        ->update(['convrt_ride' => 1]);
+
+                            $this->genLog("Comprobante respuesta venta_id: ".$id." / mensaje ".$autorizado);
+                            Session::flash('flash_message', 'RIDE generado correctamente');
+
+                        }
+
+                    }
+
+                }else{
+                    Session::flash('warning', 'No se encuentra el archivo autorizado.');     
+                }
+
+                
+            } catch (\Exception $e) {
+                $this->genLog("No se pudo convertir el comprobante venta_id: ".$id);
+                Session::flash('warning', 'No se pudo convertir convertir el pdf.'); 
+            }
+
+            return redirect()->back();
+        }
+
+        public function return_sendEmail($id){
+            $rutai         = public_path();
+            $ruta          = str_replace("\\", "//", $rutai);
+
+            try {
+
+                $comprobante = Comprobante_venta::where('id_venta',$id)->first();
+
+                $archivo = $comprobante['claveacceso'].".xml";
+                $archivopdf = $comprobante['claveacceso'].".pdf";
+
+                $archivoautorizado     = $ruta . '/archivos//autorizados' . '/'.$archivo;
+                $archivopdf     = $ruta . '/archivos//pdf' . '/'.$archivopdf;
+
+                if (\File::exists($archivoautorizado)) {
+
+                    if (\File::exists($archivopdf)) {
+                        if ($pdf = $this->sendEmail($id)) {
+
+                            Comprobante_venta::where('id', $comprobante['id'])
+                        ->where('claveacceso', $comprobante['claveacceso'])
+                        ->update(['send_xml' => '1', 'send_ride' => '1']);
+
+                            $this->genLog("Comprobantes enviados venta_id: ".$id);
+                            Session::flash('flash_message', 'Comprobantes enviados correctamente');
+
+                        }
+                    }else{
+
+                        Session::flash('warning', 'No se puede encontrar el archivo pdf.');                     
+                    }
+
+                }else{
+                    Session::flash('warning', 'No se encuentra el archivo autorizado.');     
+                }
+
+                
+            } catch (\Exception $e) {
+                $this->genLog("No se pudo enviar los comprobantes venta_id: ".$id);
+                Session::flash('warning', 'No se pudo enviar los comprobantes.'); 
+            }
+
+            return redirect()->back();            
+        }
+
 
         public function genera($id){
             $venta = Ventum::findOrFail($id);
@@ -639,6 +1094,9 @@ class VentaController extends Controller
             }
         }
 
+
+
+
         public function autorizar($id){
             try {
 
@@ -732,7 +1190,9 @@ class VentaController extends Controller
         //$autorizados = $ruta.'//archivos//'.'autorizados'.'//';
 
                 $xmlPath = $ruta . "\\archivos\\autorizados\\" . $claveAcceso . ".xml";
+
                 if (file_exists($xmlPath)) {
+
             //lee el xml y decodifica
                     $content        = utf8_encode(file_get_contents($xmlPath));
                     $xml            = \simplexml_load_string($content);
@@ -751,7 +1211,7 @@ class VentaController extends Controller
                         \DB::table('comprobante_ventas')
                         ->where('claveacceso', $claveAcceso)
                         ->update(['num_autorizacion' => $numAut, 'fecha_autorizacion' => $fechAut, 'estado_aprobacion' => $estado]);
-                        try {
+                        /*try {
 
                             $this->generaPdf($claveAcceso);
 
@@ -760,6 +1220,7 @@ class VentaController extends Controller
                             $this->genLog("Error al convertir xml a pdf : ".$claveAcceso );
                             
                         }
+                        */
 
                     } else {
                         $fechAut = $doc->getElementsByTagName("fechaAutorizacion")->item(0)->nodeValue;
@@ -770,12 +1231,15 @@ class VentaController extends Controller
                         ->update(['mensaje' => $mensaje, 'fecha_autorizacion' => $fechAut, 'estado_aprobacion' => $estado]);
                     }
                 } else {
+
+                    $this->genLog("No se encontro el archivo para revisarlo ". $claveAcceso );
+                   
+
                     //return "Retorna a firmar";
                     //$this->firmarFactura($id);
-                    $message = 'Su pedido fue realizado con éxito, estamos preparando tu factua y la enviarémos a tu correo electrónico';
-                    $message = 'Su pedido fue realizado con éxito, estamos preparando tu factura y la enviarémos a tu correo electrónico';
+                    //$message = 'Se recibio la respuesta de la revicion';
 
-                    \Session::flash('flash_message', $message);
+                   // \Session::flash('flash_message', $message);
                 }
 
             }
@@ -1188,6 +1652,9 @@ class VentaController extends Controller
     }
 
 
+
+
+
     public function sendEmail($id)
     {
         $empresa = Almacen::first();
@@ -1219,50 +1686,42 @@ class VentaController extends Controller
         
         if (\File::exists($autorizados)) {
             if (\File::exists($convertidos)) {
-            
-            
+
+
                 try {
 
-                Mail::to($emailcliente)->send(new comprobantesMail($data));
+                    Mail::to($emailcliente)->send(new comprobantesMail($data));
                     
                 } catch (\Exception $e) {
                     $this->genLog("Error : ".$e );
                 }
-                //Mail::to($to)->send(new SendSolicita($data));
-                /*\Mail::send("emails.comprobantesMail", ['data' => $data], function ($message) use ($data) {
-                    $message->to($data['email_cliente'], "christian ")
-                        ->subject("Comprobante Electrónico");
-                    $rutaPdf = $data['xml'];
-                    $rutaXml = $data['pdf'];
-                    $message->attach($rutaXml);
-                    $message->attach($rutaPdf);
-                });*/
-                $this->genLog("comprobantes enviados : ".$clavedeacceso );
-                \DB::table('comprobante_ventas')
-                    ->where('claveacceso', $clavedeacceso)
-                    ->update(['send_xml' => '1', 'send_ride' => '1']);
+                
+                $pdf = \DB::table('comprobante_ventas')
+                ->where('claveacceso', $clavedeacceso)
+                ->update(['send_xml' => '1', 'send_ride' => '1']);
                 $pdfdelete = $clavedeacceso . ".pdf";
                 $xmldelete = $clavedeacceso . ".xml";
-                /*$this->moveFile($clavedeacceso);
+                /*$this->moveFile($clavedeacceso);*/
                 $this->deleteFile("generados", $xmldelete);
                 $this->deleteFile("firmados", $xmldelete);
                 $this->deleteFile("autorizados", $xmldelete);
                 $this->deleteFile("noautorizados", $xmldelete);
                 $this->deleteFile("temp", $xmldelete);
-                $this->deleteFile("pdf", $pdfdelete);*/
+                $this->deleteFile("pdf", $pdfdelete);
             } else {
-                $this->genLog("comprobantes no enviados : ".$clavedeacceso );
+                $pdf = $this->genLog("comprobantes no enviados : ".$clavedeacceso );
 
                 \DB::table('comprobante_ventas')
-                    ->where('claveacceso', $clavedeacceso)
-                    ->update(['send_ride' => '0']);
+                ->where('claveacceso', $clavedeacceso)
+                ->update(['send_ride' => '0']);
             }
         } else {
 
-            \DB::table('comprobante_ventas')
-                ->where('claveacceso', $clavedeacceso)
-                ->update(['send_xml' => '0']);
+            $pdf = \DB::table('comprobante_ventas')
+            ->where('claveacceso', $clavedeacceso)
+            ->update(['send_xml' => '0']);
         }
+        return $pdf;
     }
 
     protected function deleteFile($directorio, $archivo)

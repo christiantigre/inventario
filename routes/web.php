@@ -301,6 +301,18 @@ Route::group(['prefix' => 'person'], function () {
   Route::get('/procesosfacturacion/{id}', ['as' => 'procesosfacturacion', 'uses' => 'Person\\VentaController@procesosfacturacion']);
   Route::resource('facturacion', 'Person\\FacturacionController'); 
   Route::get('/enviarcomprobantes/{id}', ['as' => 'enviarcomprobantes', 'uses' => 'Person\\VentaController@sendEmail']);
+
+  Route::get('/f_generafactura/{id}', ['as' => 'f_generafactura', 'uses' => 'Person\\VentaController@generafactura']);
+  Route::get('/f_firmarfactura/{id}', ['as' => 'f_firmarfactura', 'uses' => 'Person\\VentaController@f_firmafactura']);
+  Route::get('/f_autorizarfactura/{id}', ['as' => 'f_autorizarfactura', 'uses' => 'Person\\VentaController@f_autorizarfactura']);
+  Route::get('/f_generarpdf/{id}', ['as' => 'f_generarpdf', 'uses' => 'Person\\VentaController@f_generarpdf']);
+  Route::get('/f_enviarcomprobantes/{id}', ['as' => 'f_enviarcomprobantes', 'uses' => 'Person\\VentaController@f_sendEmail']);
+
+  Route::get('/return_generafactura/{id}', ['as' => 'return_generafactura', 'uses' => 'Person\\VentaController@return_generafactura']);
+  Route::get('/return_firmarfactura/{id}', ['as' => 'return_firmarfactura', 'uses' => 'Person\\VentaController@return_firmafactura']);
+  Route::get('/return_autorizarfactura/{id}', ['as' => 'return_autorizarfactura', 'uses' => 'Person\\VentaController@return_autorizarfactura']);
+  Route::get('/return_generarpdf/{id}', ['as' => 'return_generarpdf', 'uses' => 'Person\\VentaController@return_generarpdf']);
+  Route::get('/return_enviarcomprobantes/{id}', ['as' => 'return_enviarcomprobantes', 'uses' => 'Person\\VentaController@return_sendEmail']);
 });
 
   Route::get('getSubcategory/{id}', 'ComponentController@getSubcategory');
@@ -321,3 +333,12 @@ Route::group(['prefix' => 'person'], function () {
     dispatch($job);
   }
   );
+
+  Route::get('productos','DataTables\\ProductosDatatablesController@getIndex');
+  Route::get('/anyDataProd','DataTables\\ProductosDatatablesController@anyDataProd')->name('prod.data');
+
+  Route::get('clientes','DataTables\\ClientesDatatablesController@getIndex');
+  Route::get('/anyDataCli','DataTables\\ClientesDatatablesController@anyDataCli')->name('cli.data');
+
+  Route::get('proveedores','DataTables\\ProveedoresDatatablesController@getIndex');
+  Route::get('/anyDataPro','DataTables\\ProveedoresDatatablesController@anyDataPro')->name('prov.data');

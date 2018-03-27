@@ -14,6 +14,8 @@ href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 
 ][config('adminlte.layout')] : '') . (config('adminlte.collapse_sidebar') ? ' sidebar-collapse ' : ''))
 
 @section('body')
+
+
 <div class="wrapper">
     <!-- Main Header -->
     <header class="main-header">

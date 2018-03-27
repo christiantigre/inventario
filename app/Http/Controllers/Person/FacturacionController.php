@@ -7,6 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Comprobante_venta;
 use DB;
 use App\SvLog;
+use App\Ventum;
+use App\detallVenta;
+use App\Almacen;
 use Session;
 use Carbon\Carbon;
 
@@ -28,8 +31,7 @@ class FacturacionController extends Controller
         $perPage = 25;
 
         if (!empty($keyword)) {
-            $comprobantes = Comprobante_venta::where('fecha', 'LIKE', "%$keyword%")
-            ->orWhere('numfactura', 'LIKE', "%$keyword%")
+            $comprobantes = Comprobante_venta::where('numfactura', 'LIKE', "%$keyword%")
             ->orWhere('claveacceso', 'LIKE', "%$keyword%")
             ->orWhere('num_autorizacion', 'LIKE', "%$keyword%")
             ->orWhere('fecha_autorizacion', 'LIKE', "%$keyword%")
@@ -75,7 +77,14 @@ class FacturacionController extends Controller
      */
     public function show($id)
     {
-        //
+        $comprobante = Comprobante_venta::findOrFail($id);
+        $venta = Ventum::findOrFail($comprobante['id_venta']);
+        $detallventa= detallVenta::where('id_venta',$id)->get();
+        $almacen = Almacen::first();
+        
+        $this->genLog("Visualizó comprobante id : ". $comprobante['numfactura']);
+        
+        return view('person.facturacion.show', compact('comprobante','venta','detallventa','almacen'));
     }
 
     /**
