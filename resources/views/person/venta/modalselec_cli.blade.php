@@ -1,19 +1,18 @@
 <style>
-  .example-modal .modal {
-    position: relative;
-    top: auto;
-    bottom: auto;
-    right: auto;
-    left: auto;
-    display: block;
-    z-index: 1;
-  }
-  .example-modal .modal {
-    background: transparent !important;
-  }
+.example-modal .modal {
+  position: relative;
+  top: auto;
+  bottom: auto;
+  right: auto;
+  left: auto;
+  display: block;
+  z-index: 1;
+}
+.example-modal .modal {
+  background: transparent !important;
+}
 </style>
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
- 
+
 
 <div class="modal fade" id="modal-seleccionacliente">
   <div class="modal-dialog modal-lg">
@@ -31,16 +30,17 @@
 
 
           <!-- /.box-header -->
-            <div class="box-body no-padding">
-              <div id="list-clientes">
+          <div class="box-body no-padding">
+            <div id="list-clientes">
 
-              </div>  
-            </div>
-            <!-- /.box-body -->
+            </div>  
+          </div>
+          <!-- /.box-body -->
           <!-- /.box -->
 
-         
-            <table id="example1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+          <div class="table-responsive">
+
+            <table id="clientes_tab" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
               <tr>
                 <th>ID</th>
@@ -49,7 +49,6 @@
                 <th>Dirección</th>
                 <th>Contactos</th>
                 <th>mail</th>
-                <th>Estado</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -63,36 +62,37 @@
                 <td>{{ $item->tlf_cli }} / {{ $item->wts_cli }}</td>
                 <td>{{ $item->mail_cli }}</td>
                 <td>
-                  @if( ($item->is_active)=="0" )
-                  Inactivo
-                  @else
-                  Activo
-                  @endif
-                </td>
-                <td>
                 <button type='button' id="{{ $item->id }}" value="{{ $item->id }}" class="btn btn-info btn-xs select_cli_person" data-dismiss='modal'> Seleccionar</button>                  
                 </td>
               </tr>
               @endforeach
             </tbody>
           </table>
-          
-          
         </div>
-        <div class="modal-footer">
-         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">CERRAR</button>
-         <!--{!! Form::submit(isset($submitButtonText) ? $submitButtonText : 'Create', ['class' => 'btn btn-primary']) !!}-->
-       </div>
-       {!! Form::close() !!}
+
+
+
+      </div>
+      <div class="modal-footer">
+       <button type="button" class="btn btn-default pull-left" data-dismiss="modal">CERRAR</button>
+       <!--{!! Form::submit(isset($submitButtonText) ? $submitButtonText : 'Create', ['class' => 'btn btn-primary']) !!}-->
      </div>
-     <!-- /.modal-content -->
+     {!! Form::close() !!}
    </div>
-   <!-- /.modal-dialog -->
+   <!-- /.modal-content -->
  </div>
- <!-- /.modal -->
-<script type="text/javascript" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+ <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
 
 <script type="text/javascript">
+  $(function() {
+        $('#clientes_tab').DataTable({
+    responsive: true
+});
+    });
+
 /*  $(document).ready(function(){
         items_clientes_person();
     });

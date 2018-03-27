@@ -46,10 +46,12 @@
 <!-- /.box -->
 </section>
 </div>
-
 @include('person.venta.modalselec_cli')
 @include('person.venta.modalcrear_cli')
 @include('person.venta.modalselect_prod')
+@include('person.venta.modal_test')
+{{--
+    --}}
 
 <script type="text/javascript">
     $(document).ready(function(){
@@ -258,7 +260,7 @@ function reset_input_modal(){
 
 <script type="text/javascript">
   $(document).ready(function(){
-    $('#example1').DataTable();
+   /* $('#example1').DataTable();*/
   });
 
   

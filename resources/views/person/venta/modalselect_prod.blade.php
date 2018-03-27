@@ -14,8 +14,6 @@
   background: transparent !important;
 }
 </style>
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
-
 
 <div class="modal fade" id="modal-seleccionaproductos">
 	<div class="modal-dialog modal-lg">
@@ -30,7 +28,9 @@
 
 				</div>
 				<div class="modal-body">
-          <table id="example2" class="table table-striped table-bordered" cellspacing="0" width="100%">
+          <div class="table-responsive">
+
+          <table id="productos_tab" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <!--<table id="example1" class="table table-bordered table-striped">-->
               <thead>
                 <tr>
@@ -69,6 +69,7 @@
                 @endforeach
               </tbody>
             </table>
+            </div>
           </div>
           <div class="modal-footer">
            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">CERRAR</button>
@@ -81,11 +82,17 @@
      <!-- /.modal-dialog -->
    </div>
    <!-- /.modal -->
-   <script type="text/javascript" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+   
 
    <script type="text/javascript">
+    $(function() {
+        $('#productos_tab').DataTable({
+    responsive: true
+});
+    });
+    
     $(document).ready(function(){
-      $('#example2').DataTable();
+      /*$('#example2').DataTable();*/
     });
 
     //Boton id=select_prod de la modalselect_prod obtiene los datos de la fila seleccionada envia por ajax al controlador ComponetController funcion addItem y guarda en la tabla item_ventas

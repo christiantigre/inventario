@@ -24,8 +24,8 @@
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/AdminLTE.min.css') }}">
 
     @if(config('adminlte.plugins.datatables'))
-        <!-- DataTables 
-        <link rel="stylesheet" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">-->
+        
+        
     @endif
 
     <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
@@ -40,7 +40,7 @@
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
-    <!-- Jquery -->
+    <!-- Jquery edit-->
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <!-- Datepicker Files -->
     <link rel="stylesheet" href="{{asset('plugins/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker3.min.css')}}">
@@ -48,6 +48,10 @@
     <script src="{{asset('plugins/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.min.js')}}"></script>
     <!-- Languaje -->
     <script src="{{asset('plugins/bootstrap-datepicker-1.6.4/locales/bootstrap-datepicker.es.min.js')}}"></script>
+    <!-- DataTables -->
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css"> 
+
 
  
 
@@ -55,15 +59,13 @@
 </head>
 <body class="hold-transition @yield('body_class')">
 
-@yield('body')
 
+@yield('body')
+<!--edit-->
 <script src="{{ asset('vendor/adminlte/vendor/jquery/dist/jquery.min.js') }}"></script>
 <script src="{{ asset('vendor/adminlte/vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 <script>
 $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
-
-
-
 </script>
 
 @if(config('adminlte.plugins.select2'))
@@ -71,15 +73,28 @@ $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 @endif
 
+<!-- DataTables -->
+<!-- jQuery -->
+<script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+        <script src="//code.jquery.com/jquery.js"></script>
+        <!-- DataTables -->
+        <script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+        <!-- Bootstrap JavaScript -->
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
 @if(config('adminlte.plugins.datatables'))
-    <!-- DataTables -->
-    <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <!-- jQuery -->
+
+<!-- Bootstrap JavaScript -->
+<!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>-->
+<!-- App scripts -->
+
 @endif
 
-<!--toastr-->
-   <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<!--toastr edit 
+   <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+  -->
         <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
-  
     
     <script>
 @if(isset($notification['message']))

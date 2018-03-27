@@ -24,6 +24,7 @@
         "renatomarinho/laravel-page-speed": "^1.8",
         "spatie/laravel-backup": "^5.2",
         "spatie/laravel-permission": "^2.7",
+        "yajra/laravel-datatables-oracle": "~8.0",
         "zizaco/entrust": "5.2.x-dev"
     },
     "require-dev": {
