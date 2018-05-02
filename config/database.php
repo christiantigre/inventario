@@ -54,7 +54,11 @@ return [
             'engine' => null,
 
             'dump' => [
+<<<<<<< HEAD
            'dump_binary_path' => env('DB_DUMP_COMMAND_PATH', 'C:\\xampp\\mysql\\bin\\'), // only the path, so without `mysqldump` or `pg_dump`
+=======
+           'dump_binary_path' => env('PATH_DUMP', 'C:\\xampp\\mysql\\bin\\'), // only the path, so without `mysqldump` or `pg_dump`
+>>>>>>> 20c91e631facb3a35a07d98ef8cefb327e09e1d4
            'use_single_transaction',
            'timeout' => 60 * 5, // 5 minute timeout
            /*'exclude_tables' => ['table1', 'table2'],

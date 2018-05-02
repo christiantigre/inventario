@@ -33,6 +33,7 @@
                             <table class="table table-borderless">
                                 <thead>
                                     <tr>
+                                        <th>Actions</th>
                                         <th>#</th>
                                         <th>Factura</th>
                                         <th>Clave Acceso</th>
@@ -43,12 +44,17 @@
                                         <th>RIDE Generado</th>
                                         <th>RIDE Enviado</th>
                                         <th>XML Enviado</th>
-                                        <th>Actions</th>
+                                        <th>Estado</th>
+                                        <th>Mensaje</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($comprobantes as $item)
                                     <tr>
+                                        <td>
+                                            <a href="{{ url('/person/facturacion/' . $item->id) }}" title="Ver Venta"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> Ver</button></a>
+                                        </td>
+                                        
                                         <td>{{ $loop->iteration or $item->id }}</td>
                                         <td>{{ $item->numfactura }}</td>
                                         <td>{{ $item->claveacceso }}</td>
@@ -57,7 +63,7 @@
                                             <small class="label pull-left bg-green">GENERADO</small>
                                         @else
                                             <small class="label pull-left bg-red">NO GENERADO</small>
-                                            <a href="{{ url('/person/generarFacturaXml/' . $item->id_venta) }}" title="Generar XML"><button class="btn btn-info btn-xs"><i class="fa fa-refresh" aria-hidden="true"></i> GENERAR</button></a>
+                                            <a href="{{ url('/person/f_generafactura/' . $item->id_venta) }}" title="Generar XML"><button class="btn btn-info btn-xs"><i class="fa fa-refresh" aria-hidden="true"></i> GENERAR</button></a>
                                         @endif
                                         </td>
                                         <td>
@@ -65,7 +71,7 @@
                                             <small class="label pull-left bg-green">FIRMADO</small>
                                         @else
                                             <small class="label pull-left bg-red">NO FIRMADO</small>
-                                            <a href="{{ url('/person/firmarfactura/' . $item->id_venta) }}" title="Generar XML"><button class="btn btn-info btn-xs"><i class="fa fa-refresh" aria-hidden="true"></i> FIRMAR</button></a>
+                                            <a href="{{ url('/person/f_firmarfactura/' . $item->id_venta) }}" title="Generar XML"><button class="btn btn-info btn-xs"><i class="fa fa-refresh" aria-hidden="true"></i> FIRMAR</button></a>
                                         @endif
                                     </td>
                                         <td>
@@ -73,31 +79,40 @@
                                             <small class="label pull-left bg-green">ENVIADO</small>
                                         @else
                                             <small class="label pull-left bg-red">NO ENVIADO</small>
-                                            <a href="{{ url('/person/autorizarfactura/' . $item->id_venta) }}" title="Generar XML"><button class="btn btn-info btn-xs"><i class="fa fa-refresh" aria-hidden="true"></i> ENVIAR</button></a>
+                                            <a href="{{ url('/person/f_autorizarfactura/' . $item->id_venta) }}" title="Generar XML"><button class="btn btn-info btn-xs"><i class="fa fa-refresh" aria-hidden="true"></i> ENVIAR</button></a>
                                         @endif</td>
                                         <td>
                                         @if(($item->aut_xml)=='1')
                                             <small class="label pull-left bg-green">AUTORIZADO</small>
                                         @else
                                             <small class="label pull-left bg-red">NO AUTORIZADO</small>
-                                            <a href="{{ url('/person/autorizarfactura/' . $item->id_venta) }}" title="Generar XML"><button class="btn btn-info btn-xs"><i class="fa fa-refresh" aria-hidden="true"></i> AUTORIZAR</button></a>
+                                            <a href="{{ url('/person/f_firmarfactura/' . $item->id_venta) }}" title="Generar XML"><button class="btn btn-info btn-xs"><i class="fa fa-refresh" aria-hidden="true"></i> AUTORIZAR</button></a>
                                         @endif</td>
-                                        <td>{{ $item->convrt_ride }}</td>
-                                        <td>{{ $item->send_ride }}</td>
-                                        <td>{{ $item->send_xml }}</td>
                                         <td>
-                                            <a href="{{ url('/person/venta/' . $item->id) }}" title="Ver Venta"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> Ver</button></a>
-                                            <!--
-                                            <a href="{{ url('/person/venta/' . $item->id . '/edit') }}" title="Editar Venta"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>
-                                        -->
-                                        <!--
-                                            <form method="POST" action="{{ url('/person/venta' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
-                                                {{ method_field('DELETE') }}
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-xs" title="Eliminar venta" onclick="return confirm(&quot;Desea eliminar?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar</button>
-                                            </form>
-                                        -->
-                                        </td>
+                                         @if(($item->convrt_ride)=='1')
+                                            <small class="label pull-left bg-green">GENERADO</small>
+                                        @else
+                                            <small class="label pull-left bg-red">NO GENERADO</small>
+                                            <a href="{{ url('/person/f_generarpdf/' . $item->id_venta) }}" title="Generar XML"><button class="btn btn-info btn-xs"><i class="fa fa-refresh" aria-hidden="true"></i> GENERAR</button></a>
+                                        @endif</td>
+                                        <td>
+                                        @if(($item->send_ride)=='1')
+                                            <small class="label pull-left bg-green">ENVIADO</small>
+                                        @else
+                                            <small class="label pull-left bg-red">NO ENVIADO</small>
+                                            <a href="{{ url('/person/f_enviarcomprobantes/' . $item->id_venta) }}" title="Generar XML"><button class="btn btn-info btn-xs"><i class="fa fa-refresh" aria-hidden="true"></i> ENVIAR</button></a>
+                                        @endif</td>
+                                        <td>
+                                            @if(($item->send_xml)=='1')
+                                            <small class="label pull-left bg-green">ENVIADO</small>
+                                        @else
+                                            <small class="label pull-left bg-red">NO ENVIADO</small>
+                                            <a href="{{ url('/person/f_enviarcomprobantes/' . $item->id_venta) }}" title="Generar XML"><button class="btn btn-info btn-xs"><i class="fa fa-refresh" aria-hidden="true"></i> ENVIAR</button></a>
+                                        @endif</td>
+                                        <td>{{ $item->estado_aprobacion }}</td>
+                                        <td>{{ str_limit($item->mensaje,8) }}</td>
+
+                                        
                                     </tr>
                                 @endforeach
                                 </tbody>

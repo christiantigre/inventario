@@ -3,9 +3,11 @@
     <a href="" data-toggle="modal" data-target="#modal-seleccionacliente" class="btn btn-default btn-sm" title="Buscar Cliente">
         <i class="fa fa-search" aria-hidden="true"></i> Buscar Cliente
     </a>
+
     <a href="" data-toggle="modal" class="btn btn-default btn-sm reset_cli" title="Reset Cliente">
         <i class="fa fa-circle-o-notch" aria-hidden="true"></i> Reset Cliente
     </a>
+
     <a href="" data-toggle="modal" data-target="#modal-registrocliente" class="btn btn-default btn-sm" title="Registrar Cliente">
         <i class="fa fa-plus" aria-hidden="true"></i> Crear Cliente
     </a>
@@ -13,6 +15,13 @@
     <a href="" data-toggle="modal" class="btn btn-default btn-sm cliente-final-person" title="Cliente Final">
         <i class="fa fa-plus" aria-hidden="true"></i> Cliente Final
     </a>
+<!--
+    <a href="" data-toggle="modal" data-target="#myModal" class="btn btn-default btn-sm" title="Test Modal">
+        <i class="fa fa-search" aria-hidden="true"></i> Test Modal
+    </a>
+-->
+
+    
     
     <div class="form-group {{ $errors->has('num_venta') ? 'has-error' : ''}}">
         <label for="fecha" class="col-md-9 control-label">{{ 'N° Venta:' }}</label>

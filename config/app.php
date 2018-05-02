@@ -193,6 +193,8 @@ return [
         Spatie\Backup\BackupServiceProvider::class,
         Backpack\BackupManager\BackupManagerServiceProvider::class,
         Milon\Barcode\BarcodeServiceProvider::class,
+        //DATATABLES
+        Yajra\DataTables\DataTablesServiceProvider::class,
 
     ],
 
@@ -249,6 +251,7 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
         'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
+        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
     ],
 
 ];
