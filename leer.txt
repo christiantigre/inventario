@@ -207,3 +207,7 @@ https://www.youtube.com/watch?v=qVlraSBuuzE&ab_channel=MarcoFeregrino
 
 ejemplos de fcatura
 http://www.facturacionelectronica.ec/ejemplo-factura-electronica-del-ecuador-2013/
+
+
+revisar este paquete
+https://github.com/tavo1987/ec-laravel-validator
